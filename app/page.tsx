@@ -34,6 +34,7 @@ import Image from "next/image";
 import SpotlightCard from "@/components/landing/SpotlightCard";
 
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 const InteractiveHoverButtonClient = dynamic(
   () =>
@@ -50,6 +51,8 @@ const FooterClientOnly = dynamic(
 
 export default function Home() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  redirect("/auth/signin");
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);

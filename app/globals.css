@@ -264,7 +264,7 @@
 
 .driver-popover-footer button {
   text-shadow: none;
-  height: var(28px);
+  height: 28px;
   border-radius: 6px !important;
   padding: 4px 10px !important;
   transition: all 0.15s ease !important;
