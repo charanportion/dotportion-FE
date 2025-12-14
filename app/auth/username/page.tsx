@@ -1,0 +1,64 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+
+export default function UsernamePage() {
+  const [username, setUsername] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const params = useSearchParams();
+
+  const email = params.get("email");
+
+  const submit = async () => {
+    if (!username.trim()) {
+      alert("Please choose a valid username.");
+      return;
+    }
+
+    setLoading(true);
+    const res = await fetch("/api/auth/set-username", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ email, username }),
+    });
+
+    if (!res.ok) {
+      alert("Failed: " + (await res.text()));
+      return;
+    }
+
+    router.push("/onboarding?step=0");
+  };
+
+  return (
+    <div className="flex-1 flex flex-col justify-center w-[330px] sm:w-[384px]">
+      <div className="mb-10">
+        <h1 className="mt-8 mb-2 lg:text-3xl">Choose a username</h1>
+      </div>
+      <Label className="transition-all duration-500 ease-in-out flex flex-row gap-2 justify-between mb-2">
+        <p className="text font-normal peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-sm transition-colors text-foreground flex gap-2 items-center break-all leading-normal">
+          Username
+        </p>
+      </Label>
+      <Input
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        placeholder="Enter username"
+        className="flex w-full shadow-none bg-neutral-100 rounded-md border border-neutral-300 text-sm leading-4 px-3 py-2 my-2 h-[34px]"
+      />
+      <Button
+        onClick={submit}
+        disabled={loading}
+        className="relative cursor-pointer mt-2 space-x-2 text-center ease-out duration-200 rounded-md outline-none transition-all outline-0 focus-visible:outline-4 focus-visible:outline-offset-1 border-2 bg-neutral-800 dark:bg-neutral-200 hover:bg-neutral-700 dark:hover:bg-neutral-100 text-white border-neutral-500 dark:border-neutral-200/30 hover:border-brand-600 dark:hover:border-neutral-200 focus-visible:outline-neutral-600 data-[state=open]:bg-neutral-400/80 dark:data-[state=open]:bg-neutral-500/80 data-[state=open]:outline-neutral-600 w-full flex items-center justify-center text-base px-4 py-2 h-[42px]"
+      >
+        {loading ? "Saving..." : "Continue"}
+      </Button>
+    </div>
+  );
+}

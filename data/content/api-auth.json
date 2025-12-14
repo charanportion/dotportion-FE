@@ -1,0 +1,72 @@
+{
+  "path": "/api/auth",
+  "title": "Authentication API",
+  "description": "Learn how to implement authentication in your application",
+  "content": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Overview"
+    },
+    {
+      "type": "paragraph",
+      "text": "The Authentication API provides secure user authentication and authorization for your application."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Endpoints"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "POST /api/auth/login"
+    },
+    {
+      "type": "paragraph",
+      "text": "Authenticate a user with email and password."
+    },
+    {
+      "type": "code",
+      "title": "Login Request",
+      "language": "typescript",
+      "code": "const response = await fetch('/api/auth/login', {\n  method: 'POST',\n  headers: {\n    'Content-Type': 'application/json',\n  },\n  body: JSON.stringify({\n    email: 'user@example.com',\n    password: 'securepassword'\n  })\n})\n\nconst data = await response.json()"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "POST /api/auth/register"
+    },
+    {
+      "type": "paragraph",
+      "text": "Register a new user account."
+    },
+    {
+      "type": "code",
+      "title": "Register Request",
+      "language": "typescript",
+      "code": "const response = await fetch('/api/auth/register', {\n  method: 'POST',\n  headers: {\n    'Content-Type': 'application/json',\n  },\n  body: JSON.stringify({\n    email: 'newuser@example.com',\n    password: 'securepassword',\n    name: 'John Doe'\n  })\n})"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Response Format"
+    },
+    {
+      "type": "paragraph",
+      "text": "All authentication endpoints return responses in the following format:"
+    },
+    {
+      "type": "code",
+      "title": "Response Format",
+      "language": "json",
+      "code": "{\n  \"success\": true,\n  \"data\": {\n    \"user\": {\n      \"id\": \"123\",\n      \"email\": \"user@example.com\",\n      \"name\": \"John Doe\"\n    },\n    \"token\": \"jwt-token-here\"\n  },\n  \"message\": \"Login successful\"\n}"
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "title": "⚠️ Security Note",
+      "text": "Always use HTTPS in production and store JWT tokens securely. Never expose sensitive authentication data in client-side code."
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "path": "/",
+  "title": "Documentation Portal",
+  "description": "A modern, fast, and beautiful documentation portal built with Next.js",
+  "content": [
+    {
+      "type": "heading",
+      "level": 1,
+      "text": "Welcome to Documentation Portal"
+    },
+    {
+      "type": "paragraph",
+      "text": "A modern, fast, and beautiful documentation portal built with Next.js, TypeScript, and Tailwind CSS. Perfect for creating comprehensive documentation for your projects."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Features"
+    },
+    {
+      "type": "image",
+      "src": "/next.svg",
+      "alt": "logo"
+    },
+    {
+      "type": "list",
+      "items": [
+        "🚀 Built with Next.js 14 and App Router",
+        "💎 Beautiful UI with Tailwind CSS and shadcn/ui",
+        "🌙 Dark mode support",
+        "📱 Fully responsive design",
+        "🔍 Advanced search functionality",
+        "📖 Table of contents navigation",
+        "✨ Syntax highlighting for code blocks",
+        "📝 JSON-based content management"
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Quick Start"
+    },
+    {
+      "type": "paragraph",
+      "text": "Get started with the documentation portal in just a few steps ([Google](https://www.google.com)):"
+    },
+    {
+      "type": "code",
+      "title": "Installation",
+      "language": "bash",
+      "code": "# Clone the repository\ngit clone https://github.com/your-username/docs-portal.git\n\n# Install dependencies\nnpm install\n\n# Start development server\nnpm run dev"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Content Management"
+    },
+    {
+      "type": "paragraph",
+      "text": "This documentation portal uses a JSON-based content management system. Each page is defined as a JSON file in the `data/content` directory with structured content blocks."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "title": "💡 Getting Started",
+      "text": "Check out the Installation guide to set up your documentation portal, or explore the Quick Start guide to understand the project structure."
+    }
+  ]
+}

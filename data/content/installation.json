@@ -1,0 +1,119 @@
+{
+  "path": "/installation",
+  "title": "Installation",
+  "description": "Get started by installing the documentation portal",
+  "content": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Prerequisites"
+    },
+    {
+      "type": "paragraph",
+      "text": "Before you begin, make sure you have the following installed on your system:"
+    },
+    {
+      "type": "list",
+      "items": ["Node.js 18.0 or later", "npm, yarn, or pnpm package manager", "Git for version control"]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Quick Installation"
+    },
+    {
+      "type": "paragraph",
+      "text": "The fastest way to get started is by cloning the repository and installing dependencies:"
+    },
+    {
+      "type": "code",
+      "title": "Clone and Install",
+      "language": "bash",
+      "code": "# Clone the repository\ngit clone https://github.com/your-username/docs-portal.git\n\n# Navigate to the project directory\ncd docs-portal\n\n# Install dependencies\nnpm install\n\n# Start the development server\nnpm run dev"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Manual Setup"
+    },
+    {
+      "type": "paragraph",
+      "text": "If you prefer to set up the project manually, follow these steps:"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "1. Create a new Next.js project"
+    },
+    {
+      "type": "code",
+      "language": "bash",
+      "code": "npx create-next-app@latest my-docs-portal --typescript --tailwind --eslint --app"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "2. Install required dependencies"
+    },
+    {
+      "type": "code",
+      "language": "bash",
+      "code": "npm install @radix-ui/react-accordion @radix-ui/react-dialog @radix-ui/react-dropdown-menu @radix-ui/react-scroll-area @radix-ui/react-sheet lucide-react next-themes class-variance-authority clsx tailwind-merge"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "3. Install development dependencies"
+    },
+    {
+      "type": "code",
+      "language": "bash",
+      "code": "npm install -D @types/node @types/react @types/react-dom"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Configuration"
+    },
+    {
+      "type": "paragraph",
+      "text": "After installation, you'll need to configure a few files:"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "Update your tailwind.config.js"
+    },
+    {
+      "type": "code",
+      "title": "tailwind.config.js",
+      "language": "javascript",
+      "code": "/** @type {import('tailwindcss').Config} */\nmodule.exports = {\n  darkMode: [\"class\"],\n  content: [\n    './pages/**/*.{ts,tsx}',\n    './components/**/*.{ts,tsx}',\n    './app/**/*.{ts,tsx}',\n    './src/**/*.{ts,tsx}',\n  ],\n  theme: {\n    extend: {\n      colors: {\n        border: \"hsl(var(--border))\",\n        input: \"hsl(var(--input))\",\n        ring: \"hsl(var(--ring))\",\n        background: \"hsl(var(--background))\",\n        foreground: \"hsl(var(--foreground))\",\n        primary: {\n          DEFAULT: \"hsl(var(--primary))\",\n          foreground: \"hsl(var(--primary-foreground))\",\n        },\n        secondary: {\n          DEFAULT: \"hsl(var(--secondary))\",\n          foreground: \"hsl(var(--secondary-foreground))\",\n        },\n        destructive: {\n          DEFAULT: \"hsl(var(--destructive))\",\n          foreground: \"hsl(var(--destructive-foreground))\",\n        },\n        muted: {\n          DEFAULT: \"hsl(var(--muted))\",\n          foreground: \"hsl(var(--muted-foreground))\",\n        },\n        accent: {\n          DEFAULT: \"hsl(var(--accent))\",\n          foreground: \"hsl(var(--accent-foreground))\",\n        },\n        popover: {\n          DEFAULT: \"hsl(var(--popover))\",\n          foreground: \"hsl(var(--popover-foreground))\",\n        },\n        card: {\n          DEFAULT: \"hsl(var(--card))\",\n          foreground: \"hsl(var(--card-foreground))\",\n        },\n      },\n    },\n  },\n  plugins: [],\n}"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Verification"
+    },
+    {
+      "type": "paragraph",
+      "text": "To verify that everything is working correctly:"
+    },
+    {
+      "type": "ordered-list",
+      "items": [
+        "Start the development server with `npm run dev`",
+        "Open your browser and navigate to `http://localhost:3000`",
+        "You should see the documentation portal homepage",
+        "Try navigating through different sections using the sidebar",
+        "Test the dark mode toggle in the header"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "title": "🎉 Congratulations!",
+      "text": "You've successfully installed the documentation portal. You can now start customizing it for your project by adding your own content and modifying the navigation structure."
+    }
+  ]
+}

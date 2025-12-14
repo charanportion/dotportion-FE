@@ -1,0 +1,86 @@
+{
+  "path": "/quick-start",
+  "title": "Quick Start",
+  "description": "Get up and running with the documentation portal in minutes",
+  "content": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Overview"
+    },
+    {
+      "type": "paragraph",
+      "text": "This quick start guide will help you understand the basic structure of the documentation portal and how to customize it for your needs."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Project Structure"
+    },
+    {
+      "type": "paragraph",
+      "text": "The documentation portal follows a standard Next.js App Router structure:"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "code": "docs-portal/\n├── app/                    # App Router pages\n│   ├── layout.tsx         # Root layout\n│   ├── page.tsx           # Homepage\n│   ├── installation/      # Installation guide\n│   ├── components/        # Component documentation\n│   └── api/              # API documentation\n├── components/            # Reusable components\n│   ├── ui/               # shadcn/ui components\n│   ├── docs-layout.tsx   # Main documentation layout\n│   ├── navigation.tsx    # Sidebar navigation\n│   └── code-block.tsx    # Code syntax highlighting\n├── lib/                  # Utility functions\n└── public/              # Static assets"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Adding New Pages"
+    },
+    {
+      "type": "paragraph",
+      "text": "To add a new documentation page, create a new JSON file in the data/content directory:"
+    },
+    {
+      "type": "code",
+      "title": "data/content/my-new-page.json",
+      "language": "json",
+      "code": "{\n  \"path\": \"/my-new-page\",\n  \"title\": \"My New Page\",\n  \"description\": \"Description of what this page covers\",\n  \"content\": [\n    {\n      \"type\": \"heading\",\n      \"level\": 2,\n      \"text\": \"Section Title\"\n    },\n    {\n      \"type\": \"paragraph\",\n      \"text\": \"Your content goes here...\"\n    },\n    {\n      \"type\": \"code\",\n      \"language\": \"typescript\",\n      \"code\": \"// Your code example\\nconst example = \\\"Hello World\\\";\"\n    }\n  ]\n}"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Updating Navigation"
+    },
+    {
+      "type": "paragraph",
+      "text": "To add your new page to the sidebar navigation, update the `navigationItems` array in `components/docs-layout.tsx`:"
+    },
+    {
+      "type": "code",
+      "title": "components/docs-layout.tsx",
+      "language": "typescript",
+      "code": "const navigationItems = [\n  {\n    title: \"Getting Started\",\n    items: [\n      { title: \"Introduction\", href: \"/\" },\n      { title: \"Installation\", href: \"/installation\" },\n      { title: \"Quick Start\", href: \"/quick-start\" },\n      { title: \"My New Page\", href: \"/my-new-page\" }, // Add your page here\n    ],\n  },\n  // ... other sections\n]"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Content Types"
+    },
+    {
+      "type": "paragraph",
+      "text": "The JSON content system supports various content types:"
+    },
+    {
+      "type": "list",
+      "items": [
+        "heading - H1-H6 headings with level property",
+        "paragraph - Regular text content",
+        "list - Unordered bullet lists",
+        "ordered-list - Numbered lists",
+        "code - Code blocks with syntax highlighting",
+        "callout - Special highlighted boxes"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "title": "💡 Pro Tips",
+      "text": "Use consistent content types for better maintainability. Keep your navigation structure shallow for better UX. Include code examples for better understanding."
+    }
+  ]
+}

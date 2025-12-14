@@ -1,0 +1,72 @@
+{
+  "path": "/components/buttons",
+  "title": "Button Component",
+  "description": "A versatile button component with multiple variants and sizes",
+  "content": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Overview"
+    },
+    {
+      "type": "paragraph",
+      "text": "The Button component is a fundamental UI element that triggers actions when clicked. It supports multiple variants, sizes, and states."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Basic Usage"
+    },
+    {
+      "type": "code",
+      "title": "Basic Button",
+      "language": "tsx",
+      "code": "import { Button } from \"@/components/ui/button\"\n\nexport function BasicButton() {\n  return (\n    <Button onClick={() => console.log('Clicked!')}>\n      Click me\n    </Button>\n  )\n}"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Variants"
+    },
+    {
+      "type": "paragraph",
+      "text": "The button component supports several visual variants:"
+    },
+    {
+      "type": "code",
+      "title": "Button Variants",
+      "language": "tsx",
+      "code": "<Button variant=\"default\">Default</Button>\n<Button variant=\"destructive\">Destructive</Button>\n<Button variant=\"outline\">Outline</Button>\n<Button variant=\"secondary\">Secondary</Button>\n<Button variant=\"ghost\">Ghost</Button>\n<Button variant=\"link\">Link</Button>"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Sizes"
+    },
+    {
+      "type": "paragraph",
+      "text": "Control the button size with the size prop:"
+    },
+    {
+      "type": "code",
+      "title": "Button Sizes",
+      "language": "tsx",
+      "code": "<Button size=\"sm\">Small</Button>\n<Button size=\"default\">Default</Button>\n<Button size=\"lg\">Large</Button>\n<Button size=\"icon\">🚀</Button>"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Props"
+    },
+    {
+      "type": "paragraph",
+      "text": "The Button component accepts the following props:"
+    },
+    {
+      "type": "code",
+      "title": "Button Props",
+      "language": "typescript",
+      "code": "interface ButtonProps {\n  variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'\n  size?: 'default' | 'sm' | 'lg' | 'icon'\n  asChild?: boolean\n  disabled?: boolean\n  onClick?: () => void\n  children: React.ReactNode\n}"
+    }
+  ]
+}
