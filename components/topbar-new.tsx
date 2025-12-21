@@ -11,6 +11,8 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -57,11 +59,13 @@ import { Textarea } from "./ui/textarea";
 import { Separator } from "./ui/separator";
 import { submitFeedback } from "@/lib/redux/slices/feedbackSlice";
 import { toast } from "sonner";
+import { useTheme } from "next-themes";
 
 export default function TopbarNew() {
   const dispatch = useDispatch<AppDispatch>();
   const pathname = usePathname();
   const router = useRouter();
+  const { theme, setTheme } = useTheme();
   // const searchParams = useSearchParams();
 
   const { user } = useSelector((state: RootState) => state.auth);
@@ -237,7 +241,7 @@ export default function TopbarNew() {
   const isWorkflowsPage = pathname.includes("/workflows");
 
   return (
-    <header className="h-12 w-full border-b border-gray-300 bg-neutral-50 px-4 flex items-center justify-between shrink-0">
+    <header className="h-12 w-full border-b border-border bg-background px-4 flex items-center justify-between shrink-0">
       {/* Left side - Logo, Project Selector and Breadcrumbs */}
       <div className="flex items-center gap-4">
         <Link href={"/dashboard"} className="flex items-center gap-2">
@@ -246,7 +250,14 @@ export default function TopbarNew() {
             alt="Dotportion Logo"
             width={50}
             height={50}
-            className="w-5 h-5"
+            className="w-5 h-5 block dark:hidden"
+          />
+          <Image
+            src={"/logo/dark.png"}
+            alt="Dotportion Logo"
+            width={50}
+            height={50}
+            className="w-5 h-5 hidden dark:block"
           />
         </Link>
 
@@ -256,7 +267,7 @@ export default function TopbarNew() {
             {isInProjectRoute && (
               <>
                 <BreadcrumbItem>
-                  <span className="text-gray-400">/</span>
+                  <span>/</span>
                   <div className="flex items-center gap-2 ml-2">
                     <Select
                       value={selectedProject?._id || ""}
@@ -273,12 +284,12 @@ export default function TopbarNew() {
                       >
                         <Button
                           variant="ghost"
-                          className="focus-visible:bg-accent text-foreground bg-transparent h-8 p-1.5 focus-visible:ring-0 font-medium text-sm hover:bg-gray-100"
+                          className="focus-visible:bg-accent text-muted-foreground bg-transparent h-8 p-1.5 focus-visible:ring-0 font-medium text-sm hover:bg-gray-100"
                         >
                           <SelectValue placeholder="Select project" />
                           <ChevronsUpDown
                             size={14}
-                            className="text-muted-foreground/80 ml-1"
+                            className="text-muted-foreground ml-1"
                           />
                         </Button>
                       </SelectPrimitive.SelectTrigger>
@@ -304,7 +315,7 @@ export default function TopbarNew() {
                   <>
                     <BreadcrumbSeparator>/</BreadcrumbSeparator>
                     <BreadcrumbItem>
-                      <span className="text-sm text-gray-600 font-medium">
+                      <span className="text-sm  font-medium">
                         {breadcrumbs[0]}
                       </span>
                     </BreadcrumbItem>
@@ -315,7 +326,7 @@ export default function TopbarNew() {
                   <>
                     <BreadcrumbSeparator>/</BreadcrumbSeparator>
                     <BreadcrumbItem>
-                      <span className="text-sm text-gray-600 font-medium">
+                      <span className="text-sm  font-medium">
                         {breadcrumbs[2]}
                       </span>
                     </BreadcrumbItem>
@@ -337,7 +348,7 @@ export default function TopbarNew() {
                         >
                           <Button
                             variant="ghost"
-                            className="focus-visible:bg-accent text-foreground bg-transparent h-8 p-1.5 focus-visible:ring-0 font-medium text-sm hover:bg-gray-100"
+                            className="focus-visible:bg-accent text-muted-foreground bg-transparent h-8 p-1.5 focus-visible:ring-0 font-medium text-sm hover:bg-gray-100"
                           >
                             <span>
                               {selectedWorkflow?.name || "Select Workflow"}
@@ -379,8 +390,8 @@ export default function TopbarNew() {
             {/* Show simple breadcrumb for non-project routes */}
             {!isInProjectRoute && (
               <BreadcrumbItem>
-                <span className="text-gray-400 ml-2">/</span>
-                <span className="text-sm text-gray-600 font-medium ml-2">
+                <span className=" ml-2">/</span>
+                <span className="text-sm  font-medium ml-2">
                   {pathname === "/dashboard" || pathname === "/"
                     ? "Analytics"
                     : pathSegments[0]?.charAt(0).toUpperCase() +
@@ -392,7 +403,7 @@ export default function TopbarNew() {
         </Breadcrumb>
         <Badge
           variant="default"
-          className="text-xs rounded-full h-5 px-1.5 font-normal text-green-700 bg-green-100 border border-green-500"
+          className="text-xs rounded-full h-5 px-1.5 font-normal text-green-700 dark:text-green-400 bg-green-100 dark:bg-green-950 border border-green-400"
         >
           Beta
         </Badge>
@@ -406,20 +417,20 @@ export default function TopbarNew() {
             <Button
               variant="ghost"
               size="sm"
-              className="relative px-2.5 h-7 rounded-full text-neutral-500 text-sm font-normal hover:text-gray-900 "
+              className="relative px-2.5 h-7 rounded-full text-muted-foreground text-xs font-normal  "
             >
               Feedback
             </Button>
           </PopoverTrigger>
           <PopoverContent
             align="end"
-            className="w-96 p-0 shadow-xs border border-neutral-300"
+            className="w-96 p-0 shadow-xs border border-border"
           >
             <div className="rounded-md bg-background shadow-md outline-none px-0 flex flex-col pt-1 pb-3 w-full h-full">
               {!selectedFeedbackType && (
                 <div className="flex flex-col gap-4 p-4">
                   {/* Title */}
-                  <div className="font-medium text-sm text-primary">
+                  <div className="font-medium text-sm text-foreground">
                     What would you like to share?
                   </div>
 
@@ -512,7 +523,7 @@ export default function TopbarNew() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 text-gray-500 border border-neutral-300 rounded-full bg-neutral-50"
+                className="h-8 w-8 text-muted-foreground border border-border rounded-full bg-background"
               >
                 <BookOpen className="h-4 w-4" />
               </Button>
@@ -529,7 +540,7 @@ export default function TopbarNew() {
               variant="ghost"
               className="h-8 w-8 rounded-full p-0 ml-1 cursor-pointer"
             >
-              <Avatar className="h-8 w-8 border border-gray-300">
+              <Avatar className="h-8 w-8 border border-border">
                 <AvatarImage src="/" alt="User" />
                 <AvatarFallback className="bg-gradient-to-br from-neutral-400 to-neutral-800 text-white">
                   {user?.full_name?.charAt(0)?.toUpperCase() || "U"}
@@ -537,30 +548,48 @@ export default function TopbarNew() {
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="end"
-            className="w-56 shadow-none bg-white border border-neutral-300 p-0.5"
-          >
+          <DropdownMenuContent align="end" className="w-56 shadow-none  p-0.5">
             <DropdownMenuLabel className="px-2 py-1.5">
-              <p className="font-medium text-sm">{user?.full_name || "User"}</p>
-              <p className="text-xs text-neutral-600">
+              <p className="font-medium text-sm text-secondary-foreground">
+                {user?.full_name || "User"}
+              </p>
+              <p className="text-xs text-muted-foreground">
                 {user?.email || "user@example.com"}
               </p>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               asChild
-              className="flex items-center gap-2 text-xs px-2 py-1.5 text-neutral-600"
+              className="flex items-center gap-2 text-xs px-2 py-1.5 text-muted-foreground"
             >
               <Link href={"/account"}>
-                <Settings className="h-3 w-3 text-neutral-600" />
+                <Settings className="h-3 w-3 text-muted-foreground" />
                 <span>Account Preferences</span>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
+            <DropdownMenuLabel className="px-2 py-1.5 text-xs font-medium text-muted-foreground">
+              Theme
+            </DropdownMenuLabel>
+            <DropdownMenuRadioGroup
+              value={theme}
+              onValueChange={setTheme}
+              className="text-xs"
+            >
+              <DropdownMenuRadioItem value="light" className="text-xs">
+                Light
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="dark" className="text-xs">
+                Dark
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="system" className="text-xs">
+                System
+              </DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+            <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={handleLogout}
-              className="flex items-center gap-2 text-xs px-2 py-1.5 text-neutral-600"
+              className="flex items-center gap-2 text-xs px-2 py-1.5 text-muted-foreground"
             >
               Logout
             </DropdownMenuItem>

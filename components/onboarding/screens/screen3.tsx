@@ -77,7 +77,7 @@ export default function Screen3() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8">
-      <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-10 text-center">
+      <h2 className="text-lg sm:text-xl md:text-2xl font-medium mb-10 text-center">
         Which technologies, or tools you use to build backend?
       </h2>
 
@@ -87,10 +87,10 @@ export default function Screen3() {
           <Button
             key={tool}
             onClick={() => toggleTool(tool)}
-            className={`px-3 sm:px-4 py-2 text-sm rounded-full border whitespace-nowrap hover:bg-black hover:text-white transition ${
+            className={`px-3 sm:px-4 py-2 text-sm rounded-full border whitespace-nowrap hover:bg-muted text-foreground transition ${
               answers.tools?.includes(tool)
-                ? "bg-black text-white border-black"
-                : "bg-white text-black border-gray-400 hover:border-black"
+                ? "bg-primary text-primary-foreground border-border"
+                : "bg-card text-foreground border-border hover:bg-muted"
             }`}
           >
             {tool}
@@ -104,7 +104,7 @@ export default function Screen3() {
 
       {/* Continue button */}
       <Button
-        className="bg-[#222] hover:bg-white hover:border border-black hover:text-black text-white text-sm sm:text-base font-normal px-4 h-11 rounded-md mt-6"
+        className="text-sm font-normal px-5 h-8 rounded-md mt-4"
         onClick={handleContinue}
         disabled={status === "loading"}
       >
@@ -113,11 +113,11 @@ export default function Screen3() {
 
       {/* Step Indicator */}
       <div className="flex space-x-1 mt-10 sm:mt-14 justify-center">
-        <span className="h-2 w-4 rounded-md bg-gray-400"></span>
-        <span className="h-2 w-4 rounded-md bg-gray-400"></span>
-        <span className="h-2 w-2 rounded-md bg-black"></span>
-        <span className="h-2 w-4 rounded-md bg-gray-400"></span>
-        <span className="h-2 w-4 rounded-md bg-gray-400"></span>
+        <span className="h-2 w-4 rounded-md bg-muted-foreground"></span>
+        <span className="h-2 w-4 rounded-md bg-muted-foreground"></span>
+        <span className="h-2 w-2 rounded-md bg-primary"></span>
+        <span className="h-2 w-4 rounded-md bg-muted-foreground"></span>
+        <span className="h-2 w-4 rounded-md bg-muted-foreground"></span>
       </div>
     </div>
   );

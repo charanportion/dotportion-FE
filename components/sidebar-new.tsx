@@ -54,18 +54,18 @@ import { userApi } from "@/lib/api/user";
 // Main navigation items (Dashboard and Projects)
 const getMainNavigationItems = [
   {
-    title: "Analytics",
-    icon: ChartColumn,
-    href: `/dashboard`,
-    description:
-      "Access detailed analytics about your usage, API calls, errors, and performance trends.",
-  },
-  {
     title: "Projects",
     icon: Folder,
     href: `/projects`,
     description:
       "View and manage all your projects, including workflows, secrets, schemas, and documentation.",
+  },
+  {
+    title: "Analytics",
+    icon: ChartColumn,
+    href: `/dashboard`,
+    description:
+      "Access detailed analytics about your usage, API calls, errors, and performance trends.",
   },
 ];
 
@@ -336,7 +336,7 @@ export default function SidebarNew() {
       <Sidebar
         collapsible={collapsibleMode}
         side="left"
-        className="bg-neutral-50 text-black border-r border-neutral-300 h-full pt-2"
+        className="bg-background text-black border-r border-border h-full pt-2"
         style={{ top: "2.5rem", height: "calc(100svh - 2rem)" }}
       >
         <SidebarContent className="p-0">

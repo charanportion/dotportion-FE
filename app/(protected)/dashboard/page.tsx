@@ -34,7 +34,7 @@ export default function DashboardPage() {
 
   if (isAuthenticated && user) {
     return (
-      <div className="min-h-screen bg-white py-16">
+      <div className="min-h-screen bg-background py-16">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-12 gap-4">
             <h1 className="text-xl font-medium tracking-tight text-foreground">

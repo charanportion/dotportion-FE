@@ -9,6 +9,8 @@ import {
 } from "./command";
 import { cn } from "@/lib/utils";
 import type { Edge } from "@xyflow/react";
+import { Textarea } from "./textarea";
+import { Input } from "./input";
 
 interface NodeIdSuggestFieldProps {
   value: string;
@@ -76,7 +78,7 @@ export const NodeIdSuggestField = ({
     }
 
     if (depth >= maxDepth) {
-      console.warn('Possible circular dependency detected in workflow graph');
+      console.warn("Possible circular dependency detected in workflow graph");
     }
 
     return upstream;
@@ -95,8 +97,10 @@ export const NodeIdSuggestField = ({
       const inputElement = getCurrentRef();
       const popoverElement = popoverRef.current;
 
-      const clickedOutsideInput = inputElement && !inputElement.contains(target);
-      const clickedOutsidePopover = popoverElement && !popoverElement.contains(target);
+      const clickedOutsideInput =
+        inputElement && !inputElement.contains(target);
+      const clickedOutsidePopover =
+        popoverElement && !popoverElement.contains(target);
 
       if (clickedOutsideInput && clickedOutsidePopover) {
         setShowSuggestions(false);
@@ -157,9 +161,9 @@ export const NodeIdSuggestField = ({
         // Exclude API Start nodes and current node
         availableNodes = availableNodes.filter(
           (node) =>
-            node.type !== "apiStart" &&  // Exclude API Start by type
-            node.id !== "1" &&            // Exclude hardcoded API Start ID
-            node.id !== currentNodeId     // Exclude current node from its own suggestions
+            node.type !== "apiStart" && // Exclude API Start by type
+            node.id !== "1" && // Exclude hardcoded API Start ID
+            node.id !== currentNodeId // Exclude current node from its own suggestions
         );
 
         // Filter nodes by search text
@@ -235,7 +239,8 @@ export const NodeIdSuggestField = ({
 
     // Position cursor after the dot (before }})
     // {{nodeId.result.|}}
-    const cursorPosition = beforeBrackets.length + "{{".length + nodeId.length + ".result.".length;
+    const cursorPosition =
+      beforeBrackets.length + "{{".length + nodeId.length + ".result.".length;
 
     // Update
     onChange(newText);
@@ -263,7 +268,7 @@ export const NodeIdSuggestField = ({
   return (
     <div className="relative">
       {as === "textarea" ? (
-        <textarea
+        <Textarea
           ref={textareaRef}
           value={currentValue}
           onChange={handleChange}
@@ -272,13 +277,13 @@ export const NodeIdSuggestField = ({
           onClick={handleCursorPositionChange}
           placeholder={placeholder}
           className={cn(
-            "flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[80px] resize-none",
+            "flex w-full rounded-md border border-border bg-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[80px] resize-none",
             className
           )}
           rows={rows}
         />
       ) : (
-        <input
+        <Input
           ref={inputRef}
           value={currentValue}
           onChange={handleChange}
@@ -287,7 +292,7 @@ export const NodeIdSuggestField = ({
           onClick={handleCursorPositionChange}
           placeholder={placeholder}
           className={cn(
-            "flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+            "flex w-full rounded-md border border-border bg-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
             className
           )}
         />
@@ -296,7 +301,7 @@ export const NodeIdSuggestField = ({
       {showSuggestions && (
         <div
           ref={popoverRef}
-          className="absolute z-50 w-80 mt-1 bg-white border rounded-lg shadow-lg"
+          className="absolute z-50 w-80 mt-1 bg-card border border-border rounded-lg shadow-lg"
         >
           <Command className="rounded-lg border-0">
             <CommandInput
@@ -312,7 +317,10 @@ export const NodeIdSuggestField = ({
                 if (nodes.length === 0) {
                   return "No nodes in workflow.";
                 }
-                const upstreamIds = getUpstreamNodes(currentNodeId, edges || []);
+                const upstreamIds = getUpstreamNodes(
+                  currentNodeId,
+                  edges || []
+                );
                 if (upstreamIds.size === 0) {
                   return "No upstream nodes. Connect nodes before this one.";
                 }

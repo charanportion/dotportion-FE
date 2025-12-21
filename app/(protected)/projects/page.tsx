@@ -215,7 +215,7 @@ export default function ProjectsPage() {
               placeholder="Search for a project"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9 pr-10 h-7 border border-neutral-300 rounded-md bg-neutral-100 text-xs shadow-none"
+              className="pl-9 pr-10 h-7 border border-border bg-input text-xs shadow-none"
             />
           </div>
           {/* <Button
@@ -265,7 +265,7 @@ export default function ProjectsPage() {
             <Card
               key={project._id}
               onClick={() => router.push(`/projects/${project._id}/dashboard`)}
-              className="cursor-pointer border border-neutral-300 bg-white shadow-none rounded-lg p-5 transition-colors duration-200 hover:bg-muted"
+              className="cursor-pointer  shadow-none rounded-lg p-5 transition-colors duration-200 hover:bg-muted"
             >
               <CardHeader className="p-0  flex items-center justify-between">
                 <div>
@@ -304,9 +304,9 @@ export default function ProjectsPage() {
         </div>
       ) : (
         // ---------------- LIST VIEW ----------------
-        <div className="w-full bg-white rounded-lg overflow-hidden shadow-xs border border-neutral-300 h-full">
+        <div className="w-full bg-card rounded-lg overflow-hidden  border border-border h-full">
           {/* List Header */}
-          <div className="grid grid-cols-3 px-6 py-3 text-xs font-medium bg-neutral-100 text-neutral-600 border-b-2 border-neutral-300 uppercase tracking-wide min-w-[800px]">
+          <div className="grid grid-cols-3 px-6 py-3 text-xs font-medium bg-card text-muted-foreground border-b-2 border-border uppercase tracking-wide min-w-[800px]">
             <div className="text-left">Project</div>
             <div className="text-center">Workflows</div>
             <div className="text-center">Created</div>

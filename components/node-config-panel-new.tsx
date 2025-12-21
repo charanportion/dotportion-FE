@@ -313,21 +313,22 @@ export function NodeConfigPanelNew({
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex items-center justify-between px-4 h-12 border-b border-neutral-300 shrink-0">
+      <div className="flex items-center justify-between px-4 h-12 border-b border-border shrink-0">
         <div className="flex items-center gap-2">
-          <h2 className="text-sm font-semibold text-neutral-900">
+          <h2 className="text-sm font-medium text-foreground">
             Configure Node
           </h2>
-          <span className="px-2 py-0.5 text-[10px] rounded bg-neutral-100 border border-neutral-300 text-neutral-600">
+          <span className="px-2 py-0.5 text-[10px] rounded bg-card border border-border text-muted-foreground">
             {node.data.label}
           </span>
         </div>
-        <button
+        <Button
           onClick={onClose}
-          className="p-1.5 rounded-md hover:bg-neutral-100 text-neutral-500 hover:text-neutral-900 transition-colors"
+          variant="ghost"
+          className="p-1 rounded-md  transition-colors"
         >
           <X className="h-4 w-4" />
-        </button>
+        </Button>
       </div>
 
       <div className="flex-1 overflow-y-auto p-4 min-h-0">
@@ -344,13 +345,13 @@ export function NodeConfigPanelNew({
         </Form>
       </div>
 
-      <div className="flex items-center justify-end gap-2 px-4 h-14 border-t border-neutral-300 bg-neutral-50 shrink-0">
+      <div className="flex items-center justify-end gap-2 px-4 h-14 border-t border-border bg-background shrink-0">
         <Button
           type="button"
           variant="outline"
           size="sm"
           onClick={onClose}
-          className="h-8 px-3 text-xs border-neutral-300 bg-white hover:bg-neutral-100 text-neutral-600 hover:text-black shadow-none"
+          className="h-7 shadow-none gap-2 border-border bg-white hover:bg-neutral-100 text-muted-foreground text-xs px-2.5"
         >
           Cancel
         </Button>
@@ -359,7 +360,7 @@ export function NodeConfigPanelNew({
           form="node-config-form"
           size="sm"
           disabled={isSaving}
-          className="h-8 px-3 text-xs shadow-none"
+          className="h-7 shadow-none text-xs px-3"
         >
           {isSaving ? "Saving..." : "Save Changes"}
         </Button>

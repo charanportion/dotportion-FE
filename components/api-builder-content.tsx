@@ -606,7 +606,7 @@ export function ApiBuilderContent({
               position,
               data: {
                 label: "Process Data",
-                code: "// Access data from previous nodes using ${input}\nreturn { processed: true };",
+                code: "",
                 description: "Transform the input data",
                 output: { processed: true },
               },
@@ -901,24 +901,26 @@ export function ApiBuilderContent({
         {/* Canvas Area */}
         <div
           className={cn(
-            "flex flex-col bg-white transition-all overflow-hidden",
+            "flex flex-col bg-background transition-all overflow-hidden",
             selectedNode || showTestPanel ? "flex-1" : "flex-1"
           )}
         >
           {/* Top Bar */}
-          <div className="relative flex w-full min-h-[3rem] h-12 items-center justify-between border-b border-neutral-300 px-4 gap-4 shrink-0">
+          <div className="relative flex w-full min-h-[3rem] h-12 items-center justify-between border-b border-border px-4 gap-4 shrink-0">
             <div className="flex items-center gap-2">
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
-                className="h-7 shadow-none border-neutral-300 bg-white hover:bg-neutral-100 text-neutral-600 hover:text-black text-xs"
+                className="h-7 shadow-none border border-border hover:bg-muted text-xs"
                 onClick={() => router.push(`/projects/${projectId}/workflows/`)}
               >
                 <ArrowLeft className="h-3.5 w-3.5 mr-2" />
                 Back
               </Button>
-              <h1 className="text-sm font-semibold">{selectedWorkflow.name}</h1>
-              <span className="px-2 py-0.5 text-[10px] rounded bg-neutral-100 border border-neutral-300">
+              <h1 className="text-sm font-medium text-foreground">
+                {selectedWorkflow.name}
+              </h1>
+              <span className="px-2 py-0.5 text-[10px] rounded bg-secondary border border-border">
                 {selectedWorkflow.method}
               </span>
               <span className="text-xs text-muted-foreground">
@@ -937,7 +939,7 @@ export function ApiBuilderContent({
               />
               <Button
                 variant="outline"
-                className="h-7 shadow-none gap-2 border-neutral-300 bg-white hover:bg-neutral-100 text-neutral-600 hover:text-black text-xs px-2.5 tour-test"
+                className="h-7 shadow-none bg-secondary border border-border hover:bg-muted text-xs cursor-pointer"
                 onClick={() => dispatch(setShowTestPanel(true))}
               >
                 <Beaker className="size-3.5" />
@@ -945,7 +947,7 @@ export function ApiBuilderContent({
               </Button>
               <Button
                 variant="outline"
-                className="h-7 shadow-none gap-2 border-neutral-300 bg-white hover:bg-neutral-100 text-neutral-600 hover:text-black text-xs px-2.5"
+                className="h-7 shadow-none bg-secondary border border-border hover:bg-muted text-xs cursor-pointer"
                 onClick={() => setShowMinimap(!showMinimap)}
               >
                 {showMinimap ? (
@@ -957,7 +959,8 @@ export function ApiBuilderContent({
               </Button>
               <Button
                 size="sm"
-                className="h-7 shadow-none text-xs px-3 tour-save"
+                variant="default"
+                className="h-7 shadow-none text-xs px-3 tour-save cursor-pointer"
                 onClick={saveWorkflow}
                 disabled={isSaving || !hasUnsavedChanges}
               >
@@ -986,7 +989,7 @@ export function ApiBuilderContent({
           <div className="flex-1 flex overflow-hidden min-h-0">
             <div
               ref={reactFlowWrapper}
-              className="flex-1 relative bg-neutral-50 min-h-0"
+              className="flex-1 relative bg-background min-h-0"
             >
               <ReactFlow
                 nodes={reactFlowNodes}
@@ -1001,18 +1004,18 @@ export function ApiBuilderContent({
                 fitView
                 attributionPosition="bottom-right"
               >
-                <Controls className="border border-neutral-300" />
+                <Controls className="border border-neutral-300 text-black dark:text-white bg-white  dark:bg-neutral-900" />
                 {showMinimap && (
-                  <MiniMap className="border border-neutral-300" />
+                  <MiniMap className="border border-neutral-300 bg-white/70" />
                 )}
-                <Background gap={12} size={1} />
+                <Background gap={12} size={0.3} />
               </ReactFlow>
             </div>
           </div>
         </div>
 
         {(selectedNode || showTestPanel) && (
-          <div className="w-[350px] border-l border-neutral-300 bg-white flex flex-col shrink-0 overflow-hidden">
+          <div className="w-[350px] border-l border-border bg-background flex flex-col shrink-0 overflow-hidden">
             {selectedNode ? (
               <NodeConfigPanelNew
                 node={selectedNode}

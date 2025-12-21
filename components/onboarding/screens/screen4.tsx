@@ -52,7 +52,7 @@ export default function Screen4() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8">
-      <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-10 text-center">
+      <h2 className="text-lg sm:text-xl md:text-2xl font-medium mb-10 text-center">
         Your API experience level
       </h2>
 
@@ -60,10 +60,10 @@ export default function Screen4() {
         {levels.map((level) => (
           <div
             key={level.value}
-            className={`flex items-center text-sm sm:text-base text-gray-700 border rounded-md pl-4 pr-32 py-3 gap-2 w-full cursor-pointer transition ${
+            className={`flex items-center text-sm sm:text-base text-foreground border rounded-md pl-4 pr-32 py-3 gap-2 w-full cursor-pointer transition ${
               answers.experience_level === level.value
-                ? "border-black bg-gray-100"
-                : "border-gray-400 hover:border-black"
+                ? "border-border bg-muted"
+                : "border-border hover:bg-muted"
             }`}
             onClick={() => {
               dispatch(
@@ -72,7 +72,7 @@ export default function Screen4() {
             }}
           >
             <Checkbox
-              className="w-5 h-5 border-gray-400"
+              className="w-6 h-6 border-border"
               checked={answers.experience_level === level.value}
             />
             <Label>{level.label}</Label>
@@ -86,7 +86,7 @@ export default function Screen4() {
 
       {/* Continue button */}
       <Button
-        className="bg-[#222] hover:bg-white hover:border border-black hover:text-black text-white text-sm sm:text-base font-normal px-4 h-11 rounded-md mt-6"
+        className="text-sm font-normal px-5 h-8 rounded-md mt-4"
         onClick={handleContinue}
         disabled={status === "loading"}
       >
@@ -95,11 +95,11 @@ export default function Screen4() {
 
       {/* Step Indicator */}
       <div className="flex space-x-1 mt-10 sm:mt-14 justify-center">
-        <span className="h-2 w-4 rounded-md bg-gray-400"></span>
-        <span className="h-2 w-4 rounded-md bg-gray-400"></span>
-        <span className="h-2 w-4 rounded-md bg-gray-400"></span>
-        <span className="h-2 w-2 rounded-md bg-black"></span>
-        <span className="h-2 w-4 rounded-md bg-gray-400"></span>
+        <span className="h-2 w-4 rounded-md bg-muted-foreground"></span>
+        <span className="h-2 w-4 rounded-md bg-muted-foreground"></span>
+        <span className="h-2 w-4 rounded-md bg-muted-foreground"></span>
+        <span className="h-2 w-2 rounded-md bg-primary"></span>
+        <span className="h-2 w-4 rounded-md bg-muted-foreground"></span>
       </div>
     </div>
   );

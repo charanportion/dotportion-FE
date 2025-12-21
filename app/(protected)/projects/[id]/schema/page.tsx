@@ -74,17 +74,17 @@ export default function DatabasePage() {
   return (
     <>
       {/* Top Bar */}
-      <div className="flex w-full h-12 min-h-12 items-center justify-between border-b border-neutral-300 px-4">
-        <h2 className="text-sm font-medium text-neutral-700">
+      <div className="flex w-full h-12 min-h-12 items-center justify-between border-b border-border px-4">
+        <h2 className="text-sm font-medium text-muted-foreground">
           Select a database to manage its schema
         </h2>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex items-center justify-center bg-neutral-50 p-8 overflow-auto">
+      <div className="flex-1 flex items-center justify-center bg-background p-8 overflow-auto">
         {error ? (
           <div className="text-center max-w-md">
-            <div className="bg-red-50 rounded-full p-4 w-fit mx-auto mb-4">
+            <div className="bg-card rounded-full p-4 w-fit mx-auto mb-4">
               <Database className="size-8 text-red-500" />
             </div>
             <h3 className="text-lg font-semibold text-foreground mb-2">
@@ -102,8 +102,8 @@ export default function DatabasePage() {
           </div>
         ) : databaseOptions.length === 0 ? (
           <div className="text-center max-w-md">
-            <div className="bg-neutral-100 rounded-full p-6 w-fit mx-auto mb-4">
-              <Database className="size-12 text-neutral-400" />
+            <div className="bg-card rounded-full p-6 w-fit mx-auto mb-4">
+              <Database className="size-12 text-muted-foreground" />
             </div>
             <h3 className="text-lg font-semibold text-foreground mb-2">
               No Database Secrets Found
@@ -120,7 +120,9 @@ export default function DatabasePage() {
         ) : (
           <div className="w-full max-w-4xl">
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold mb-2">Schema Management</h2>
+              <h2 className="text-2xl font-bold mb-2 text-foreground">
+                Schema Management
+              </h2>
               <p className="text-muted-foreground">
                 Select a database to visualize and manage your data schema
               </p>
@@ -133,23 +135,20 @@ export default function DatabasePage() {
                   onClick={() => handleDatabaseClick(db)}
                   className={cn(
                     "group p-4 rounded-lg border cursor-pointer transition-all",
-                    "hover:shadow-md hover:border-primary/50",
-                    db.isPlatform
-                      ? "border-primary/30 bg-primary/5"
-                      : "border-neutral-200 bg-white"
+                    "hover:shadow-md hover:bg-muted border-border bg-card"
                   )}
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div
                       className={cn(
                         "p-2 rounded-lg",
-                        db.isPlatform ? "bg-primary/10" : "bg-neutral-100"
+                        db.isPlatform ? "bg-secondary" : "bg-secondary"
                       )}
                     >
                       {db.icon}
                     </div>
                     {db.isPlatform && (
-                      <span className="text-[10px] bg-primary text-white px-2 py-0.5 rounded-full font-medium">
+                      <span className="text-[10px] bg-secondary text-foreground px-2 py-0.5 rounded-full font-medium">
                         INTERNAL
                       </span>
                     )}
@@ -170,7 +169,7 @@ export default function DatabasePage() {
       </div>
 
       {/* Bottom Footer - Legend */}
-      <div className="h-9 border-t border-neutral-300 bg-white flex items-center justify-center gap-6 px-4 shrink-0">
+      <div className="h-9 border-t border-border bg-background flex items-center justify-center gap-6 px-4 shrink-0">
         <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
           <Key className="size-3.5 text-amber-500" />
           <span>Primary key</span>

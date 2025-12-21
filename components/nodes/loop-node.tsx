@@ -19,10 +19,8 @@ export function LoopNode({
 
   return (
     <div
-      className={`rounded-md border bg-white w-[200px] overflow-hidden relative ${
-        selected
-          ? "border-violet-500 ring-1 ring-violet-500"
-          : "border-neutral-300"
+      className={`rounded-md border bg-card w-[200px] overflow-hidden relative ${
+        selected ? "border-violet-500 ring-1 ring-violet-500" : "border-border"
       }`}
     >
       {/* Input Handle */}
@@ -35,12 +33,12 @@ export function LoopNode({
       />
 
       {/* Header */}
-      <div className="flex items-center gap-2 px-2.5 py-2 border-b border-neutral-200 bg-violet-50">
+      <div className="flex items-center gap-2 px-2.5 py-2 border-b border-border bg-violet-50 dark:bg-violet-950/10">
         <div className="w-6 h-6 rounded bg-violet-500 flex items-center justify-center">
           <RotateCw className="h-3 w-3 text-white" />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="font-medium text-xs text-neutral-900 truncate">
+          <div className="font-medium text-xs text-foreground truncate">
             {data.label || "Loop"}
           </div>
         </div>
@@ -49,16 +47,18 @@ export function LoopNode({
       {/* Content */}
       <div className="px-2.5 py-2 pb-6 space-y-1.5">
         <div className="flex items-center justify-between">
-          <span className="text-[10px] text-neutral-500">Iterates over:</span>
+          <span className="text-[10px] text-muted-foreground">
+            Iterates over:
+          </span>
         </div>
 
-        <div className="bg-neutral-50 border border-neutral-200 rounded px-1.5 py-1">
-          <code className="text-[10px] text-neutral-600 font-mono block truncate">
+        <div className="bg-secondary border border-border rounded px-1.5 py-1">
+          <code className="text-[10px] text-foreground font-mono block truncate">
             {itemsPreview}
           </code>
         </div>
 
-        <div className="text-[9px] text-neutral-400 font-mono">{id}</div>
+        <div className="text-[9px] text-muted-foreground font-mono">{id}</div>
       </div>
 
       {/* Loop Body Output Handle (Bottom) */}

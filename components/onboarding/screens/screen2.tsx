@@ -47,7 +47,7 @@ export default function Screen2() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8">
-      <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-10 text-center">
+      <h2 className="text-lg sm:text-xl md:text-2xl font-medium text-foreground mb-10 text-center">
         What is your occupation?
       </h2>
 
@@ -55,17 +55,17 @@ export default function Screen2() {
         {occupation.map((role) => (
           <div
             key={role}
-            className={`flex items-center text-sm sm:text-base text-gray-700 border rounded-md pl-4 pr-32 py-3 gap-2 w-full cursor-pointer transition ${
+            className={`flex items-center text-sm sm:text-base text-foreground border rounded-md pl-4 pr-32 py-3 gap-2 w-full cursor-pointer transition ${
               answers.occupation === role
-                ? "border-black bg-gray-100"
-                : "border-gray-400 hover:border-black"
+                ? "border-border bg-muted"
+                : "border-border hover:bg-muted"
             }`}
             onClick={() =>
               dispatch(setAnswer({ key: "occupation", value: role }))
             }
           >
             <Checkbox
-              className="w-6 h-6 border-gray-400"
+              className="w-6 h-6 border-border"
               checked={answers.occupation === role}
             />
             <Label>{role}</Label>
@@ -79,7 +79,7 @@ export default function Screen2() {
 
       {/* Continue button */}
       <Button
-        className="bg-[#222] hover:bg-white hover:border border-black hover:text-black text-white text-sm sm:text-base font-normal px-4 h-11 rounded-md mt-4"
+        className="text-sm font-normal px-5 h-8 rounded-md mt-4"
         onClick={handleContinue}
         disabled={status === "loading"}
       >
@@ -88,11 +88,11 @@ export default function Screen2() {
 
       {/* Step Indicator */}
       <div className="flex space-x-1 mt-10 sm:mt-14 justify-center">
-        <span className="h-2 w-4 rounded-md bg-gray-400"></span>
-        <span className="h-2 w-2 rounded-md bg-black"></span>
-        <span className="h-2 w-4 rounded-md bg-gray-400"></span>
-        <span className="h-2 w-4 rounded-md bg-gray-400"></span>
-        <span className="h-2 w-4 rounded-md bg-gray-400"></span>
+        <span className="h-2 w-4 rounded-md bg-muted-foreground"></span>
+        <span className="h-2 w-2 rounded-md bg-primary"></span>
+        <span className="h-2 w-4 rounded-md bg-muted-foreground"></span>
+        <span className="h-2 w-4 rounded-md bg-muted-foreground"></span>
+        <span className="h-2 w-4 rounded-md bg-muted-foreground"></span>
       </div>
     </div>
   );

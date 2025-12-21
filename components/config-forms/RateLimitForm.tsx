@@ -113,8 +113,8 @@ export function RateLimitForm({ project }: { project: Project }) {
                     <Badge
                       className={
                         field.value
-                          ? "bg-green-100 text-green-500 border border-green-500"
-                          : "bg-red-100 text-red-500 border border-red-500"
+                          ? "bg-green-100 dark:bg-green-950 text-green-500 border border-green-500"
+                          : "bg-red-100 dark:bg-red-950 text-red-500 border border-red-500"
                       }
                     >
                       {field.value ? "Enabled" : "Disabled"}
@@ -142,7 +142,7 @@ export function RateLimitForm({ project }: { project: Project }) {
                   </FormLabel>
                   <FormControl>
                     <Input
-                      className="h-8 px-3 py-2 bg-neutral-100 border border-neutral-300 rounded-lg font-inter text-neutral-800 text-xs"
+                      className="h-8 px-3 py-2 bg-input border border-border rounded-lg font-inter  text-xs"
                       {...field}
                       type="text"
                     />
@@ -161,7 +161,7 @@ export function RateLimitForm({ project }: { project: Project }) {
                   </FormLabel>
                   <FormControl>
                     <Input
-                      className="h-8 px-3 py-2 bg-neutral-100 border border-neutral-300 rounded-lg font-inter text-neutral-800 text-xs"
+                      className="h-8 px-3 py-2 bg-input border border-border rounded-lg font-inter  text-xs"
                       {...field}
                       type="number"
                       min={1}
@@ -179,7 +179,7 @@ export function RateLimitForm({ project }: { project: Project }) {
                   <FormLabel className="text-sm font-inter">Message</FormLabel>
                   <FormControl>
                     <Input
-                      className="h-8 px-3 py-2 bg-neutral-100 border border-neutral-300 rounded-lg font-inter text-neutral-800 text-xs"
+                      className="h-8 px-3 py-2 bg-input border border-border rounded-lg font-inter  text-xs"
                       {...field}
                       type="text"
                     />
@@ -226,20 +226,20 @@ export function RateLimitForm({ project }: { project: Project }) {
             />
           </div>
         </div>
-        <div className="w-full flex gap-2 items-start justify-end p-5 border-t border-neutral-300">
+        <div className="w-full flex gap-2 items-start justify-end p-5 border-t border-border">
           <Button
             type="button"
             variant="outline"
             onClick={handleCancel}
             disabled={!hasChanges}
-            className="justify-start shadow-none gap-2 text-left font-normal border-2 border-neutral-300 bg-white hover:bg-neutral-100 text-neutral-600 hover:text-neutral-800 cursor-pointer text-xs h-7 px-2.5 py-1"
+            className="justify-start shadow-none gap-2 text-left font-normal border-2 border-neutral-300 bg-white hover:bg-neutral-100 text-muted-foreground cursor-pointer text-xs h-7 px-2.5 py-1"
           >
             Cancel
           </Button>
           <Button
             type="submit"
             disabled={form.formState.isSubmitting || !hasChanges}
-            className="justify-start gap-2 text-left font-normal border-2 border-neutral-950 bg-neutral-800 hover:bg-neutral-700 text-white hover:text-white cursor-pointer text-xs h-7 px-2.5 py-1"
+            className="justify-start gap-2 text-left font-normal  cursor-pointer text-xs h-7 px-2.5 py-1"
           >
             {form.formState.isSubmitting ? (
               <LoaderCircle className="size-3.5 animate-spin" />

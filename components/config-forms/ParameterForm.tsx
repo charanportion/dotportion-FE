@@ -32,24 +32,24 @@ export function ParameterForm() {
         name="sources"
         render={({ field }) => (
           <FormItem className="space-y-2">
-            <FormLabel className="text-xs font-medium text-neutral-700">
+            <FormLabel className="text-xs font-medium text-foreground">
               Parameter Sources
             </FormLabel>
             <div className="space-y-3">
               {sources.map((source: Source, sourceIndex: number) => (
                 <div
                   key={sourceIndex}
-                  className="p-3 border border-neutral-300 rounded-md space-y-3 bg-neutral-50"
+                  className="p-3 border border-card rounded-md space-y-3 bg-card "
                 >
                   <div className="flex justify-between items-center">
-                    <h4 className="text-xs font-medium text-neutral-700">
+                    <h4 className="text-xs font-medium text-foreground">
                       Source {sourceIndex + 1}
                     </h4>
                     <Button
                       type="button"
                       variant="ghost"
                       size="sm"
-                      className="h-6 w-6 p-0 text-neutral-500 hover:text-red-500"
+                      className="h-6 w-6 p-0 text-muted-foreground hover:text-red-500"
                       onClick={() => {
                         const newSources = [...sources];
                         newSources.splice(sourceIndex, 1);
@@ -65,7 +65,7 @@ export function ParameterForm() {
                     name={`sources.${sourceIndex}.from`}
                     render={({ field }) => (
                       <FormItem className="space-y-1">
-                        <FormLabel className="text-[10px] font-medium text-neutral-600">
+                        <FormLabel className="text-[10px] font-medium text-foreground">
                           Source Type
                         </FormLabel>
                         <Select
@@ -73,7 +73,7 @@ export function ParameterForm() {
                           defaultValue={field.value}
                         >
                           <FormControl>
-                            <SelectTrigger className="h-7 text-xs border-neutral-300">
+                            <SelectTrigger className="h-7 text-xs border border-border bg-input">
                               <SelectValue placeholder="Select source type" />
                             </SelectTrigger>
                           </FormControl>
@@ -92,7 +92,7 @@ export function ParameterForm() {
                             </SelectItem>
                           </SelectContent>
                         </Select>
-                        <FormDescription className="text-[10px] text-neutral-500">
+                        <FormDescription className="text-[10px] text-muted-foreground">
                           Where to extract parameters from
                         </FormDescription>
                       </FormItem>
@@ -100,7 +100,7 @@ export function ParameterForm() {
                   />
 
                   <div className="space-y-2">
-                    <FormLabel className="text-[10px] font-medium text-neutral-600">
+                    <FormLabel className="text-[10px] font-medium text-foreground">
                       Parameters
                     </FormLabel>
                     <div className="space-y-1.5">
@@ -111,7 +111,7 @@ export function ParameterForm() {
                         ) => (
                           <div
                             key={paramIndex}
-                            className="flex items-center gap-2 p-2 border border-neutral-200 rounded bg-white"
+                            className="flex items-center gap-2 p-2 rounded"
                           >
                             <div className="flex-1">
                               <Input
@@ -128,7 +128,7 @@ export function ParameterForm() {
                                   field.onChange(newSources);
                                 }}
                                 placeholder="Parameter name"
-                                className="h-7 text-xs font-mono border-neutral-300"
+                                className="h-7 text-xs font-mono border border-border bg-input"
                               />
                             </div>
 
@@ -150,7 +150,7 @@ export function ParameterForm() {
                               />
                               <label
                                 htmlFor={`required-${sourceIndex}-${paramIndex}`}
-                                className="text-[10px] text-neutral-500 cursor-pointer"
+                                className="text-[10px] text-muted-foreground cursor-pointer"
                               >
                                 Required
                               </label>
@@ -160,7 +160,7 @@ export function ParameterForm() {
                               type="button"
                               variant="ghost"
                               size="sm"
-                              className="h-6 w-6 p-0 text-neutral-500 hover:text-red-500"
+                              className="h-6 w-6 p-0 text-muted-foreground hover:text-red-500"
                               onClick={() => {
                                 const newSources = [...sources];
                                 const newParameters = { ...source.parameters };
@@ -179,9 +179,9 @@ export function ParameterForm() {
 
                     <Button
                       type="button"
-                      variant="outline"
+                      variant="secondary"
                       size="sm"
-                      className="h-7 text-xs border-neutral-300 bg-transparent"
+                      className="h-7 text-xs border-border border"
                       onClick={() => {
                         const newSources = [...sources];
                         if (!newSources[sourceIndex].parameters) {

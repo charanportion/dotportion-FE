@@ -15,21 +15,19 @@ export default function MongoDbNode({
 }) {
   const operationColor =
     data.operation === "findOne" || data.operation === "findMany"
-      ? "bg-blue-100 text-blue-700"
+      ? "bg-blue-100 dark:bg-blue-950 text-blue-700"
       : data.operation === "insertOne" || data.operation === "insertMany"
-      ? "bg-green-100 text-green-700"
+      ? "bg-green-100 dark:bg-green-950  text-green-700"
       : data.operation === "updateOne" || data.operation === "updateMany"
-      ? "bg-amber-100 text-amber-700"
+      ? "bg-amber-100 dark:bg-amber-950  text-amber-700"
       : data.operation === "deleteOne" || data.operation === "deleteMany"
-      ? "bg-red-100 text-red-700"
-      : "bg-neutral-100 text-neutral-700";
+      ? "bg-red-100 dark:bg-red-950 text-red-700"
+      : "bg-neutral-100 dark:bg-neutral-950  text-neutral-700";
 
   return (
     <div
-      className={`rounded-md border bg-white w-[200px] overflow-hidden ${
-        selected
-          ? "border-green-600 ring-1 ring-green-600"
-          : "border-neutral-300"
+      className={`rounded-md border bg-card w-[200px] overflow-hidden ${
+        selected ? "border-green-600 ring-1 ring-green-600" : "border-border"
       }`}
     >
       {/* Input Handle */}
@@ -42,12 +40,12 @@ export default function MongoDbNode({
       />
 
       {/* Header */}
-      <div className="flex items-center gap-2 px-2.5 py-2 border-b border-neutral-200 bg-green-50">
+      <div className="flex items-center gap-2 px-2.5 py-2 border-b border-border bg-green-50 dark:bg-green-950/10">
         <div className="w-6 h-6 rounded bg-green-600 flex items-center justify-center">
           <Leaf className="h-3 w-3 text-white" />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="font-medium text-xs text-neutral-900 truncate">
+          <div className="font-medium text-xs text-foreground truncate">
             {data.label || "MongoDB"}
           </div>
         </div>
@@ -56,14 +54,14 @@ export default function MongoDbNode({
       {/* Content */}
       <div className="px-2.5 py-2 space-y-1.5">
         <div className="flex items-center justify-between">
-          <span className="text-[10px] text-neutral-500">Collection:</span>
-          <span className="text-[10px] font-medium text-neutral-700 truncate max-w-[80px]">
+          <span className="text-[10px] text-foreground">Collection:</span>
+          <span className="text-[10px] font-medium text-muted-foreground truncate max-w-[80px]">
             {data.collection || "—"}
           </span>
         </div>
 
         <div className="flex items-center justify-between">
-          <span className="text-[10px] text-neutral-500">Operation:</span>
+          <span className="text-[10px] text-foreground">Operation:</span>
           <span
             className={`px-1.5 py-0.5 text-[10px] font-medium rounded ${operationColor}`}
           >
@@ -71,7 +69,7 @@ export default function MongoDbNode({
           </span>
         </div>
 
-        <div className="text-[9px] text-neutral-400 font-mono">{id}</div>
+        <div className="text-[9px] text-muted-foreground font-mono">{id}</div>
       </div>
 
       {/* Output Handle */}

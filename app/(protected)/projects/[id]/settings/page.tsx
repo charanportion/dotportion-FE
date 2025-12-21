@@ -141,12 +141,12 @@ export default function SettingsPage({ params }: SettingsPageProps) {
         <h1 className="text-xl font-inter font-medium tracking-tight text-foreground">
           Project Settings
         </h1>
-        <p className="text-xs font-inter text-gray-600 mt-1">
+        <p className="text-xs font-inter text-muted-foreground mt-1">
           Manage your project configuration
         </p>
       </div>
 
-      <Card className="rounded-lg shadow-xs p-0 border border-neutral-300">
+      <Card className="rounded-lg shadow-xs p-0 border border-border">
         <CardContent className=" p-0">
           <form
             onSubmit={handleSubmit}
@@ -168,7 +168,7 @@ export default function SettingsPage({ params }: SettingsPageProps) {
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Enter project name"
                     required
-                    className="h-8 px-3 py-2 bg-neutral-100 border border-neutral-300 rounded-lg font-inter text-neutral-800 text-xs"
+                    className="h-8 px-3 py-2 bg-input border border-border rounded-lg font-inter text-xs"
                   />
                 </div>
                 <div className="grid gap-2">
@@ -179,7 +179,7 @@ export default function SettingsPage({ params }: SettingsPageProps) {
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Enter project description"
                     rows={3}
-                    className="px-3 py-2 bg-neutral-100 border border-neutral-300 rounded-lg font-inter text-neutral-800 text-xs"
+                    className="px-3 py-2 bg-input border border-border rounded-lg font-inter  text-xs"
                   />
                 </div>
                 <div className="grid gap-2">
@@ -189,12 +189,12 @@ export default function SettingsPage({ params }: SettingsPageProps) {
                       value={currentProject._id}
                       placeholder="Project id"
                       disabled
-                      className="h-8 px-3 py-2 bg-neutral-100 border border-neutral-300 rounded-lg font-inter text-neutral-800 text-xs cursor-not-allowed"
+                      className="h-8 px-3 py-2 bg-input border border-border rounded-lg font-inter  text-xs cursor-not-allowed"
                     />
                     <Button
                       type="button"
                       onClick={handleCopyProjectId}
-                      className="absolute right-1 top-0.5 justify-start shadow-none gap-2 text-left font-normal border-2 border-neutral-300 bg-white hover:bg-neutral-100 text-neutral-600 hover:text-neutral-800 cursor-pointer text-xs h-7 px-2.5 py-1"
+                      className="absolute right-1 top-0.5 justify-start shadow-none gap-2 text-left font-normal  cursor-pointer text-xs h-7 px-2.5 py-1"
                     >
                       <Copy className="size-3.5" />
                       Copy
@@ -204,18 +204,18 @@ export default function SettingsPage({ params }: SettingsPageProps) {
               </div>
             </div>
 
-            <div className="flex gap-2 w-full justify-end border-t border-neutral-300 py-4 px-8">
+            <div className="flex gap-2 w-full justify-end border-t border-border py-4 px-8">
               <Button
                 type="button"
                 variant="outline"
                 onClick={handleCancel}
                 disabled={!hasChanges}
-                className="justify-start shadow-none gap-2 text-left font-normal border-2 border-neutral-300 bg-white hover:bg-neutral-100 text-neutral-600 hover:text-neutral-800 cursor-pointer text-xs h-7 px-2.5 py-1"
+                className="justify-start shadow-none gap-2 text-left font-normal border-2 border-neutral-300 bg-white hover:bg-neutral-100 text-muted-foreground  cursor-pointer text-xs h-7 px-2.5 py-1"
               >
                 Cancel
               </Button>
               <Button
-                className="justify-start gap-2 text-left font-normal border-2 border-neutral-950 bg-neutral-800 hover:bg-neutral-700 text-white hover:text-white cursor-pointer text-xs h-7 px-2.5 py-1"
+                className="justify-start gap-2 text-left font-normal  cursor-pointer text-xs h-7 px-2.5 py-1"
                 type="submit"
                 disabled={projectsLoading || !hasChanges}
               >
@@ -235,12 +235,12 @@ export default function SettingsPage({ params }: SettingsPageProps) {
           <h1 className="text-xl font-inter font-medium tracking-tight text-foreground">
             CORS
           </h1>
-          <p className="text-xs font-inter text-gray-600 mt-1">
+          <p className="text-xs font-inter text-muted-foreground mt-1">
             Manage your project CORS configuration
           </p>
         </div>
 
-        <Card className="rounded-lg shadow-xs p-0 border bg-white border-neutral-300">
+        <Card className="rounded-lg shadow-xs p-0 border bg-card border-border">
           <CardContent className="p-0 flex items-start gap-4">
             <CorsForm project={currentProject} />
           </CardContent>
@@ -252,12 +252,12 @@ export default function SettingsPage({ params }: SettingsPageProps) {
           <h1 className="text-xl font-inter font-medium tracking-tight text-foreground">
             Rate Limiter
           </h1>
-          <p className="text-xs font-inter text-gray-600 mt-1">
+          <p className="text-xs font-inter text-muted-foreground mt-1">
             Manage your project Rate Limiter configuration
           </p>
         </div>
 
-        <Card className="rounded-lg shadow-xs p-0 border bg-white border-neutral-300">
+        <Card className="rounded-lg shadow-xs p-0 border bg-card border-border">
           <CardContent className="p-0 flex items-start gap-4">
             <RateLimitForm project={currentProject} />
           </CardContent>
@@ -269,23 +269,26 @@ export default function SettingsPage({ params }: SettingsPageProps) {
           Delete Project
         </h1>
 
-        <Card className="rounded-lg shadow-xs p-0 border bg-red-50 border-red-300">
+        <Card className="rounded-lg shadow-xs p-0 border bg-card border-border">
           <CardContent className="p-3 flex items-start gap-4">
-            <div className="bg-red-700 rounded-lg size-7 flex items-center justify-center">
+            <div className="bg-destructive rounded-lg size-7 flex items-center justify-center">
               <TriangleAlert className="text-white size-4" />
             </div>
             <div className="space-y-2">
-              <p className="font-inter text-sm text-neutral-900 font-medium">
+              <p className="font-inter text-sm text-foreground font-medium">
                 Deleting this project will also remove your platform database
               </p>
-              <p className="font-inter text-xs text-neutral-700 tracking-wide">
+              <p className="font-inter text-xs text-muted-foreground tracking-wide">
                 Make sure you have made a backup if you want to keep your data
               </p>
               <DeleteProjectDialog
                 project={currentProject}
                 isDeleting={projectsLoading}
               >
-                <Button className="mt-2 justify-start gap-2 text-left font-normal border-2 border-red-300 bg-red-100 hover:bg-red-200 text-neutral-900 hover:text-black cursor-pointer text-xs h-7 px-2.5 py-1 shadow-none">
+                <Button
+                  variant="destructive"
+                  className="mt-2 justify-start gap-2 text-left font-normal  cursor-pointer text-xs h-7 px-2.5 py-1 shadow-none"
+                >
                   Delete Project
                 </Button>
               </DeleteProjectDialog>

@@ -66,7 +66,6 @@ export interface ForgotPasswordResponse {
 
 export interface ResetPasswordRequest {
   email: string;
-  otp: string;
   new_password: string;
 }
 

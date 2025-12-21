@@ -109,7 +109,7 @@ export default function FeedbackSheet() {
     <div className="mx-auto my-16 max-w-2xl w-full px-4 lg:px-6">
       <div className="flex flex-col gap-y-8">
         {/* Card */}
-        <div className="bg-card min-w-full w-full shadow-xs rounded-lg py-8 space-y-12 border border-neutral-100">
+        <div className="bg-card min-w-full w-full shadow-xs rounded-lg py-8 space-y-12 border border-border">
           <div className="flex flex-col gap-y-6">
             {/* Title */}
             <h2 className="text-xl font-semibold px-6">How can we help?</h2>
@@ -336,7 +336,7 @@ export default function FeedbackSheet() {
         </div>
 
         {/* HELP SECTION */}
-        <div className="block bg-card w-full rounded-lg border border-neutral-100 shadow-xs py-3">
+        <div className="block bg-card w-full rounded-lg border border-border shadow-xs py-3">
           <div className="flex flex-col px-4">
             <h5 className="text-foreground">Having trouble submitting?</h5>
 

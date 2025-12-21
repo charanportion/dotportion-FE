@@ -67,26 +67,26 @@ export default function SignUpPage() {
 
   return (
     <>
-      <div className="flex-1 flex flex-col justify-center w-[330px] sm:w-[384px]">
+      <div className="flex-1 flex flex-col justify-center w-[330px] sm:w-[384px] ">
         <div className="mb-10">
           <h1 className="mt-8 mb-2 lg:text-3xl">Get started</h1>
-          <h2 className="text-sm text-foreground-light">
+          <h2 className="text-sm text-foreground-light dark:text-neutral-400">
             Create a new account
           </h2>
         </div>
         <div className="flex flex-col gap-5">
           <Button
-            variant="ghost"
+            variant="outline"
             onClick={handleGithubLogin}
-            className="truncate px-4 py-2 h-11 flex items-center border border-neutral-300 shadow-none rounded-lg w-full"
+            className="truncate px-4 py-2 h-11 flex items-center border border-border shadow-none rounded-lg w-full"
           >
             <FaGithub className="size-5 mr-2" />
             Continue with Github
           </Button>
           <Button
-            variant="ghost"
+            variant="outline"
             onClick={handleGoogleLogin}
-            className="truncate px-4 py-2 h-11 flex items-center border border-neutral-300 shadow-none rounded-lg w-full"
+            className="truncate px-4 py-2 h-11 flex items-center border border-border shadow-none rounded-lg w-full"
           >
             <FaGoogle className="size-5 mr-2" />
             Continue with Google
@@ -116,7 +116,7 @@ export default function SignUpPage() {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        className="flex w-full shadow-none bg-neutral-100 rounded-md border border-neutral-300 text-sm leading-4 px-3 py-2 h-[34px]"
+                        className="flex w-full shadow-none bg-input rounded-md border border-border text-sm leading-4 px-3 py-2 h-[34px]"
                         placeholder="Sri Charan"
                         {...field}
                       />
@@ -135,7 +135,7 @@ export default function SignUpPage() {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        className="flex w-full shadow-none bg-neutral-100 rounded-md border border-neutral-300 text-sm leading-4 px-3 py-2 h-[34px]"
+                        className="flex w-full shadow-none bg-input rounded-md border border-border text-sm leading-4 px-3 py-2 h-[34px]"
                         placeholder="charan"
                         {...field}
                       />
@@ -155,7 +155,7 @@ export default function SignUpPage() {
                     <FormControl>
                       <Input
                         type="email"
-                        className="flex w-full shadow-none bg-neutral-100 rounded-md border border-neutral-300 text-sm leading-4 px-3 py-2 h-[34px]"
+                        className="flex w-full shadow-none bg-input rounded-md border border-border text-sm leading-4 px-3 py-2 h-[34px]"
                         placeholder="you@example.com"
                         {...field}
                       />
@@ -175,7 +175,7 @@ export default function SignUpPage() {
                     <FormControl>
                       <div className="relative">
                         <Input
-                          className="flex w-full shadow-none bg-neutral-100 rounded-md border border-neutral-300 text-sm leading-4 px-3 py-2 h-[34px] pr-10"
+                          className="flex w-full shadow-none bg-input rounded-md border border-border text-sm leading-4 px-3 py-2 h-[34px]"
                           type={showPassword ? "text" : "password"}
                           placeholder="Enter your password"
                           {...field}
@@ -184,7 +184,7 @@ export default function SignUpPage() {
                           type="button"
                           variant="ghost"
                           size="sm"
-                          className="absolute text-neutral-500 right-1 top-1/2 -translate-y-1/2 h-6 w-6 hover:bg-neutral-100 hover:border-neutral-400 bg-white border border-neutral-300"
+                          className="absolute text-muted-foreground right-1 top-1 h-6 w-6 bg-card hover:bg-muted border border-border"
                           onClick={() => setShowPassword(!showPassword)}
                         >
                           {showPassword ? (
@@ -206,7 +206,7 @@ export default function SignUpPage() {
 
               <Button
                 type="submit"
-                className="w-full flex items-center justify-center text-base px-4 py-2 h-[42px] bg-neutral-800 hover:bg-neutral-700 text-white"
+                className="relative cursor-pointer space-x-2 text-center ease-out duration-200 rounded-md outline-none transition-all outline-0 focus-visible:outline-4 focus-visible:outline-offset-1  w-full flex items-center justify-center text-base px-4 py-2 h-[42px]"
                 disabled={isLoading}
               >
                 {isLoading ? "Signing up..." : "Sign Up"}
@@ -216,9 +216,9 @@ export default function SignUpPage() {
         </div>
 
         <div className="self-center my-8 text-sm">
-          <span className="text-foreground-light">Have an account? </span>
+          <span className="text-muted-foreground">Have an account? </span>
           <Link
-            className="underline transition text-foreground hover:text-foreground-light"
+            className="underline transition text-foreground hover:text-muted-foreground"
             href="/auth/signin"
           >
             Sign In Now
@@ -227,14 +227,21 @@ export default function SignUpPage() {
       </div>
 
       <div className="sm:text-center">
-        <p className="text-xs text-foreground-lighter sm:mx-auto sm:max-w-sm">
+        <p className="text-xs text-muted-foreground sm:mx-auto sm:max-w-sm">
           By continuing, you agree to Dotportion&apos;s{" "}
-          <Link href="/" className="underline hover:text-foreground-light">
-            Terms of Service
-          </Link>{" "}
-          and{" "}
-          <Link href="/" className="underline hover:text-foreground-light">
-            Privacy Policy
+          <Link
+            href={"https://www.dotportion.com/terms"}
+            className="underline text-foreground hover:text-muted-foreground"
+          >
+            Terms of Service{" "}
+          </Link>
+          and
+          <Link
+            href={"https://www.dotportion.com/privacy"}
+            className="underline text-foreground hover:text-muted-foreground"
+          >
+            {" "}
+            Privacy Policy{" "}
           </Link>
           , and to receive periodic emails with updates.
         </p>

@@ -56,6 +56,7 @@ import Link from "next/link";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import { userApi } from "@/lib/api/user";
+import { useTheme } from "next-themes";
 
 interface LogsPageProps {
   params: Promise<{
@@ -70,7 +71,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     const error = data.error;
 
     return (
-      <div className="bg-white text-xs border border-neutral-300 rounded-lg shadow-none p-2 min-w-[150px]">
+      <div className="bg-background text-xs border border-border rounded-lg shadow-none p-2 min-w-[150px]">
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1.5">
@@ -118,6 +119,9 @@ export default function Page({ params }: LogsPageProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [workflowSearchTerm, setWorkflowSearchTerm] = useState("");
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const { resolvedTheme } = useTheme();
+  const chartColor =
+    resolvedTheme === "dark" ? "hsl(0, 0%, 100%)" : "hsl(0, 0%, 0%)";
   const [activeTab, setActiveTab] = useState<"details" | "raw">("details");
   const [isCopied, setIsCopied] = useState(false);
   const [hasAttemptedInitialFetch, setHasAttemptedInitialFetch] =
@@ -346,16 +350,18 @@ export default function Page({ params }: LogsPageProps) {
       `}</style>
 
       {/* Left Panel: Workflows List - Full height */}
-      <div className="w-64 flex flex-col h-full border-r border-border bg-white shrink-0">
+      <div className="w-64 flex flex-col h-full border-r border-border bg-background shrink-0">
         <div className="border-b border-border flex min-h-12 items-center px-4">
-          <h4 className="text-sm font-medium">Logs & Analytics</h4>
+          <h4 className="text-sm font-medium text-foreground">
+            Logs & Analytics
+          </h4>
         </div>
         <div className="flex-grow overflow-y-auto flex flex-col">
-          <div className="flex gap-x-2 items-center sticky top-0 bg-neutral-50 backdrop-blur z-[1] px-4 py-3 border-b border-border">
+          <div className="flex gap-x-2 items-center sticky top-0 bg-background backdrop-blur z-[1] px-4 py-3 border-b border-border">
             <div className="relative h-7 flex-1">
               <Search className="absolute top-1.5 left-2 size-3.5 text-neutral-600" />
               <Input
-                className="h-7 w-full pl-7 text-xs bg-neutral-100 border border-neutral-300 shadow-none text-neutral-600"
+                className="h-7 w-full pl-7 text-xs bg-input border border-border shadow-none"
                 placeholder="Search Workflows"
                 value={workflowSearchTerm}
                 onChange={(e) => setWorkflowSearchTerm(e.target.value)}
@@ -433,8 +439,8 @@ export default function Page({ params }: LogsPageProps) {
                   className={cn(
                     "h-7 px-4 py-2 cursor-pointer text-xs truncate rounded-md hover:bg-neutral-100 flex items-center gap-2 transition-colors",
                     selectedWorkflow?._id === workflow._id
-                      ? "bg-neutral-100 text-black font-medium"
-                      : "text-neutral-700"
+                      ? "bg-muted text-foreground font-medium"
+                      : "text-muted-foreground"
                   )}
                 >
                   <Workflow className="size-3.5 shrink-0" />
@@ -451,17 +457,17 @@ export default function Page({ params }: LogsPageProps) {
         {/* Middle Panel: Logs View */}
         <div
           className={cn(
-            "h-full flex flex-col bg-white transition-all",
+            "h-full flex flex-col bg-background transition-all",
             selectedLog ? "flex-1" : "flex-1"
           )}
         >
           {/* Top Bar - Added 'relative' for loader positioning */}
-          <div className="relative flex w-full h-12 min-h-12 items-center justify-between border-b border-neutral-300 p-3 gap-4">
+          <div className="relative flex w-full h-12 min-h-12 items-center justify-between border-b border-border p-3 gap-4">
             <div className="flex flex-row items-center gap-x-2 flex-1 mr-2">
               <div className="relative h-7 ">
                 <Search className="absolute top-1.5 left-2 size-3.5 text-neutral-600" />
                 <Input
-                  className="h-7 w-full pl-7 text-xs shadow-none bg-white border-neutral-300 focus:border-input focus:bg-white transition-all"
+                  className="h-7 w-full pl-7 text-xs shadow-none bg-input border-bordertransition-all"
                   placeholder="Search events"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -469,7 +475,8 @@ export default function Page({ params }: LogsPageProps) {
               </div>
               <Button
                 size={"icon"}
-                className="size-7 shadow-none bg-white border border-neutral-300 hover:bg-neutral-100 cursor-pointer text-neutral-600 hover:text-black"
+                variant="secondary"
+                className="size-7 shadow-none bg-secondary border border-border cursor-pointer"
                 onClick={handleRefresh}
                 disabled={isLoading}
               >
@@ -480,8 +487,8 @@ export default function Page({ params }: LogsPageProps) {
               </Button>
 
               <Button
-                variant={showChart ? "secondary" : "outline"}
-                className="chart-button justify-start shadow-none gap-2 text-left font-normal border border-neutral-300 bg-white hover:bg-neutral-100 text-neutral-600 hover:text-black cursor-pointer text-xs h-7 px-2.5 py-1"
+                variant="secondary"
+                className="chart-button justify-start shadow-none gap-2 text-left font-normal bg-secondary border border-border cursor-pointer text-xs h-7 px-2.5 py-1"
                 onClick={() => setShowChart(!showChart)}
               >
                 {showChart ? (
@@ -501,7 +508,7 @@ export default function Page({ params }: LogsPageProps) {
                   "live-button justify-start shadow-none gap-2 text-left font-normal border cursor-pointer text-xs h-7 px-2.5 py-1",
                   isPolling
                     ? "border-red-600 bg-red-50 text-red-600 hover:bg-red-100"
-                    : "border-neutral-300 bg-white hover:bg-neutral-100 text-neutral-600 hover:text-black"
+                    : "border-border "
                 )}
               >
                 <Radio
@@ -552,7 +559,7 @@ export default function Page({ params }: LogsPageProps) {
           <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
             {/* Chart Section */}
             {showChart && (
-              <div className="h-40 shrink-0 w-full border-b border-neutral-300 relative bg-white">
+              <div className="h-40 shrink-0 w-full border-b border-border relative bg-background">
                 <div className="absolute inset-0 p-5">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart
@@ -570,21 +577,12 @@ export default function Page({ params }: LogsPageProps) {
                       <Tooltip content={<CustomTooltip />} cursor={false} />
                       <Bar
                         dataKey="count"
-                        fill="hsl(var(--primary))"
+                        fill={chartColor}
                         radius={[2, 2, 0, 0]}
                         barSize={8}
                       >
                         {chartData.map((entry, index) => (
-                          <Cell
-                            key={`cell-${index}`}
-                            fill={
-                              activeIndex === null || activeIndex === index
-                                ? entry.error > 0
-                                  ? "hsl(var(--destructive))"
-                                  : "hsl(var(--primary))"
-                                : "#808080" // neutral-700
-                            }
-                          />
+                          <Cell key={`cell-${index}`} />
                         ))}
                       </Bar>
                     </BarChart>
@@ -612,41 +610,41 @@ export default function Page({ params }: LogsPageProps) {
             {/* Logs List */}
 
             <div className="flex-1 flex overflow-hidden">
-              <div className="flex-1 flex flex-col overflow-hidden bg-neutral-50">
+              <div className="flex-1 flex flex-col overflow-hidden bg-background">
                 {logs.length === 0 && !searchTerm && !selectedWorkflow ? (
                   <div className="h-full flex flex-col items-center justify-center text-muted-foreground p-8">
-                    <div className="bg-neutral-100 rounded-full p-6 mb-4">
-                      <Inbox className="size-12 text-neutral-400" />
+                    <div className="bg-background rounded-full p-6 mb-4">
+                      <Inbox className="size-12 text-muted-foreground" />
                     </div>
                     <h3 className="text-base font-semibold text-foreground mb-2">
                       No logs yet
                     </h3>
-                    <p className="text-sm text-center max-w-sm">
+                    <p className="text-sm text-center max-w-sm text-muted-foreground">
                       Select a workflow to view its execution logs.
                     </p>
                   </div>
                 ) : logs.length === 0 && !searchTerm && selectedWorkflow ? (
                   <div className="h-full flex flex-col items-center justify-center text-muted-foreground p-8">
-                    <div className="bg-neutral-100 rounded-full p-6 mb-4">
-                      <Inbox className="size-12 text-neutral-400" />
+                    <div className="bg-background rounded-full p-6 mb-4">
+                      <Inbox className="size-12 text-muted-foreground" />
                     </div>
                     <h3 className="text-base font-semibold text-foreground mb-2">
                       No logs yet
                     </h3>
-                    <p className="text-sm text-center max-w-sm">
+                    <p className="text-sm text-center max-w-sm text-muted-foreground">
                       Logs will appear here when your workflow receives
                       requests.
                     </p>
                   </div>
                 ) : filteredLogs.length === 0 && searchTerm ? (
                   <div className="h-full flex flex-col items-center justify-center text-muted-foreground p-8">
-                    <div className="bg-neutral-100 rounded-full p-6 mb-4">
-                      <Inbox className="size-12 text-neutral-400" />
+                    <div className="bg-background rounded-full p-6 mb-4">
+                      <Inbox className="size-12 text-muted-foreground" />
                     </div>
                     <h3 className="text-base font-semibold text-foreground mb-2">
                       No logs found
                     </h3>
-                    <p className="text-sm text-center max-w-sm">
+                    <p className="text-sm text-center max-w-sm text-muted-foreground">
                       Try adjusting your search criteria.
                     </p>
                   </div>
@@ -659,9 +657,9 @@ export default function Page({ params }: LogsPageProps) {
                             key={log._id}
                             onClick={() => handleLogClick(log)}
                             className={cn(
-                              "flex items-center gap-4 px-4 py-2 border-b border-neutral-300 cursor-pointer hover:bg-white transition-colors whitespace-nowrap",
+                              "flex items-center gap-4 px-4 py-2 border-b border-border cursor-pointer hover:bg-muted transition-colors whitespace-nowrap",
                               selectedLog?._id === log._id
-                                ? "hover:bg-neutral-100 bg-white"
+                                ? "hover:bg-muted bg-muted"
                                 : ""
                             )}
                           >
@@ -677,7 +675,7 @@ export default function Page({ params }: LogsPageProps) {
                                 className={cn(
                                   "size-2 rounded-full",
                                   log.status === "success"
-                                    ? "bg-green-500"
+                                    ? "bg-green-500 "
                                     : "bg-red-500"
                                 )}
                               />
@@ -700,8 +698,8 @@ export default function Page({ params }: LogsPageProps) {
                                 className={cn(
                                   "text-muted-foreground mr-2 shrink-0  text-[10px] border px-2 rounded-sm",
                                   log.status === "success"
-                                    ? "text-green-700 bg-green-50 border-green-500"
-                                    : "text-red-700 bg-red-50 border-red-500"
+                                    ? "text-green-500 bg-green-50 dark:bg-green-950 border-green-500"
+                                    : "text-red-500 bg-red-50 dark:bg-red-950 border-red-500"
                                 )}
                               >
                                 {log.response?.statusCode}
@@ -937,8 +935,8 @@ export default function Page({ params }: LogsPageProps) {
                                 <div
                                   className={`${
                                     selectedLog.status === "success"
-                                      ? "bg-muted/50 border border-neutral-300"
-                                      : "bg-red-50 border border-red-300"
+                                      ? "bg-muted/50 border border-border"
+                                      : "bg-muted/50 border border-border"
                                   } bg-muted/50 rounded-lg p-3 `}
                                 >
                                   <p className="text-xs font-medium text-muted-foreground mb-2">
@@ -1006,10 +1004,10 @@ export default function Page({ params }: LogsPageProps) {
                                               className={cn(
                                                 "px-2 py-0.5 rounded text-[10px] font-medium",
                                                 step.status === "success"
-                                                  ? "bg-green-100 text-green-700"
+                                                  ? "bg-green-100 dark:bg-green-950 text-green-700"
                                                   : step.status === "error"
-                                                  ? "bg-red-100 text-red-700"
-                                                  : "bg-blue-100 text-blue-700"
+                                                  ? "bg-red-100 dark:bg-red-950 text-red-700"
+                                                  : "bg-blue-100 dark:bg-blue-950 text-blue-700"
                                               )}
                                             >
                                               {step.status}
@@ -1124,13 +1122,14 @@ export default function Page({ params }: LogsPageProps) {
             </div>
 
             {/* Bottom Bar */}
-            <div className="h-9 border-t border-neutral-300 bg-white flex items-center justify-between p-2 shrink-0">
+            <div className="h-9 border-t border-border bg-background flex items-center justify-between p-2 shrink-0">
               <div className="flex items-center gap-4">
                 {pagination.hasMore && (
                   <Button
                     onClick={handleLoadOlder}
                     disabled={isLoading}
-                    className="justify-start shadow-none gap-2 text-left font-normal border border-neutral-300 bg-white hover:bg-neutral-100 text-neutral-600 hover:text-black cursor-pointer text-xs h-7 px-2.5 py-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                    variant="secondary"
+                    className="justify-start shadow-none gap-2 text-left font-normal  cursor-pointer text-xs h-7 px-2.5 py-1 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <ChevronLeft className="size-3.5" />
                     Load older
@@ -1140,18 +1139,19 @@ export default function Page({ params }: LogsPageProps) {
                   <Button
                     onClick={handleLoadNewer}
                     disabled={isLoading}
-                    className="justify-start shadow-none gap-2 text-left font-normal border border-neutral-300 bg-white hover:bg-neutral-100 text-neutral-600 hover:text-black cursor-pointer text-xs h-7 px-2.5 py-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                    variant="secondary"
+                    className="justify-start shadow-none gap-2 text-left font-normal  cursor-pointer text-xs h-7 px-2.5 py-1 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <ChevronRight className="size-3.5" />
                     Load newer
                   </Button>
                 )}
-                <span className="text-xs text-neutral-600">
+                <span className="text-xs text-muted-foreground">
                   Showing {filteredLogs.length} results
                   {filters.page > 1 && ` (Page ${filters.page})`}
                 </span>
               </div>
-              <div className="flex items-center gap-2 px-2">
+              <div className="flex items-center gap-2 px-2 text-muted-foreground">
                 <p className="text-xs">30 days retention</p>
                 <Info className="size-3.5" />
               </div>

@@ -42,7 +42,7 @@ export function SuccessFailChart({
   const totalCalls = successCalls + failedCalls;
 
   return (
-    <Card className="flex flex-col h-full w-full shadow-none border border-neutral-300 py-4">
+    <Card className="flex flex-col h-full w-full shadow-none border border-border py-4">
       <CardHeader className="items-center pb-0 px-4">
         <CardTitle className="font-inter text-sm font-medium">
           API Success vs Failed

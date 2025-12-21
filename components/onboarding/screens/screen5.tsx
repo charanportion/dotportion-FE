@@ -40,7 +40,7 @@ export default function Screen5() {
       await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Redirect to dashboard
-      router.push("/dashboard");
+      router.push("/projects");
     } catch (err) {
       if (typeof err === "string") {
         setLocalError(err);
@@ -53,24 +53,24 @@ export default function Screen5() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-2xl text-center">
-        <h2 className="text-lg sm:text-xl font-semibold mb-2">
+        <h2 className="text-lg sm:text-xl font-medium text-foreground mb-2">
           Subscribe for updates
         </h2>
-        <p className="text-xs sm:text-sm text-gray-500 mb-10">
+        <p className="text-xs sm:text-sm text-muted-foreground mb-10">
           DotPortion is constantly evolving, subscribe to learn about changes
         </p>
 
         {/* Subscription Options */}
         <div className="space-y-4 text-left">
-          <div className="flex sm:items-center sm:justify-between gap-y-4 sm:gap-y-0 sm:gap-x-48 pt-8 pb-8 border-t border-b border-gray-300">
+          <div className="flex sm:items-center sm:justify-between gap-y-4 sm:gap-y-0 sm:gap-x-48 pt-8 pb-8 border-t border-b border-border">
             <div className="flex-1 px-4 sm:px-6">
               <Label
                 htmlFor="tutorials-switch"
-                className="text-sm sm:text-base font-medium mb-2"
+                className="text-sm sm:text-base font-medium mb-2 text-foreground"
               >
                 Subscribe to DotPortion tutorials
               </Label>
-              <p className="text-xs text-gray-600">
+              <p className="text-xs text-muted-foreground">
                 Follow how to use our features to build API&apos;s
               </p>
             </div>
@@ -90,15 +90,15 @@ export default function Screen5() {
             </div>
           </div>
 
-          <div className="flex sm:items-center sm:justify-between gap-y-4 sm:gap-y-0 sm:gap-x-48 pb-8 border-b border-gray-300">
+          <div className="flex sm:items-center sm:justify-between gap-y-4 sm:gap-y-0 sm:gap-x-48 pb-8 border-b border-border">
             <div className="flex-1 px-4 sm:px-6">
               <Label
                 htmlFor="newsletter-switch"
-                className="text-sm sm:text-base font-medium mb-2"
+                className="text-sm sm:text-base font-medium mb-2 text-foreground"
               >
                 Subscribe to DotPortion newsletter
               </Label>
-              <p className="text-xs text-gray-600">
+              <p className="text-xs text-muted-foreground">
                 Follow our newsletter to get tech updates
               </p>
             </div>
@@ -125,7 +125,7 @@ export default function Screen5() {
 
         {/* Continue button */}
         <Button
-          className="bg-[#222] hover:bg-white hover:border border-black hover:text-black text-white text-sm sm:text-base font-normal px-5 h-11 rounded-md mt-6"
+          className="text-sm font-normal px-5 h-8 rounded-md mt-4"
           onClick={handleContinue}
           disabled={status === "loading"}
         >
@@ -134,11 +134,11 @@ export default function Screen5() {
 
         {/* Step Indicator */}
         <div className="flex space-x-1 mt-10 sm:mt-14 justify-center">
-          <span className="h-2 w-4 rounded-md bg-gray-400"></span>
-          <span className="h-2 w-4 rounded-md bg-gray-400"></span>
-          <span className="h-2 w-4 rounded-md bg-gray-400"></span>
-          <span className="h-2 w-4 rounded-md bg-gray-400"></span>
-          <span className="h-2 w-2 rounded-full bg-black"></span>
+          <span className="h-2 w-4 rounded-md bg-muted-foreground"></span>
+          <span className="h-2 w-4 rounded-md bg-muted-foreground"></span>
+          <span className="h-2 w-4 rounded-md bg-muted-foreground"></span>
+          <span className="h-2 w-4 rounded-md bg-muted-foreground"></span>
+          <span className="h-2 w-2 rounded-md bg-primary"></span>
         </div>
       </div>
     </div>
