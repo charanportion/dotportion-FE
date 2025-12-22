@@ -93,6 +93,9 @@ interface ApiBuilderContentProps {
   projectId: string;
 }
 
+const getApiBuilderTourKey = (userId: string) =>
+  `tour_done_api_builder_${userId}`;
+
 export function ApiBuilderContent({
   workflowId,
   projectId,
@@ -110,6 +113,7 @@ export function ApiBuilderContent({
   );
   const finalResponse = useAppSelector((state) => state.execution.responseData);
   const user = useAppSelector((state) => state.auth.user);
+  const userId = user?._id;
   const historyState = useAppSelector((state) => state.history);
 
   const { nodes, edges, hasUnsavedChanges, isSaving, isLoading } = useSelector(
@@ -158,12 +162,13 @@ export function ApiBuilderContent({
 
   useEffect(() => {
     async function syncApiBuilderTour() {
+      if (!userId) return;
       try {
         const res = await userApi.getTours();
         const tours = res?.tours || {};
 
         if (tours.workflowsTour === true) {
-          localStorage.setItem("tour_done_api_builder", "true");
+          localStorage.setItem(getApiBuilderTourKey(userId), "true");
         }
       } catch (err) {
         console.warn("Failed to sync API Builder tour:", err);
@@ -173,13 +178,14 @@ export function ApiBuilderContent({
     }
     setToursSynced(false);
     syncApiBuilderTour();
-  }, []);
+  }, [userId]);
 
   // --- Guided Tour for API Builder ---
   useEffect(() => {
-    const TOUR_KEY = "tour_done_api_builder";
     if (typeof window === "undefined") return;
     if (!toursSynced) return;
+    if (!userId) return;
+    const TOUR_KEY = getApiBuilderTourKey(userId);
     if (localStorage.getItem(TOUR_KEY)) return;
 
     const waitFor = (selectors: string[], timeout = 5000) =>
@@ -261,7 +267,7 @@ export function ApiBuilderContent({
 
       setTimeout(() => tour.drive(), 300);
     })();
-  }, [toursSynced]);
+  }, [toursSynced, userId]);
 
   // Handle ReactFlow node changes
   const onNodesChange = useCallback(

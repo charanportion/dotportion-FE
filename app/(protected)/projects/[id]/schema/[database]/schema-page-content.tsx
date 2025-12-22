@@ -78,6 +78,8 @@ const defaultEdgeOptions = {
   style: { strokeWidth: 2, stroke: "#94a3b8" },
 };
 
+const getSchemaTourKey = (userId: string) => `tour_done_schema_page_${userId}`;
+
 export default function SchemaPageContent() {
   const params = useParams();
   const dispatch = useDispatch<AppDispatch>();
@@ -89,6 +91,9 @@ export default function SchemaPageContent() {
   const schemaForAPI = useSelector(selectSchemaForAPI);
   const canUndo = useSelector(selectCanUndo);
   const canRedo = useSelector(selectCanRedo);
+
+  const { user } = useSelector((state: RootState) => state.auth);
+  const userId = user?._id;
 
   const { isDirty, isSaving, isGenerating } = schemaCanvas.ui;
   const isSavingRef = useRef(false);
@@ -174,12 +179,13 @@ export default function SchemaPageContent() {
   // Sync schema-page tour from backend to localStorage
   useEffect(() => {
     async function syncSchemaTour() {
+      if (!userId) return;
       try {
         const res = await userApi.getTours();
         const tours = res.tours || {};
 
         if (tours.schemaPageTour === true) {
-          localStorage.setItem("tour_done_schema_page", "true");
+          localStorage.setItem(getSchemaTourKey(userId), "true");
         }
       } catch (err) {
         console.warn("Failed to sync schema tour:", err);
@@ -189,13 +195,15 @@ export default function SchemaPageContent() {
     }
     setToursSynced(false);
     syncSchemaTour();
-  }, []);
+  }, [userId]);
 
   // ------- Add this useEffect (tour) ------- //
   useEffect(() => {
-    const TOUR_KEY = "tour_done_schema_page";
     if (typeof window === "undefined") return;
+    if (!userId) return;
     if (!toursSynced) return;
+
+    const TOUR_KEY = getSchemaTourKey(userId);
     if (localStorage.getItem(TOUR_KEY) === "true") return;
 
     const waitForSelectors = (selectors: string[], timeout = 5000) =>
@@ -343,7 +351,7 @@ export default function SchemaPageContent() {
         tour.drive();
       }, 250);
     })();
-  }, [toursSynced]);
+  }, [toursSynced, userId]);
 
   // ReactFlow handlers
   const onNodesChange = useCallback(

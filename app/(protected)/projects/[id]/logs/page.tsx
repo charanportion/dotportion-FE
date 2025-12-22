@@ -64,6 +64,8 @@ interface LogsPageProps {
   }>;
 }
 
+const getLogsTourKey = (userId: string) => `tour_done_logs_${userId}`;
+
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
@@ -102,6 +104,9 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 export default function Page({ params }: LogsPageProps) {
   const { id } = use(params);
   const dispatch = useDispatch<AppDispatch>();
+
+  const { user } = useSelector((state: RootState) => state.auth);
+  const userId = user?._id;
 
   const {
     workflows,
@@ -170,11 +175,12 @@ export default function Page({ params }: LogsPageProps) {
   // Sync Logs tour state from backend -> localStorage (runs once when component mounts)
   useEffect(() => {
     async function syncLogsTour() {
+      if (!userId) return;
       try {
         const res = await userApi.getTours();
         const tours = res?.tours || {};
         if (tours.logsTour === true) {
-          localStorage.setItem("tour_done_logs", "true");
+          localStorage.setItem(getLogsTourKey(userId), "true");
         }
       } catch (err) {
         console.warn("Failed to sync logs tour from server:", err);
@@ -188,14 +194,15 @@ export default function Page({ params }: LogsPageProps) {
     if (typeof window !== "undefined") {
       void syncLogsTour();
     }
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
-    const TOUR_KEY = "tour_done_logs";
-
     // Prevent re-running if already completed
     if (typeof window === "undefined") return;
+    if (!userId) return;
     if (!toursSynced) return;
+    const TOUR_KEY = getLogsTourKey(userId);
+
     if (localStorage.getItem(TOUR_KEY)) return;
 
     // Tour should only run if required elements exist
@@ -245,7 +252,7 @@ export default function Page({ params }: LogsPageProps) {
     });
 
     setTimeout(() => tour.drive(), 300);
-  }, [currentProject, workflowsIsLoading, toursSynced]);
+  }, [currentProject, workflowsIsLoading, toursSynced, userId]);
 
   const handleWorkflowClick = (workflow: WorkflowType) => {
     dispatch(selectWorkflow(workflow));

@@ -51,6 +51,11 @@ import "driver.js/dist/driver.css";
 import "../app/globals.css";
 import { userApi } from "@/lib/api/user";
 
+const getUserScopedTourKey = (
+  baseKey: "tour_done_sidebar_main" | "tour_done_sidebar_project",
+  userId: string
+) => `${baseKey}_${userId}`;
+
 // Main navigation items (Dashboard and Projects)
 const getMainNavigationItems = [
   {
@@ -136,10 +141,15 @@ export default function SidebarNew() {
   const pathname = usePathname();
   const { setOpen } = useSidebar();
   const dispatch = useDispatch<AppDispatch>();
-  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated, user } = useSelector(
+    (state: RootState) => state.auth
+  );
   const { selectedProject, isLoading } = useSelector(
     (state: RootState) => state.projects
   );
+
+  const userId = user?._id;
+  console.log(userId);
 
   const [sidebarMode, setSidebarMode] = useState<SidebarMode>(() => {
     if (typeof window !== "undefined") {
@@ -173,16 +183,22 @@ export default function SidebarNew() {
   useEffect(() => {
     async function syncTours() {
       try {
-        if (!isAuthenticated) return;
+        if (!isAuthenticated || !userId) return;
 
         const res = await userApi.getTours();
         const tours = res.tours || {};
 
         if (tours.sidebarMain === true) {
-          localStorage.setItem("tour_done_sidebar_main", "true");
+          localStorage.setItem(
+            getUserScopedTourKey("tour_done_sidebar_main", userId),
+            "true"
+          );
         }
         if (tours.sidebarProject === true) {
-          localStorage.setItem("tour_done_sidebar_project", "true");
+          localStorage.setItem(
+            getUserScopedTourKey("tour_done_sidebar_project", userId),
+            "true"
+          );
         }
       } catch (err) {
         console.warn("Failed to sync tours:", err);
@@ -192,7 +208,7 @@ export default function SidebarNew() {
     }
     setToursSynced(false);
     syncTours();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, userId]);
 
   useEffect(() => {
     if (sidebarMode === "expanded") {
@@ -235,14 +251,16 @@ export default function SidebarNew() {
   }, [projectIdFromUrl]);
 
   useEffect(() => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated || !userId) return;
     if (sidebarMode !== "expanded") return;
 
     if (!toursSynced) return;
 
-    const tourKey = isInProjectRoute
+    const baseKey = isInProjectRoute
       ? "tour_done_sidebar_project"
       : "tour_done_sidebar_main";
+
+    const tourKey = getUserScopedTourKey(baseKey, userId);
 
     // Prevent re-running the tour
     if (localStorage.getItem(tourKey) === "true") return;
@@ -265,13 +283,11 @@ export default function SidebarNew() {
         try {
           localStorage.setItem(tourKey, "true");
 
-          const dbTourKey =
-            tourKey === "tour_done_sidebar_project"
-              ? "sidebarProject"
-              : "sidebarMain";
-
           await userApi.updateTourStatus({
-            tourKey: dbTourKey,
+            tourKey:
+              baseKey === "tour_done_sidebar_project"
+                ? "sidebarProject"
+                : "sidebarMain",
             completed: true,
           });
         } catch (err) {
@@ -283,6 +299,7 @@ export default function SidebarNew() {
     setTimeout(() => tour.drive(), 200);
   }, [
     isAuthenticated,
+    userId,
     isInProjectRoute,
     dashboardSteps,
     projectSteps,

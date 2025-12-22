@@ -15,16 +15,21 @@ import { driver, type DriveStep } from "driver.js";
 import "driver.js/dist/driver.css";
 import { userApi } from "@/lib/api/user";
 
+const getUserScopedProjectsTourKey = (userId: string) =>
+  `tour_done_projects_${userId}`;
+
 export default function ProjectsPage() {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
   const {
     projects,
     isLoading,
     error: projectError,
     isCreating,
   } = useAppSelector((state) => state.projects);
+
+  const userId = user?._id;
 
   const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -38,12 +43,13 @@ export default function ProjectsPage() {
 
   useEffect(() => {
     async function syncProjectsTour() {
+      if (!isAuthenticated || !userId) return;
       try {
         const res = await userApi.getTours();
         const tours = res?.tours || {};
 
         if (tours.projectTour === true) {
-          localStorage.setItem("tour_done_projects", "true");
+          localStorage.setItem(getUserScopedProjectsTourKey(userId), "true");
         }
       } catch (err) {
         console.warn("Failed to sync projects tour:", err);
@@ -56,7 +62,7 @@ export default function ProjectsPage() {
       setToursSynced(false);
       syncProjectsTour();
     }
-  }, []);
+  }, [isAuthenticated, userId]);
 
   const filteredProjects = projects?.filter(
     (p) =>
@@ -93,8 +99,8 @@ export default function ProjectsPage() {
   );
 
   useEffect(() => {
-    const TOUR_KEY = "tour_done_projects";
-
+    if (!userId) return;
+    const TOUR_KEY = getUserScopedProjectsTourKey(userId);
     if (typeof window === "undefined") return;
     if (!toursSynced) return;
 
@@ -127,7 +133,7 @@ export default function ProjectsPage() {
     });
 
     setTimeout(() => tour.drive(), 300);
-  }, [isLoading, projectSteps, toursSynced]);
+  }, [isLoading, projectSteps, toursSynced, userId]);
 
   // Loading State
   if (isLoading) {
