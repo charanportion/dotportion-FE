@@ -163,10 +163,7 @@ ApiCallsChartProps) {
 
   return (
     <Card
-      className={cn(
-        "w-full shadow-none border border-neutral-300 py-4",
-        className
-      )}
+      className={cn("w-full shadow-none border border-border py-4", className)}
     >
       <CardHeader className="pb-2 px-4">
         {/* Filters */}

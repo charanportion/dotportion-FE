@@ -40,7 +40,7 @@ export default function Page() {
 
     if (login.fulfilled.match(result)) {
       toast.success("Login successful!");
-      router.push("/dashboard");
+      router.push("/projects");
     } else {
       toast.error((result.payload as string) || "Login failed");
     }
@@ -57,8 +57,10 @@ export default function Page() {
     <>
       <div className="flex-1 flex flex-col justify-center w-[330px] sm:w-[384px]">
         <div className="mb-10">
-          <h1 className="mt-8 mb-2 lg:text-3xl">Welcome back</h1>
-          <h2 className="text-sm text-foreground-light">
+          <h1 className="mt-8 mb-2 lg:text-3xl text-foreground">
+            Welcome back
+          </h1>
+          <h2 className="text-sm text-muted-foreground">
             Sign in to your account
           </h2>
         </div>
@@ -66,9 +68,9 @@ export default function Page() {
           <div className="w-flex items-center relative">
             <div className="w-full">
               <Button
-                variant={"ghost"}
+                variant={"outline"}
                 onClick={handleGithubLogin}
-                className="truncate px-4 py-2 h-11 flex items-center border border-neutral-300 shadow-none rounded-lg w-full"
+                className="truncate px-4 py-2 h-11 flex items-center border border-border shadow-none rounded-lg w-full"
               >
                 <div>
                   <FaGithub className="size-5" />
@@ -80,9 +82,9 @@ export default function Page() {
           <div className="w-flex items-center relative">
             <div className="w-full">
               <Button
-                variant={"ghost"}
+                variant={"outline"}
                 onClick={handleGoogleLogin}
-                className="truncate px-4 py-2 h-11 flex items-center border border-neutral-300 shadow-none rounded-lg w-full"
+                className="truncate px-4 py-2 h-11 flex items-center border border-border shadow-none rounded-lg w-full"
               >
                 <div>
                   <FaGoogle className="size-5" />
@@ -117,7 +119,7 @@ export default function Page() {
                     <FormControl className="transition-all duration-500 ease-in-out order-1 col-span-12">
                       <Input
                         type="email"
-                        className="flex w-full shadow-none bg-neutral-100 rounded-md border border-neutral-300 text-sm leading-4 px-3 py-2 h-[34px]"
+                        className="flex w-full shadow-none bg-input rounded-md border border-border text-sm leading-4 px-3 py-2 h-[34px]"
                         placeholder="m@example.com"
                         {...field}
                       />
@@ -138,7 +140,7 @@ export default function Page() {
                       </p>
                       <Link
                         href="/auth/forgot-password"
-                        className="text-neutral-400 font-normal text-sm cursor-pointer hover:text-neutral-500 transition-all duration-200"
+                        className="text-muted-foreground font-normal text-sm cursor-pointer hover:text-foreground transition-all duration-200"
                       >
                         Forgot Password?
                       </Link>
@@ -146,7 +148,7 @@ export default function Page() {
                     <FormControl>
                       <div className="transition-all duration-500 ease-in-out order-1 col-span-12 relative">
                         <Input
-                          className="flex w-full shadow-none bg-neutral-100 rounded-md border border-neutral-300 text-sm leading-4 px-3 py-2 h-[34px]"
+                          className="flex w-full shadow-none bg-input rounded-md border border-border text-sm leading-4 px-3 py-2 h-[34px]"
                           type={showPassword ? "text" : "password"}
                           placeholder="Enter your password"
                           {...field}
@@ -155,7 +157,7 @@ export default function Page() {
                           type="button"
                           variant="ghost"
                           size="sm"
-                          className="absolute text-neutral-500 right-1 top-1 h-6 w-6 hover:bg-neutral-100 hover:border-neutral-400 bg-white border border-neutral-300"
+                          className="absolute text-muted-foreground right-1 top-1 h-6 w-6 bg-card hover:bg-muted border border-border"
                           onClick={() => setShowPassword(!showPassword)}
                         >
                           {showPassword ? (
@@ -179,7 +181,7 @@ export default function Page() {
                 <div className="w-full">
                   <Button
                     type="submit"
-                    className="relative cursor-pointer space-x-2 text-center ease-out duration-200 rounded-md outline-none transition-all outline-0 focus-visible:outline-4 focus-visible:outline-offset-1 border-2 bg-neutral-800 dark:bg-neutral-200 hover:bg-neutral-700 dark:hover:bg-neutral-100 text-white border-neutral-500 dark:border-neutral-200/30 hover:border-brand-600 dark:hover:border-neutral-200 focus-visible:outline-neutral-600 data-[state=open]:bg-neutral-400/80 dark:data-[state=open]:bg-neutral-500/80 data-[state=open]:outline-neutral-600 w-full flex items-center justify-center text-base px-4 py-2 h-[42px]"
+                    className="relative cursor-pointer space-x-2 text-center ease-out duration-200 rounded-md outline-none transition-all outline-0 focus-visible:outline-4 focus-visible:outline-offset-1  w-full flex items-center justify-center text-base px-4 py-2 h-[42px]"
                     disabled={isLoading}
                   >
                     {isLoading ? "Signing in..." : "Sign In"}
@@ -192,11 +194,11 @@ export default function Page() {
         </div>
         <div className="self-center my-8 text-sm">
           <div>
-            <span className="text-foreground-light">
+            <span className="text-muted-foreground">
               Don&apos;t have an account?{" "}
             </span>
             <Link
-              className="underline transition text-foreground hover:text-foreground-light"
+              className="underline transition text-foreground hover:text-muted-foreground"
               href={"/auth/signup"}
             >
               Sign Up Now
@@ -205,13 +207,19 @@ export default function Page() {
         </div>
       </div>
       <div className="sm:text-center">
-        <p className="text-xs text-foreground-lighter sm:mx-auto sm:max-w-sm">
+        <p className="text-xs text-muted-foreground sm:mx-auto sm:max-w-sm">
           By continuing, you agree to Dotportion&apos;s{" "}
-          <Link href={"/"} className="underline hover:text-foreground-light">
+          <Link
+            href={"https://www.dotportion.com/terms"}
+            className="underline text-foreground hover:text-muted-foreground"
+          >
             Terms of Service{" "}
           </Link>
           and
-          <Link href={"/"} className="underline hover:text-foreground-light">
+          <Link
+            href={"https://www.dotportion.com/privacy"}
+            className="underline text-foreground hover:text-muted-foreground"
+          >
             {" "}
             Privacy Policy{" "}
           </Link>

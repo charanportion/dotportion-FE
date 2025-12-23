@@ -23,10 +23,8 @@ export function ParameterNode({
 
   return (
     <div
-      className={`rounded-md border bg-white w-[200px] overflow-hidden ${
-        selected
-          ? "border-green-500 ring-1 ring-green-500"
-          : "border-neutral-300"
+      className={`rounded-md border bg-card w-[200px] overflow-hidden ${
+        selected ? "border-green-500 ring-1 ring-green-500" : "border-border"
       }`}
     >
       {/* Input Handle */}
@@ -35,16 +33,16 @@ export function ParameterNode({
         position={Position.Top}
         id="in"
         isConnectable={isConnectable}
-        className="!w-2.5 !h-2.5 !bg-green-500 !border-2 !border-white"
+        className="!w-2.5 !h-2.5 !bg-green-500 !border-2 !border-border"
       />
 
       {/* Header */}
-      <div className="flex items-center gap-2 px-2.5 py-2 border-b border-neutral-200 bg-green-50">
+      <div className="flex items-center gap-2 px-2.5 py-2 border-b border-border bg-green-50 dark:bg-green-900/10">
         <div className="w-6 h-6 rounded bg-green-500 flex items-center justify-center">
           <Settings className="h-3 w-3 text-white" />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="font-medium text-xs text-neutral-900 truncate">
+          <div className="font-medium text-xs text-foreground truncate">
             {data.label || "Parameters"}
           </div>
         </div>
@@ -61,7 +59,7 @@ export function ParameterNode({
 
         <div className="flex items-center justify-between">
           <span className="text-[10px] text-neutral-500">Parameters:</span>
-          <span className="px-1.5 py-0.5 text-[10px] font-medium bg-green-100 text-green-700 rounded">
+          <span className="px-1.5 py-0.5 text-[10px] font-medium bg-green-100 dark:bg-green-950 text-green-700 rounded">
             {paramCount}
           </span>
         </div>

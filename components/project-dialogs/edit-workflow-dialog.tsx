@@ -84,13 +84,13 @@ export function EditWorkflowDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       {/* <DialogTrigger asChild>{children}</DialogTrigger> */}
-      <DialogContent className="sm:max-w-[425px] border border-neutral-300 p-4">
+      <DialogContent className="sm:max-w-[425px] border border-border p-4">
         <form onSubmit={handleSubmit}>
           <DialogHeader className="flex flex-col gap-1">
-            <DialogTitle className="flex items-center gap-2 font-inter text-[16px] font-medium">
+            <DialogTitle className="flex items-center gap-2 font-inter text-[16px] font-medium text-foreground">
               Edit Workflow
             </DialogTitle>
-            <DialogDescription className="flex items-center gap-2 font-inter text-xs text-neutral-500">
+            <DialogDescription className="flex items-center gap-2 font-inter text-xs text-muted-foreground">
               Update the workflow details below.
             </DialogDescription>
           </DialogHeader>
@@ -104,7 +104,7 @@ export function EditWorkflowDialog({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Enter workflow name"
-                className="h-8 px-3 py-2 bg-neutral-100 border border-neutral-300 rounded-lg font-inter text-neutral-800 text-xs"
+                className="h-8 px-3 py-2 border border-border bg-input rounded-lg font-inter  text-xs"
                 required
               />
             </div>
@@ -117,7 +117,7 @@ export function EditWorkflowDialog({
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Enter workflow description"
-                className="px-3 py-2 bg-neutral-100 border border-neutral-300 rounded-lg font-inter text-neutral-800 text-xs"
+                className="px-3 py-2 border border-border bg-input rounded-lg font-inter  text-xs"
                 rows={3}
               />
             </div>
@@ -126,7 +126,7 @@ export function EditWorkflowDialog({
                 HTTP Method
               </Label>
               <Select value={method} onValueChange={setMethod}>
-                <SelectTrigger className="w-full px-3 py-2 bg-neutral-100 border border-neutral-300 shadow-none rounded-lg font-inter text-neutral-800 text-xs">
+                <SelectTrigger className="w-full px-3 py-2 border border-border bg-input shadow-none rounded-lg font-inter text-xs">
                   <SelectValue placeholder="Select method" />
                 </SelectTrigger>
                 <SelectContent>
@@ -148,7 +148,7 @@ export function EditWorkflowDialog({
                 onChange={(e) => setPath(e.target.value)}
                 placeholder="Enter API path (e.g., create-user)"
                 required
-                className="h-8 px-3 py-2 bg-neutral-100 border border-neutral-300 rounded-lg font-inter text-neutral-800 text-xs"
+                className="h-8 px-3 py-2 border border-border bg-input rounded-lg font-inter  text-xs"
               />
             </div>
           </div>
@@ -157,14 +157,14 @@ export function EditWorkflowDialog({
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="justify-start shadow-none gap-2 text-left font-normal border-2 border-neutral-300 bg-white hover:bg-neutral-100 text-neutral-600 hover:text-neutral-800 cursor-pointer text-xs h-7 px-2.5 py-1"
+              className="justify-start shadow-none gap-2 text-left font-normal border-2 border-neutral-300 bg-white hover:bg-neutral-100 text-muted-foreground cursor-pointer text-xs h-7 px-2.5 py-1"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={isSaving}
-              className="justify-start gap-2 text-left font-normal border-2 border-neutral-950 bg-neutral-800 hover:bg-neutral-700 text-white hover:text-white cursor-pointer text-xs h-7 px-2.5 py-1"
+              className="justify-start gap-2 text-left font-normal  cursor-pointer text-xs h-7 px-2.5 py-1"
             >
               {isSaving ? (
                 <LoaderCircle className="size-3.5 animate-spin" />

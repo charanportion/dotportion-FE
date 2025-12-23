@@ -46,7 +46,7 @@ export function CodeBlock({
         getLineProps,
         getTokenProps,
       }) => (
-        <div className="w-full overflow-x-auto rounded-md bg-neutral-800">
+        <div className="w-full overflow-x-auto rounded-md bg-secondary border border-border">
           <pre
             className={`${internalClass} ${className} p-4 text-sm whitespace-pre min-w-max`}
             style={{

@@ -28,14 +28,14 @@ export const JwtGenerateForm = () => {
         name="payload"
         render={({ field }) => (
           <FormItem className="space-y-1.5">
-            <FormLabel className="text-xs font-medium text-neutral-700">
+            <FormLabel className="text-xs font-medium text-foreground">
               Payload
             </FormLabel>
             <FormControl>
               <Textarea
                 placeholder="Write what payload to be set in the JWT"
                 {...field}
-                className="text-xs border-neutral-300 min-h-[80px] font-mono"
+                className="text-xs border-border bg-input min-h-[80px] font-mono"
               />
             </FormControl>
             <FormMessage className="text-[10px]" />
@@ -47,12 +47,12 @@ export const JwtGenerateForm = () => {
         name="secretType"
         render={({ field }) => (
           <FormItem className="space-y-1.5">
-            <FormLabel className="text-xs font-medium text-neutral-700">
+            <FormLabel className="text-xs font-medium text-foreground">
               Secret
             </FormLabel>
             <Select onValueChange={field.onChange} defaultValue={field.value}>
               <FormControl>
-                <SelectTrigger className="h-8 text-xs border-neutral-300">
+                <SelectTrigger className="h-8 text-xs border-border bg-input">
                   <SelectValue placeholder="Select a type of secret" />
                 </SelectTrigger>
               </FormControl>
@@ -74,14 +74,14 @@ export const JwtGenerateForm = () => {
         name="expiresIn"
         render={({ field }) => (
           <FormItem className="space-y-1.5">
-            <FormLabel className="text-xs font-medium text-neutral-700">
+            <FormLabel className="text-xs font-medium text-foreground">
               Expires In
             </FormLabel>
             <FormControl>
               <Input
                 {...field}
                 placeholder="e.g., 1h, 30m"
-                className="h-8 text-xs border-neutral-300"
+                className="h-8 text-xs border-border bg-input"
               />
             </FormControl>
             <FormMessage className="text-[10px]" />

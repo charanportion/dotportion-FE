@@ -21,10 +21,8 @@ export function LogicNode({
 
   return (
     <div
-      className={`rounded-md border bg-white w-[200px] overflow-hidden ${
-        selected
-          ? "border-purple-500 ring-1 ring-purple-500"
-          : "border-neutral-300"
+      className={`rounded-md border bg-card w-[200px] overflow-hidden ${
+        selected ? "border-purple-500 ring-1 ring-purple-500" : "border-border"
       }`}
     >
       {/* Input Handle */}
@@ -37,12 +35,12 @@ export function LogicNode({
       />
 
       {/* Header */}
-      <div className="flex items-center gap-2 px-2.5 py-2 border-b border-neutral-200 bg-purple-50">
+      <div className="flex items-center gap-2 px-2.5 py-2 border-b border-border bg-purple-50 dark:bg-purple-950/10">
         <div className="w-6 h-6 rounded bg-purple-500 flex items-center justify-center">
           <Code className="h-3 w-3 text-white" />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="font-medium text-xs text-neutral-900 truncate">
+          <div className="font-medium text-xs text-foreground truncate">
             {data.label || "Logic"}
           </div>
         </div>
@@ -50,19 +48,19 @@ export function LogicNode({
 
       {/* Content */}
       <div className="px-2.5 py-2 space-y-1.5">
-        <div className="bg-neutral-50 border border-neutral-200 rounded px-1.5 py-1">
-          <code className="text-[10px] text-neutral-600 font-mono block truncate">
+        <div className="bg-secondary border border-border rounded px-1.5 py-1">
+          <code className="text-[10px] text-foreground font-mono block truncate">
             {codePreview}
           </code>
         </div>
 
         {data.description && (
-          <p className="text-[10px] text-neutral-500 truncate">
+          <p className="text-[10px] text-muted-foreground truncate">
             {data.description}
           </p>
         )}
 
-        <div className="text-[9px] text-neutral-400 font-mono">{id}</div>
+        <div className="text-[9px] text-muted-foreground font-mono">{id}</div>
       </div>
 
       {/* Output Handle */}

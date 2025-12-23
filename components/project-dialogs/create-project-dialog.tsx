@@ -70,20 +70,20 @@ export function CreateProjectDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          className="justify-start gap-2 text-left font-normal border-2 border-neutral-950 bg-neutral-800 hover:bg-neutral-700 text-white hover:text-white cursor-pointer text-xs h-7 px-2.5 py-1"
+          className="justify-start gap-2 text-left font-normal  cursor-pointer text-xs h-7 px-2.5 py-1"
           disabled={isCreating}
         >
           <Plus className="h-3.5 w-3.5" />
           <span className="truncate">New Project</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] border border-neutral-300 p-4">
+      <DialogContent className="sm:max-w-[425px] border border-border p-4">
         <form onSubmit={handleSubmit}>
           <DialogHeader className="flex flex-col gap-1">
             <DialogTitle className="flex items-center gap-2 font-inter text-[16px] font-medium">
               Create New Project
             </DialogTitle>
-            <DialogDescription className="flex items-center gap-2 font-inter text-xs text-neutral-500">
+            <DialogDescription className="flex items-center gap-2 font-inter text-xs ">
               Create a new project to organize your APIs and workflows.
             </DialogDescription>
           </DialogHeader>
@@ -98,7 +98,7 @@ export function CreateProjectDialog({
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Enter project name"
                 required
-                className="h-8 px-3 py-2 bg-neutral-100 border border-neutral-300 rounded-lg font-inter text-neutral-800 text-xs"
+                className="h-8 px-3 py-2 bg-input border border-border  rounded-lg font-inter text-neutral-800 text-xs shadow-none"
               />
             </div>
             <div className="grid gap-2">
@@ -111,7 +111,7 @@ export function CreateProjectDialog({
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Enter project description"
                 rows={3}
-                className="px-3 py-2 bg-neutral-100 border border-neutral-300 rounded-lg font-inter text-neutral-800 text-xs"
+                className="px-3 py-2 bg-input border border-border rounded-lg font-inter  text-xs shadow-none"
               />
             </div>
           </div>
@@ -124,14 +124,14 @@ export function CreateProjectDialog({
                 setDescription("");
                 setOpen(false);
               }}
-              className="justify-start shadow-none gap-2 text-left font-normal border-2 border-neutral-300 bg-white hover:bg-neutral-100 text-neutral-600 hover:text-neutral-800 cursor-pointer text-xs h-7 px-2.5 py-1"
+              className="justify-start shadow-none gap-2 text-left font-normal border-2 border-border  text-muted-foreground  cursor-pointer text-xs h-7 px-2.5 py-1"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={isCreating}
-              className="justify-start gap-2 text-left font-normal border-2 border-neutral-950 bg-neutral-800 hover:bg-neutral-700 text-white hover:text-white cursor-pointer text-xs h-7 px-2.5 py-1"
+              className="justify-start gap-2 text-left font-normal  cursor-pointer text-xs h-7 px-2.5 py-1"
             >
               {isCreating ? (
                 <LoaderCircle className="size-3.5 animate-spin" />

@@ -106,16 +106,18 @@ export default function SchemaLayout({
   return (
     <div className="flex h-[calc(100vh-3rem)] w-full bg-background text-foreground overflow-hidden">
       {/* Left Panel: Database List - Persisted across routes */}
-      <div className="w-64 flex flex-col h-full border-r border-border bg-white shrink-0">
+      <div className="w-64 flex flex-col h-full border-r border-border bg-background shrink-0">
         <div className="border-b border-border flex min-h-12 items-center px-4">
-          <h4 className="text-sm font-medium">Schema Management</h4>
+          <h4 className="text-sm font-medium text-foreground">
+            Schema Management
+          </h4>
         </div>
         <div className="flex-grow overflow-y-auto flex flex-col">
-          <div className="flex gap-x-2 items-center sticky top-0 bg-neutral-50 backdrop-blur z-[1] px-4 py-3 border-b border-border">
+          <div className="flex gap-x-2 items-center sticky top-0 bg-background backdrop-blur z-[1] px-4 py-3 border-b border-border">
             <div className="relative h-7 flex-1">
               <Search className="absolute top-1.5 left-2 size-3.5 text-neutral-600" />
               <Input
-                className="h-7 w-full pl-7 text-xs bg-neutral-100 border border-neutral-300 shadow-none"
+                className="h-7 w-full pl-7 text-xs bg-input border border-border shadow-none"
                 placeholder="Search Databases"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -126,7 +128,7 @@ export default function SchemaLayout({
                 <Button
                   size="icon"
                   variant="outline"
-                  className="size-7 shadow-none border-neutral-300"
+                  className="size-7 shadow-none border-border"
                 >
                   <Plus className="size-3.5" />
                 </Button>
@@ -167,16 +169,16 @@ export default function SchemaLayout({
                   key={db.id}
                   onClick={() => handleDatabaseClick(db)}
                   className={cn(
-                    "h-7 px-4 py-2 cursor-pointer text-xs truncate rounded-md hover:bg-neutral-100 flex items-center gap-2 transition-colors",
+                    "h-7 px-4 py-2 cursor-pointer text-xs truncate rounded-md hover:bg-muted flex items-center gap-2 transition-colors",
                     currentDatabase === db.id
-                      ? "bg-neutral-100 text-black font-medium"
-                      : "text-neutral-700"
+                      ? "bg-muted text-foreground font-medium"
+                      : "text-muted-foreground"
                   )}
                 >
                   {db.icon}
                   <span className="truncate">{db.name}</span>
                   {db.isPlatform && (
-                    <span className="ml-auto text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded">
+                    <span className="ml-auto text-[10px] bg-secondary text-foreground px-1.5 py-0.5 rounded">
                       INTERNAL
                     </span>
                   )}
@@ -188,7 +190,7 @@ export default function SchemaLayout({
       </div>
 
       {/* Right Side: Dynamic Content */}
-      <div className="flex-1 h-full flex flex-col bg-white overflow-hidden">
+      <div className="flex-1 h-full flex flex-col bg-background overflow-hidden">
         {children}
       </div>
     </div>

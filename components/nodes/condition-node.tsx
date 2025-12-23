@@ -20,10 +20,8 @@ export function ConditionNode({
 
   return (
     <div
-      className={`rounded-md border bg-white w-[200px] overflow-hidden relative ${
-        selected
-          ? "border-amber-500 ring-1 ring-amber-500"
-          : "border-neutral-300"
+      className={`rounded-md border bg-card w-[200px] overflow-hidden relative ${
+        selected ? "border-amber-500 ring-1 ring-amber-500" : "border-border"
       }`}
     >
       {/* Input Handle */}
@@ -36,12 +34,12 @@ export function ConditionNode({
       />
 
       {/* Header */}
-      <div className="flex items-center gap-2 px-2.5 py-2 border-b border-neutral-200 bg-amber-50">
+      <div className="flex items-center gap-2 px-2.5 py-2 border-b border-border bg-amber-50 dark:bg-amber-950/10">
         <div className="w-6 h-6 rounded bg-amber-500 flex items-center justify-center">
           <GitBranch className="h-3 w-3 text-white" />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="font-medium text-xs text-neutral-900 truncate">
+          <div className="font-medium text-xs text-foreground truncate">
             {data.label || "Condition"}
           </div>
         </div>
@@ -49,13 +47,13 @@ export function ConditionNode({
 
       {/* Content */}
       <div className="px-2.5 py-2 pb-6 space-y-1.5">
-        <div className="bg-neutral-50 border border-neutral-200 rounded px-1.5 py-1">
-          <code className="text-[10px] text-neutral-600 font-mono block truncate">
+        <div className="bg-secondary border border-border rounded px-1.5 py-1">
+          <code className="text-[10px] text-foreground font-mono block truncate">
             {conditionPreview}
           </code>
         </div>
 
-        <div className="text-[9px] text-neutral-400 font-mono">{id}</div>
+        <div className="text-[9px] text-muted-foreground font-mono">{id}</div>
       </div>
 
       {/* True Output Handle (Bottom) */}
@@ -71,7 +69,7 @@ export function ConditionNode({
       </div>
 
       {/* False Output Handle (Right) */}
-      <div className="absolute right-0 top-1/2 flex items-center -translate-y-1/2 translate-x-1/2">
+      <div className="absolute -right-3 top-1/2 flex items-center -translate-y-1/2 translate-x-1/2">
         <Handle
           type="source"
           position={Position.Right}

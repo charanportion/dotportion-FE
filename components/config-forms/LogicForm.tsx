@@ -29,7 +29,7 @@ export const LogicForm = ({ nodeId }: LogicFormProps) => {
         name="code"
         render={({ field }) => (
           <FormItem className="space-y-1.5">
-            <FormLabel className="text-xs font-medium text-neutral-700">
+            <FormLabel className="text-xs font-medium text-foreground">
               Code
             </FormLabel>
             <FormControl>
@@ -39,7 +39,7 @@ export const LogicForm = ({ nodeId }: LogicFormProps) => {
                 placeholder="write the code in javascript or typescript"
                 as="textarea"
                 rows={5}
-                className="text-xs border-neutral-300 font-mono"
+                className="text-xs border-border font-mono"
                 currentNodeId={nodeId}
               />
             </FormControl>
@@ -47,11 +47,11 @@ export const LogicForm = ({ nodeId }: LogicFormProps) => {
           </FormItem>
         )}
       />
-      <div className="flex items-start gap-2 p-2 bg-neutral-50 border border-neutral-200 rounded text-[10px] text-neutral-600">
+      <div className="flex items-start gap-2 p-2 bg-card border border-border rounded text-[10px] text-muted-foreground">
         <Info className="h-3 w-3 mt-0.5 shrink-0" />
         <span>
           Type{" "}
-          <code className="px-1 py-0.5 bg-neutral-200 rounded font-mono">
+          <code className="px-1 py-0.5 bg-secondary rounded font-mono">
             {"{{"}
           </code>{" "}
           to insert dynamic node values

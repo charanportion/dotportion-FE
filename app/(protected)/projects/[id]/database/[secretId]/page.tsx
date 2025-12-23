@@ -454,17 +454,19 @@ export default function DatabasePage() {
   return (
     <div className="flex h-[calc(100vh-3rem)] w-full bg-background overflow-hidden">
       {/* Left Panel: Collections */}
-      <div className="w-64 flex flex-col h-full border-r border-border bg-white shrink-0">
+      <div className="w-64 flex flex-col h-full border-r border-border bg-background shrink-0">
         <div className="border-b border-border flex min-h-12 items-center px-4">
-          <h4 className="text-sm font-medium">Database Collections</h4>
+          <h4 className="text-sm font-medium text-foreground">
+            Database Collections
+          </h4>
         </div>
 
         <div className="flex-grow overflow-y-auto flex flex-col">
-          <div className="flex gap-x-2 items-center sticky top-0 bg-neutral-50 backdrop-blur z-[1] px-4 py-3 border-b border-border">
+          <div className="flex gap-x-2 items-center sticky top-0 bg-background backdrop-blur z-[1] px-4 py-3 border-b border-border">
             <div className="relative h-7 flex-1">
               <Search className="absolute top-1.5 left-2 size-3.5 text-neutral-600" />
               <Input
-                className="h-7 w-full pl-7 text-xs bg-neutral-100 border border-neutral-300 shadow-none text-neutral-600"
+                className="h-7 w-full pl-7 text-xs bg-input border border-border shadow-none"
                 placeholder="Search Collections"
                 value={collectionSearchTerm}
                 onChange={(e) => setCollectionSearchTerm(e.target.value)}
@@ -487,7 +489,7 @@ export default function DatabasePage() {
               </div>
             ) : filteredCollections.length === 0 && collectionSearchTerm ? (
               <div className="h-full flex flex-col items-center justify-center text-muted-foreground p-4 text-center">
-                <Inbox className="size-8 text-neutral-400 mb-2" />
+                <Inbox className="size-8 text-muted-foreground mb-2" />
                 <h3 className="text-sm font-semibold text-foreground mb-1">
                   No collections found
                 </h3>
@@ -495,7 +497,7 @@ export default function DatabasePage() {
               </div>
             ) : filteredCollections.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-muted-foreground p-4 text-center">
-                <Inbox className="size-8 text-neutral-400 mb-2" />
+                <Inbox className="size-8 text-muted-foreground mb-2" />
                 <h3 className="text-sm font-semibold text-foreground mb-1">
                   No collections
                 </h3>
@@ -509,10 +511,10 @@ export default function DatabasePage() {
                   key={collection}
                   onClick={() => setSelectedCollection(collection)}
                   className={cn(
-                    "h-7 px-4 py-2 cursor-pointer text-xs truncate rounded-md hover:bg-neutral-100 flex items-center gap-2 transition-colors",
+                    "h-7 px-4 py-2 cursor-pointer text-xs truncate rounded-md hover:bg-muted flex items-center gap-2 transition-colors",
                     selectedCollection === collection
-                      ? "bg-neutral-100 text-black font-medium"
-                      : "text-neutral-700"
+                      ? "bg-muted text-foreground font-medium"
+                      : "text-muted-foreground"
                   )}
                 >
                   <Folder className="size-3.5 shrink-0" />
@@ -525,14 +527,14 @@ export default function DatabasePage() {
       </div>
 
       {/* Right Panel: Data View */}
-      <div className="flex-1 h-full flex flex-col bg-white">
+      <div className="flex-1 h-full flex flex-col bg-background">
         {/* Top Bar */}
-        <div className="relative flex w-full h-12 min-h-12 items-center justify-between border-b border-neutral-300 p-3 gap-4">
+        <div className="relative flex w-full h-12 min-h-12 items-center justify-between border-b border-border p-3 gap-4">
           <div className="flex flex-row items-center gap-x-2 flex-1 mr-2">
             <div className="relative h-7 min-w-[200px]">
-              <Search className="absolute top-1.5 left-2 size-3.5 text-neutral-600" />
+              <Search className="absolute top-1.5 left-2 size-3.5 text-muted-foreground" />
               <Input
-                className="h-7 w-full pl-7 text-xs shadow-none bg-white border-neutral-300"
+                className="h-7 w-full pl-7 text-xs shadow-none bg-input border border-border"
                 placeholder="Search documents..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -540,7 +542,8 @@ export default function DatabasePage() {
             </div>
             <Button
               size="icon"
-              className="size-7 shadow-none bg-white border border-neutral-300 hover:bg-neutral-100 text-neutral-600 hover:text-black"
+              variant="secondary"
+              className="size-7 shadow-none bg-secondary border border-border  cursor-pointer "
               onClick={() => fetchDocuments(1)}
               disabled={isLoading || !selectedCollection}
             >
@@ -552,7 +555,7 @@ export default function DatabasePage() {
 
           <Button
             size="sm"
-            className="h-7 gap-2 text-xs"
+            className="h-7 px-2.5 text-xs shadow-none  gap-1.5"
             onClick={() => setIsCreateDialogOpen(true)}
             disabled={!selectedCollection}
           >
@@ -580,60 +583,60 @@ export default function DatabasePage() {
         <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
           {!selectedCollection ? (
             <div className="h-full flex flex-col items-center justify-center text-muted-foreground p-8">
-              <div className="bg-neutral-100 rounded-full p-6 mb-4">
-                <DatabaseIcon className="size-12 text-neutral-400" />
+              <div className="bg-secondary rounded-full p-6 mb-4">
+                <DatabaseIcon className="size-12 text-foreground" />
               </div>
               <h3 className="text-base font-semibold text-foreground mb-2">
                 No collection selected
               </h3>
-              <p className="text-sm text-center max-w-sm">
+              <p className="text-sm text-center max-w-sm text-muted-foreground">
                 Select a collection from the left to view and manage documents.
               </p>
             </div>
           ) : data.documents.length === 0 && !isLoading ? (
             <div className="h-full flex flex-col items-center justify-center text-muted-foreground p-8">
-              <div className="bg-neutral-100 rounded-full p-6 mb-4">
-                <Inbox className="size-12 text-neutral-400" />
+              <div className="bg-secondary rounded-full p-6 mb-4">
+                <Inbox className="size-12 text-foreground" />
               </div>
               <h3 className="text-base font-semibold text-foreground mb-2">
                 No documents
               </h3>
-              <p className="text-sm text-center max-w-sm">
+              <p className="text-sm text-center max-w-sm text-muted-foreground">
                 This collection is empty. Add your first document to get
                 started.
               </p>
             </div>
           ) : filteredDocuments.length === 0 && searchTerm ? (
             <div className="h-full flex flex-col items-center justify-center text-muted-foreground p-8">
-              <div className="bg-neutral-100 rounded-full p-6 mb-4">
+              <div className="bg-secondary rounded-full p-6 mb-4">
                 <Search className="size-12 text-neutral-400" />
               </div>
               <h3 className="text-base font-semibold text-foreground mb-2">
                 No results found
               </h3>
-              <p className="text-sm text-center max-w-sm">
+              <p className="text-sm text-center max-w-sm text-muted-foreground">
                 No documents match &quot;{searchTerm}&quot;. Try a different
                 search term.
               </p>
             </div>
           ) : (
             <>
-              <div className="flex-1 overflow-auto bg-neutral-50">
+              <div className="flex-1 overflow-auto bg-card">
                 <Table>
-                  <TableHeader className="sticky top-0 z-10 bg-white [&_tr]:border-b-0">
+                  <TableHeader className="sticky top-0 z-10 bg-card [&_tr]:border-b-0">
                     <TableRow className="relative after:content-[''] after:absolute after:bottom-0 after:left-2 after:right-2 after:h-px after:bg-border">
-                      <TableHead className="w-48 text-left text-xs">
+                      <TableHead className="w-48 text-left text-xs text-muted-foreground">
                         ID
                       </TableHead>
                       {allFields.map((field) => (
                         <TableHead
                           key={field}
-                          className="min-w-32 text-center text-xs uppercase"
+                          className="min-w-32 text-center text-xs uppercase text-muted-foreground"
                         >
                           {field}
                         </TableHead>
                       ))}
-                      <TableHead className="w-24 text-center text-xs uppercase">
+                      <TableHead className="w-24 text-center text-xs uppercase text-muted-foreground">
                         Actions
                       </TableHead>
                     </TableRow>
@@ -657,7 +660,7 @@ export default function DatabasePage() {
                             <Button
                               size="icon"
                               variant="destructive"
-                              className="h-7 w-7"
+                              className="h-7 w-7 cursor-pointer"
                               onClick={() => handleDelete(doc._id)}
                             >
                               <Trash2 className="h-3 w-3" />
@@ -671,12 +674,12 @@ export default function DatabasePage() {
               </div>
 
               {/* Footer Pagination */}
-              <div className="h-9 border-t border-neutral-300 bg-white flex items-center justify-between px-4 py-2 shrink-0">
+              <div className="h-9 border-t border-border bg-card flex items-center justify-between px-4 py-2 shrink-0">
                 <div className="flex items-center gap-2">
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-7 gap-1 text-xs border-neutral-300"
+                    className="h-7 gap-1 text-xs border-border"
                     onClick={() => fetchDocuments(data.page - 1)}
                     disabled={data.page <= 1 || isLoading}
                   >
@@ -689,7 +692,7 @@ export default function DatabasePage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-7 gap-1 text-xs border-neutral-300"
+                    className="h-7 gap-1 text-xs border-border"
                     onClick={() => fetchDocuments(data.page + 1)}
                     disabled={data.documents.length < data.limit || isLoading}
                   >
@@ -715,12 +718,12 @@ export default function DatabasePage() {
 
       {/* Create Dialog */}
       <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-        <DialogContent className="sm:max-w-[425px] border border-neutral-300 p-4">
+        <DialogContent className="sm:max-w-[425px] border border-border p-4">
           <DialogHeader className="flex flex-col gap-1">
-            <DialogTitle className="flex items-center gap-2 font-inter text-[16px] font-medium">
+            <DialogTitle className="flex items-center gap-2 font-inter text-[16px] font-medium text-foreground">
               Create New Document
             </DialogTitle>
-            <DialogDescription className="flex items-center gap-2 font-inter text-xs text-neutral-500">
+            <DialogDescription className="flex items-center gap-2 font-inter text-xs text-muted-foreground">
               Add a new document to the {selectedCollection} collection
             </DialogDescription>
           </DialogHeader>
@@ -740,7 +743,7 @@ export default function DatabasePage() {
                       [field]: e.target.value,
                     }))
                   }
-                  className="px-3 py-2 bg-neutral-100 border border-neutral-300 rounded-lg font-inter text-neutral-800 text-xs"
+                  className="px-3 py-2 bg-input border border-border rounded-lg font-inter text-xs"
                 />
               </div>
             ))}
@@ -752,12 +755,12 @@ export default function DatabasePage() {
                 <Input
                   placeholder="Field name"
                   id="newFieldName"
-                  className="h-8 px-3 py-2 bg-neutral-100 border border-neutral-300 rounded-lg font-inter text-neutral-800 text-xs"
+                  className="h-8 px-3 py-2 bg-input border border-border rounded-lg font-inter  text-xs"
                 />
                 <Input
                   placeholder="Field value"
                   id="newFieldValue"
-                  className="h-8 px-3 py-2 bg-neutral-100 border border-neutral-300 rounded-lg font-inter text-neutral-800 text-xs"
+                  className="h-8 px-3 py-2  bg-input border border-border rounded-lg font-inter  text-xs"
                 />
                 <Button
                   type="button"
@@ -788,14 +791,14 @@ export default function DatabasePage() {
             <Button
               variant="outline"
               onClick={() => setIsCreateDialogOpen(false)}
-              className="justify-start shadow-none gap-2 text-left font-normal border-2 border-neutral-300 bg-white hover:bg-neutral-100 text-neutral-600 hover:text-neutral-800 cursor-pointer text-xs h-7 px-2.5 py-1"
+              className="justify-start shadow-none gap-2 text-left font-normal border-2 border-border bg-white hover:bg-neutral-100 text-muted-foreground cursor-pointer text-xs h-7 px-2.5 py-1"
             >
               Cancel
             </Button>
             <Button
               onClick={handleCreate}
               disabled={isCreating}
-              className="justify-start gap-2 text-left font-normal border-2 border-neutral-950 bg-neutral-800 hover:bg-neutral-700 text-white hover:text-white cursor-pointer text-xs h-7 px-2.5 py-1"
+              className="justify-start gap-2 text-left font-normal  cursor-pointer text-xs h-7 px-2.5 py-1"
             >
               {isCreating ? (
                 <LoaderCircle className="size-3.5 animate-spin" />

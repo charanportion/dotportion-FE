@@ -15,17 +15,17 @@ export function APIStartNode({
 }) {
   return (
     <div
-      className={`rounded-md border bg-white w-[200px] overflow-hidden ${
-        selected ? "border-blue-500 ring-1 ring-blue-500" : "border-neutral-300"
+      className={`rounded-md border bg-card w-[200px] overflow-hidden ${
+        selected ? "border-blue-500 ring-1 ring-blue-500" : "border-border"
       } tour-api-start-node`}
     >
       {/* Header */}
-      <div className="flex items-center gap-2 px-2.5 py-2 border-b border-neutral-200 bg-blue-50">
+      <div className="flex items-center gap-2 px-2.5 py-2 border-b border-border bg-blue-50 dark:bg-blue-900/10">
         <div className="w-6 h-6 rounded bg-blue-500 flex items-center justify-center">
           <Globe className="h-3 w-3 text-white" />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="font-medium text-xs text-neutral-900 truncate">
+          <div className="font-medium text-xs text-foreground truncate">
             {data.label || "API Endpoint"}
           </div>
         </div>
@@ -37,30 +37,30 @@ export function APIStartNode({
           <span
             className={`px-1.5 py-0.5 text-[10px] font-medium rounded ${
               data.method === "GET"
-                ? "bg-green-100 text-green-700"
+                ? "bg-green-100 dark:bg-green-950 text-green-500"
                 : data.method === "POST"
-                ? "bg-blue-100 text-blue-700"
+                ? "bg-blue-100 dark:bg-blue-950 text-blue-500"
                 : data.method === "PUT"
-                ? "bg-amber-100 text-amber-700"
+                ? "bg-amber-100 dark:bg-amber-950 text-amber-500"
                 : data.method === "DELETE"
-                ? "bg-red-100 text-red-700"
-                : "bg-neutral-100 text-neutral-700"
+                ? "bg-red-100 dark:bg-red-950 text-red-500"
+                : "bg-neutral-100 dark:bg-neutral-950 text-neutral-500"
             }`}
           >
             {data.method || "GET"}
           </span>
-          <span className="text-[10px] font-mono text-neutral-600 truncate">
+          <span className="text-[10px] font-mono text-muted-foreground truncate">
             {data.path || "/api"}
           </span>
         </div>
 
         {data.description && (
-          <p className="text-[10px] text-neutral-500 truncate">
+          <p className="text-[10px] text-muted-foreground truncate">
             {data.description}
           </p>
         )}
 
-        <div className="text-[9px] text-neutral-400 font-mono">{id}</div>
+        <div className="text-[9px] text-muted-foreground font-mono">{id}</div>
       </div>
 
       {/* Output Handle */}

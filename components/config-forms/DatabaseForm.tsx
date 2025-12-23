@@ -207,13 +207,13 @@ export function DatabaseForm({ nodeId }: DatabaseFormProps) {
           <Button
             variant="outline"
             role="combobox"
-            className="h-7 text-xs justify-between border-neutral-300 flex-1 bg-transparent"
+            className="h-7 text-xs justify-between border-border flex-1 bg-input"
           >
             {field.key || "Select field..."}
             <ChevronsUpDown className="ml-1 h-3 w-3 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[180px] p-0 border-neutral-300">
+        <PopoverContent className="w-[180px] p-0 border-border">
           <Command>
             <CommandInput
               placeholder="Search fields..."
@@ -288,7 +288,7 @@ export function DatabaseForm({ nodeId }: DatabaseFormProps) {
           value={field.value}
           onValueChange={(value) => updateField(type, index, "value", value)}
         >
-          <SelectTrigger className="h-7 text-xs border-neutral-300 flex-1">
+          <SelectTrigger className="h-7 text-xs border-border bg-input flex-1">
             <SelectValue placeholder="Select value" />
           </SelectTrigger>
           <SelectContent>
@@ -308,7 +308,7 @@ export function DatabaseForm({ nodeId }: DatabaseFormProps) {
           value={field.value}
           onValueChange={(value) => updateField(type, index, "value", value)}
         >
-          <SelectTrigger className="h-7 text-xs border-neutral-300 flex-1">
+          <SelectTrigger className="h-7 text-xs border-border bg-input flex-1">
             <SelectValue placeholder="Select value" />
           </SelectTrigger>
           <SelectContent>
@@ -329,7 +329,7 @@ export function DatabaseForm({ nodeId }: DatabaseFormProps) {
         onChange={(value) => updateField(type, index, "value", value)}
         placeholder={param ? `${param.type} value` : "Value"}
         as="input"
-        className="h-7 text-xs border-neutral-300 flex-1"
+        className="h-7 text-xs border-border bg-input flex-1"
         currentNodeId={nodeId}
       />
     );
@@ -337,7 +337,7 @@ export function DatabaseForm({ nodeId }: DatabaseFormProps) {
 
   if (!user || !selectedProject) {
     return (
-      <div className="text-xs text-neutral-500 p-3 bg-neutral-50 border border-neutral-200 rounded">
+      <div className="text-xs text-neutral-500 p-3 bg-card border border-border rounded">
         Please select a project first
       </div>
     );
@@ -351,7 +351,7 @@ export function DatabaseForm({ nodeId }: DatabaseFormProps) {
         render={({ field }) => (
           <FormItem className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <FormLabel className="text-xs font-medium text-neutral-700">
+              <FormLabel className="text-xs font-medium text-foreground">
                 Select Collection
               </FormLabel>
               {/* <CreateCollectionDialog
@@ -379,7 +379,7 @@ export function DatabaseForm({ nodeId }: DatabaseFormProps) {
                       variant="outline"
                       role="combobox"
                       className={cn(
-                        "h-8 text-xs justify-between w-full border-neutral-300",
+                        "h-8 text-xs justify-between w-full border-border bg-input",
                         !field.value && "text-neutral-500"
                       )}
                     >
@@ -392,7 +392,7 @@ export function DatabaseForm({ nodeId }: DatabaseFormProps) {
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
-                <PopoverContent className="w-[280px] p-0 border-neutral-300">
+                <PopoverContent className="w-[280px] p-0 border-border">
                   <Command>
                     <CommandInput
                       placeholder="Search collections..."
@@ -434,7 +434,7 @@ export function DatabaseForm({ nodeId }: DatabaseFormProps) {
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="h-6 text-[10px] w-full justify-start text-neutral-500 hover:text-neutral-700"
+                  className="h-6 text-[10px] justify-start text-muted-foreground"
                 >
                   <Settings className="h-3 w-3 mr-1" />
                   Manage Collections
@@ -450,12 +450,12 @@ export function DatabaseForm({ nodeId }: DatabaseFormProps) {
         name="operation"
         render={({ field }) => (
           <FormItem className="space-y-1.5">
-            <FormLabel className="text-xs font-medium text-neutral-700">
+            <FormLabel className="text-xs font-medium text-foreground">
               Operation
             </FormLabel>
             <Select onValueChange={field.onChange} defaultValue={field.value}>
               <FormControl>
-                <SelectTrigger className="h-8 text-xs border-neutral-300">
+                <SelectTrigger className="h-8 text-xs border-border">
                   <SelectValue placeholder="Select operation" />
                 </SelectTrigger>
               </FormControl>
@@ -491,8 +491,8 @@ export function DatabaseForm({ nodeId }: DatabaseFormProps) {
       />
 
       {selectedCollection && currentCollectionParams.length > 0 && (
-        <div className="p-2 bg-neutral-50 border border-neutral-200 rounded">
-          <h4 className="text-[10px] font-medium text-neutral-600 mb-1.5">
+        <div className="p-2 bg-card border border-border rounded">
+          <h4 className="text-[10px] font-medium text-foreground mb-1.5">
             Available Fields in {selectedCollection}:
           </h4>
           <div className="flex flex-wrap gap-1">
@@ -500,13 +500,13 @@ export function DatabaseForm({ nodeId }: DatabaseFormProps) {
               <div key={param.name} className="flex items-center gap-0.5">
                 <Badge
                   variant="outline"
-                  className="text-[9px] px-1.5 py-0 h-4 border-neutral-300"
+                  className="text-[9px] px-1.5 py-0 h-4 border-border"
                 >
                   {param.name}
                 </Badge>
                 <Badge
                   variant="secondary"
-                  className="text-[9px] px-1 py-0 h-4 bg-neutral-200"
+                  className="text-[9px] px-1 py-0 h-4 bg-secondary"
                 >
                   {param.type}
                 </Badge>
@@ -526,14 +526,14 @@ export function DatabaseForm({ nodeId }: DatabaseFormProps) {
 
       <div className="space-y-2">
         <div className="flex justify-between items-center">
-          <FormLabel className="text-xs font-medium text-neutral-700">
+          <FormLabel className="text-xs font-medium text-foreground">
             Query Fields
           </FormLabel>
           <Button
             type="button"
-            variant="outline"
+            variant="secondary"
             size="sm"
-            className="h-6 text-[10px] border-neutral-300 bg-transparent"
+            className="h-6 text-[10px] border-border"
             onClick={() => addField("query")}
           >
             <Plus className="h-3 w-3 mr-1" />
@@ -548,7 +548,7 @@ export function DatabaseForm({ nodeId }: DatabaseFormProps) {
               type="button"
               variant="ghost"
               size="sm"
-              className="h-7 w-7 p-0 text-neutral-500 hover:text-red-500 shrink-0"
+              className="h-7 w-7 p-0 text-muted-foreground hover:text-red-500 shrink-0"
               onClick={() => removeField("query", index)}
             >
               <Trash2 className="h-3 w-3" />
@@ -559,14 +559,14 @@ export function DatabaseForm({ nodeId }: DatabaseFormProps) {
 
       <div className="space-y-2">
         <div className="flex justify-between items-center">
-          <FormLabel className="text-xs font-medium text-neutral-700">
+          <FormLabel className="text-xs font-medium text-foreground">
             Data Fields
           </FormLabel>
           <Button
             type="button"
-            variant="outline"
+            variant="secondary"
             size="sm"
-            className="h-6 text-[10px] border-neutral-300 bg-transparent"
+            className="h-6 text-[10px] border-border"
             onClick={() => addField("data")}
           >
             <Plus className="h-3 w-3 mr-1" />
@@ -581,7 +581,7 @@ export function DatabaseForm({ nodeId }: DatabaseFormProps) {
               type="button"
               variant="ghost"
               size="sm"
-              className="h-7 w-7 p-0 text-neutral-500 hover:text-red-500 shrink-0"
+              className="h-7 w-7 p-0 text-muted-foreground hover:text-red-500 shrink-0"
               onClick={() => removeField("data", index)}
             >
               <Trash2 className="h-3 w-3" />
@@ -590,11 +590,11 @@ export function DatabaseForm({ nodeId }: DatabaseFormProps) {
         ))}
       </div>
 
-      <div className="flex items-start gap-2 p-2 bg-neutral-50 border border-neutral-200 rounded text-[10px] text-neutral-600">
+      <div className="flex items-start gap-2 p-2 bg-card border border-borer rounded text-[10px] text-muted-foreground">
         <Info className="h-3 w-3 mt-0.5 shrink-0" />
         <span>
           Type{" "}
-          <code className="px-1 py-0.5 bg-neutral-200 rounded font-mono">
+          <code className="px-1 py-0.5 bg-secondary rounded font-mono">
             {"{{"}
           </code>{" "}
           to insert dynamic node values

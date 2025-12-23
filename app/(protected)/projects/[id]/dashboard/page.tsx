@@ -51,12 +51,14 @@ export default function Page({ params }: ProjectPageProps) {
   }
   return (
     <div className="h-full px-4 w-full mx-auto">
-      <div className="h-full border-b border-neutral-300 w-full  py-16 mx-auto">
+      <div className="h-full border-b border-border w-full  py-16 mx-auto">
         <div className="mx-auto max-w-7xl w-full  flex flex-col gap-y-4 ">
           <div className="flex flex-col md:flex-row md:items-center gap-6 justify-between w-full">
             <div className="flex flex-col md:flex-row md:items-end gap-3 w-full ">
               <div>
-                <h1 className="text-3xl">{currentProject.name}</h1>
+                <h1 className="text-3xl text-foreground">
+                  {currentProject.name}
+                </h1>
               </div>
             </div>
             <div className="flex items-center">
@@ -64,33 +66,33 @@ export default function Page({ params }: ProjectPageProps) {
                 <div className="flex flex-col gap-y-1">
                   <Link
                     href={`/projects/${currentProject._id}/workflows`}
-                    className="text-sm transition text-neutral-800 hover:text-neutral-600 cursor-pointer"
+                    className="text-sm transition text-muted-foreground cursor-pointer"
                   >
                     Workflows
                   </Link>
-                  <p className="text-2xl tabular-nums">
+                  <p className="text-2xl tabular-nums text-foreground">
                     {currentProject.workflows.length}
                   </p>
                 </div>
                 <div className="flex flex-col gap-y-1">
                   <Link
                     href={`/projects/${currentProject._id}/secrets`}
-                    className="text-sm transition text-neutral-800 hover:text-neutral-600 cursor-pointer"
+                    className="text-sm transition text-muted-foreground cursor-pointer"
                   >
                     Secrets
                   </Link>
-                  <p className="text-2xl tabular-nums">
+                  <p className="text-2xl tabular-nums text-foreground">
                     {currentProject.secrets.length}
                   </p>
                 </div>
                 <div className="flex flex-col gap-y-1">
                   <Link
                     href={`/projects/${currentProject._id}/logs`}
-                    className="text-sm transition text-neutral-800 hover:text-neutral-600 cursor-pointer"
+                    className="text-sm transition text-muted-foreground cursor-pointer"
                   >
                     Requests
                   </Link>
-                  <p className="text-2xl tabular-nums">
+                  <p className="text-2xl tabular-nums text-foreground">
                     {currentProject.stats.totalApiCalls}
                   </p>
                 </div>
@@ -98,14 +100,14 @@ export default function Page({ params }: ProjectPageProps) {
               <div className="ml-6 border-l flex  flex-col items-start w-[145px] justify-end pl-8 gap-2">
                 <Link
                   href={`/projects/${currentProject._id}/settings`}
-                  className="cursor-pointer text-xs items-center gap-2 inline-flex px-2.5 py-1 h-[26px] border border-neutral-300 text-neutral-700 rounded-md hover:bg-neutral-100 transition duration-150"
+                  className="cursor-pointer text-xs items-center gap-2 inline-flex px-2.5 py-1 h-[26px] border border-border text-muted-foreground rounded-md bg-card hover:bg-muted transition duration-150"
                 >
                   <div className="[&_svg]:h-[14px] [&_svg]:w-[14px] text-foreground-lighter">
                     <div
                       className={`w-2 h-2 rounded-full  ${
                         currentProject.cors.enabled
                           ? "bg-green-400"
-                          : "bg-red-400"
+                          : "bg-destructive"
                       }`}
                     ></div>
                   </div>
@@ -113,14 +115,14 @@ export default function Page({ params }: ProjectPageProps) {
                 </Link>
                 <Link
                   href={`/projects/${currentProject._id}/settings`}
-                  className="cursor-pointer text-xs items-center gap-2 inline-flex px-2.5 py-1 h-[26px] border border-neutral-300 text-neutral-700 rounded-md hover:bg-neutral-100 transition duration-150"
+                  className="cursor-pointer text-xs items-center gap-2 inline-flex px-2.5 py-1 h-[26px] border border-border text-muted-foreground rounded-md bg-card hover:bg-muted transition duration-150"
                 >
                   <div className="[&_svg]:h-[14px] [&_svg]:w-[14px] text-foreground-lighter">
                     <div
                       className={`w-2 h-2 rounded-full  ${
                         currentProject.rateLimit.enabled
                           ? "bg-green-400"
-                          : "bg-red-400"
+                          : "bg-destructive"
                       }`}
                     ></div>
                   </div>
@@ -131,8 +133,8 @@ export default function Page({ params }: ProjectPageProps) {
           </div>
         </div>
       </div>
-      <div className="h-full border-b border-neutral-300 w-full  py-16 mx-auto">
-        <div className="mx-auto max-w-7xl w-full space-y-16 ">
+      <div className="h-full border-b border-border w-full  py-16 mx-auto">
+        <div className="mx-auto max-w-7xl w-full space-y-4 ">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
             <SuccessFailChart
               successCalls={currentProject.stats.successCalls}
@@ -145,7 +147,7 @@ export default function Page({ params }: ProjectPageProps) {
           <ApiCallsChart projectId={currentProject._id} className="w-full" />
         </div>
       </div>
-      <div className="h-full border-b border-neutral-300 w-full  py-16 mx-auto">
+      <div className="h-full border-b border-border w-full  py-16 mx-auto">
         <div className="mx-auto max-w-7xl w-full space-y-16 ">
           <div className="space-y-8">
             <h2 className="text-lg">Example Template</h2>
@@ -153,21 +155,28 @@ export default function Page({ params }: ProjectPageProps) {
               {[...Array(7)].map((_, i) => (
                 <div
                   key={i}
-                  className="group relative border border-neutral-300 flex h-32 flex-row rounded-md p-4 hover:bg-neutral-50 transition"
+                  className="group relative border border-border flex h-32 flex-row rounded-md p-4 bg-card hover:bg-muted transition"
                 >
                   <div className="mr-4 flex flex-col">
                     <Image
-                      src="/logo/light.png"
-                      alt="logo"
+                      src={"/logo/light.png"}
+                      alt="Dotportion Logo"
                       width={26}
                       height={26}
-                      className="transition group-hover:scale-110"
+                      className="transition group-hover:scale-110 block dark:hidden"
+                    />
+                    <Image
+                      src={"/logo/dark.png"}
+                      alt="Dotportion Logo"
+                      width={26}
+                      height={26}
+                      className="transition group-hover:scale-110 hidden dark:block"
                     />
                   </div>
 
                   <div className="w-4/5 space-y-2">
-                    <h5 className="text-neutral-900">Todo</h5>
-                    <p className="text-sm text-neutral-600">
+                    <h5 className="text-foreground">Todo</h5>
+                    <p className="text-sm text-muted-foreground">
                       Simple todo application
                     </p>
                   </div>
