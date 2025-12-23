@@ -58,12 +58,36 @@ interface SecretsTableProps {
   data: Secret[];
   projectId: string;
   isCreating: boolean;
+  isLoading: boolean;
+}
+
+function SecretsTableSkeleton({
+  columns,
+  rows = 5,
+}: {
+  columns: number;
+  rows?: number;
+}) {
+  return (
+    <>
+      {Array.from({ length: rows }).map((_, rowIndex) => (
+        <TableRow key={rowIndex}>
+          {Array.from({ length: columns }).map((_, colIndex) => (
+            <TableCell key={colIndex}>
+              <div className="h-4 w-full rounded bg-muted animate-pulse" />
+            </TableCell>
+          ))}
+        </TableRow>
+      ))}
+    </>
+  );
 }
 
 export function SecretsTable({
   data,
   projectId,
   isCreating,
+  isLoading,
 }: SecretsTableProps) {
   const dispatch = useDispatch<AppDispatch>();
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -338,10 +362,35 @@ export function SecretsTable({
                 ))}
               </TableHeader>
               <TableBody className="[&_tr]:border-b border-border bg-card">
-                {table.getRowModel().rows?.length ? (
+                {isLoading ? (
+                  <SecretsTableSkeleton columns={columns.length} rows={4} />
+                ) : !isLoading && data.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={columns.length}>
+                      <div className="flex flex-col items-center justify-center h-[260px] gap-2 text-center">
+                        <div className="text-sm font-medium text-muted-foreground">
+                          No secrets found
+                        </div>
+                        <p className="text-xs text-muted-foreground max-w-sm">
+                          Create a secret to securely store credentials and
+                          configurations.
+                        </p>
+
+                        <CreateSecretDialog
+                          projectId={projectId}
+                          isCreating={isCreating}
+                        >
+                          <Button className="mt-4 justify-start gap-2 text-left font-normal  cursor-pointer text-xs h-7 px-2.5 py-1">
+                            <Plus className="size-3.5 mr-1" />
+                            New Secret
+                          </Button>
+                        </CreateSecretDialog>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ) : (
                   table.getRowModel().rows.map((row) => (
                     <TableRow
-                      // className="relative after:content-[''] after:absolute after:bottom-0 after:left-2 after:right-2 after:h-px after:bg-border border-muted-foreground"
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
                     >
@@ -355,15 +404,6 @@ export function SecretsTable({
                       ))}
                     </TableRow>
                   ))
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={columns.length}
-                      className="h-24 text-center"
-                    >
-                      No secrets found.
-                    </TableCell>
-                  </TableRow>
                 )}
               </TableBody>
             </Table>

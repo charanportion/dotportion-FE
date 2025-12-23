@@ -483,11 +483,11 @@ export default function SchemaPageContent() {
     return (
       <>
         {/* Top Bar Skeleton */}
-        <div className="relative flex w-full h-12 min-h-12 items-center justify-between border-b border-neutral-300 px-3 gap-4">
+        <div className="relative flex w-full h-12 min-h-12 items-center justify-between border-b border-border px-3 gap-4">
           <div className="flex items-center gap-2">
             <Skeleton className="size-7 rounded-md" />
             <Skeleton className="size-7 rounded-md" />
-            <div className="w-px h-5 bg-neutral-300 mx-1" />
+            <div className="w-px h-5 bg-background mx-1" />
             <Skeleton className="h-7 w-24 rounded-md" />
           </div>
           <div className="flex items-center gap-2">
@@ -501,7 +501,7 @@ export default function SchemaPageContent() {
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
         {/* Footer Skeleton */}
-        <div className="h-9 border-t border-neutral-300 bg-white flex items-center justify-center gap-6 px-4 shrink-0">
+        <div className="h-9 border-t border-border bg-background flex items-center justify-center gap-6 px-4 shrink-0">
           {[...Array(5)].map((_, i) => (
             <div key={i} className="flex items-center gap-1.5">
               <Skeleton className="size-3.5 rounded" />

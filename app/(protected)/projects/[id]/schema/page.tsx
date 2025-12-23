@@ -128,14 +128,22 @@ export default function DatabasePage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div
+              className={cn(
+                "grid gap-4",
+                databaseOptions.length === 1
+                  ? "grid-cols-1 place-items-center"
+                  : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+              )}
+            >
               {databaseOptions.map((db) => (
                 <div
                   key={db.id}
                   onClick={() => handleDatabaseClick(db)}
                   className={cn(
                     "group p-4 rounded-lg border cursor-pointer transition-all",
-                    "hover:shadow-md hover:bg-muted border-border bg-card"
+                    "hover:shadow-md hover:bg-muted border-border bg-card",
+                    databaseOptions.length === 1 && "w-full max-w-sm"
                   )}
                 >
                   <div className="flex items-start justify-between mb-3">

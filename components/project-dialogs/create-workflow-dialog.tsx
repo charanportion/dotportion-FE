@@ -27,6 +27,7 @@ import { createWorkflow } from "@/lib/redux/slices/workflowsSlice";
 import type { AppDispatch } from "@/lib/redux/store";
 import { toast } from "sonner";
 import { LoaderCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface CreateWorkflowDialogProps {
   projectId: string;
@@ -45,6 +46,7 @@ export function CreateWorkflowDialog({
   const [method, setMethod] = useState("GET");
   const [path, setPath] = useState("");
   const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -84,7 +86,7 @@ export function CreateWorkflowDialog({
     const defaultEdges = [{ id: "e1-2", source: "1", target: "2" }];
 
     try {
-      await dispatch(
+      const response = await dispatch(
         createWorkflow({
           projectId,
           data: {
@@ -97,6 +99,8 @@ export function CreateWorkflowDialog({
           },
         })
       ).unwrap();
+
+      const workflowId = response._id;
       toast("Success", {
         description: "Workflow created successfully",
         className: "bg-green-500 text-white",
@@ -106,6 +110,7 @@ export function CreateWorkflowDialog({
       setDescription("");
       setPath("");
       setMethod("");
+      router.push(`/projects/${projectId}/workflows/${workflowId}`);
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);

@@ -30,9 +30,11 @@ export default function PendingAccessPage() {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen px-6 text-center">
-      <h1 className="text-3xl font-semibold mb-4">Access Requested</h1>
+      <h1 className="text-3xl font-semibold mb-4 text-foreground">
+        Access Requested
+      </h1>
 
-      <p className="text-neutral-600 max-w-md">
+      <p className="text-muted-foreground max-w-md">
         Your access request has been received. Once approved, you will be
         notified and automatically gain access to your workspace.
       </p>
