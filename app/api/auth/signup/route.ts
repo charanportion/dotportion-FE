@@ -22,6 +22,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const nextResponse = NextResponse.json(data);
+    const expiresDate = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+    if (data.access?.status !== undefined) {
+      nextResponse.cookies.set("auth-access-status", data.access.status, {
+        httpOnly: false,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        path: "/",
+        expires: expiresDate,
+      });
+    }
+
     // Signup doesn't return a token - just pass through the response
     return NextResponse.json(data);
   } catch (error) {
