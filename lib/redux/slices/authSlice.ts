@@ -90,6 +90,8 @@ export const login = createAsyncThunk<
 >("auth/login", async ({ email, password }, { rejectWithValue }) => {
   try {
     const res = await authApi.signIn({ email, password });
+
+    console.log(res);
     return res;
   } catch (error) {
     return rejectWithValue(handleApiError(error));

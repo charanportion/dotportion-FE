@@ -19,7 +19,7 @@ import { fetchSecrets } from "@/lib/redux/slices/secretsSlice";
 import Link from "next/link";
 import { format } from "date-fns";
 
-const DATABASE_TYPES = ["mongodb", "supabase", "neondb"];
+// const DATABASE_TYPES = ["mongodb", "supabase", "neondb"];
 
 export default function DatabasePage() {
   const dispatch = useDispatch<AppDispatch>();
@@ -37,31 +37,34 @@ export default function DatabasePage() {
     }
   }, [dispatch, selectedProject]);
 
-  const databaseSecrets = secrets.filter((secret) =>
-    DATABASE_TYPES.includes(secret.provider.toLowerCase())
+  const mongoSecret = secrets.find(
+    (secret) => secret.provider.toLowerCase() === "mongodb"
   );
 
   // Include platform database in the list
-  const allDatabases = [
-    {
-      _id: "platform",
-      name: "Platform Database",
-      provider: "Internal",
-      description: "Access project's internal database",
-      type: "platform",
-      createdAt: selectedProject?.createdAt || new Date().toISOString(),
-      updatedAt: selectedProject?.updatedAt || new Date().toISOString(),
-    },
-    ...databaseSecrets.map((secret) => ({
-      _id: secret._id,
-      name: secret.provider,
-      provider: secret.provider.toUpperCase(),
-      description: "Click to explore collections and data",
-      type: "external",
-      createdAt: secret.createdAt,
-      updatedAt: secret.updatedAt,
-    })),
-  ];
+  const allDatabases = mongoSecret
+    ? [
+        {
+          _id: mongoSecret._id,
+          name: mongoSecret.provider,
+          provider: mongoSecret.provider.toUpperCase(),
+          description: "Click to explore collections and data",
+          type: "external",
+          createdAt: mongoSecret.createdAt,
+          updatedAt: mongoSecret.updatedAt,
+        },
+      ]
+    : [
+        {
+          _id: "platform",
+          name: "Platform Database",
+          provider: "INTERNAL",
+          description: "Access project's internal database",
+          type: "platform",
+          createdAt: selectedProject?.createdAt || new Date().toISOString(),
+          updatedAt: selectedProject?.updatedAt || new Date().toISOString(),
+        },
+      ];
 
   const filteredDatabases = allDatabases.filter(
     (db) =>
@@ -117,7 +120,7 @@ export default function DatabasePage() {
   }
 
   // Empty State (no external databases)
-  if (databaseSecrets.length === 0) {
+  if (!mongoSecret && !selectedProject) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen text-center gap-4 bg-background">
         <Database className="h-10 w-10 text-foreground" />

@@ -132,7 +132,7 @@ export function CreateSecretDialog({
                 </Label>
                 <Input
                   id="uri"
-                  type="password"
+                  // type="password"
                   value={uri}
                   onChange={(e) => setUri(e.target.value)}
                   placeholder="mongodb+srv://..."
@@ -148,7 +148,7 @@ export function CreateSecretDialog({
                 </Label>
                 <Input
                   id="secret"
-                  type="password"
+                  // type="password"
                   value={secret}
                   onChange={(e) => setSecret(e.target.value)}
                   placeholder="Enter JWT secret"

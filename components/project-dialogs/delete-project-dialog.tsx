@@ -20,6 +20,7 @@ import { deleteProject } from "@/lib/redux/slices/projectsSlice";
 import type { AppDispatch } from "@/lib/redux/store";
 import type { Project } from "@/lib/api/projects";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface DeleteProjectDialogProps {
   project: Project;
@@ -34,6 +35,7 @@ export function DeleteProjectDialog({
 }: DeleteProjectDialogProps) {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
 
   const handleDelete = async () => {
     try {
@@ -43,6 +45,7 @@ export function DeleteProjectDialog({
         className: "bg-green-500 text-white",
       });
       setOpen(false);
+      router.push("/projects");
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);

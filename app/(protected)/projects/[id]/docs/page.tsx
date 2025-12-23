@@ -333,8 +333,8 @@ export default function ApiDocsPage({ params }: ApiDocsPageProps) {
           <div className="flex-1 overflow-y-auto">
             {!currentWorkflowId ? (
               <div className="h-full flex flex-col items-center justify-center text-muted-foreground p-8">
-                <div className="bg-neutral-100 rounded-full p-6 mb-4">
-                  <FileCode className="size-12 text-foreground" />
+                <div className=" rounded-full p-6 mb-4">
+                  <FileCode className="size-12 text-muted-foreground" />
                 </div>
                 <h3 className="text-base font-semibold text-foreground mb-2">
                   Select a workflow

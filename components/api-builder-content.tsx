@@ -17,7 +17,14 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { TestPanel } from "@/components/test-panel";
-import { Beaker, ArrowLeft, Save, Eye, EyeOff } from "lucide-react";
+import {
+  Beaker,
+  ArrowLeft,
+  Save,
+  Eye,
+  EyeOff,
+  LoaderCircle,
+} from "lucide-react";
 import { APIStartNode } from "@/components/nodes/api-start-node";
 import { ParameterNode } from "@/components/nodes/parameter-node";
 import { LogicNode } from "@/components/nodes/logic-node";
@@ -868,9 +875,11 @@ export function ApiBuilderContent({
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <div className="text-center">
-          <h2 className="text-2xl font-semibold">Loading workflow...</h2>
+      <div className="flex items-center justify-center h-[94vh]">
+        <div className="flex flex-col items-center gap-2">
+          {/* <DotLoader /> */}
+          <LoaderCircle className="size-4 text-foreground animate-spin" />
+          <p className="text-sm text-muted-foreground">Loading Workflow...</p>
         </div>
       </div>
     );

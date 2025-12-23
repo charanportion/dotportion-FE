@@ -52,6 +52,16 @@ export async function POST(request: NextRequest) {
         path: "/",
         expires: expiresDate,
       });
+
+      if (data.access?.status !== undefined) {
+        nextResponse.cookies.set("auth-access-status", data.access.status, {
+          httpOnly: false,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+          path: "/",
+          expires: expiresDate,
+        });
+      }
     }
 
     return nextResponse;

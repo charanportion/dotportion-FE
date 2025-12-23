@@ -47,7 +47,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useDispatch } from "react-redux";
 import {
   toggleWorkflowDeployment,
@@ -57,7 +57,6 @@ import type { Workflow } from "@/lib/api/workflows";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import type { AppDispatch } from "@/lib/redux/store";
-import DotLoader from "./loader";
 import { CreateWorkflowDialog } from "./project-dialogs/create-workflow-dialog";
 
 interface WorkflowsTableProps {
@@ -69,6 +68,28 @@ interface WorkflowsTableProps {
   selectedWorkflowId?: string;
   mode?: "workflows" | "logs";
   isCreating?: boolean;
+}
+
+function TableSkeletonRows({
+  columns,
+  rows = 5,
+}: {
+  columns: number;
+  rows?: number;
+}) {
+  return (
+    <>
+      {Array.from({ length: rows }).map((_, rowIndex) => (
+        <TableRow key={rowIndex}>
+          {Array.from({ length: columns }).map((_, colIndex) => (
+            <TableCell key={colIndex}>
+              <div className="h-16 w-full rounded bg-muted animate-pulse" />
+            </TableCell>
+          ))}
+        </TableRow>
+      ))}
+    </>
+  );
 }
 
 export function WorkflowsTable({
@@ -331,22 +352,6 @@ export function WorkflowsTable({
     },
   });
 
-  if (isLoading) {
-    return (
-      <Card className="shadow-none border-none py-0 min-w-xl w-full">
-        <CardHeader>
-          <CardTitle>Workflow Logs</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center justify-center py-8">
-            <DotLoader />
-            <div className="text-muted-foreground">Loading workflows...</div>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
   return (
     <Card className="shadow-none border-none rounded-none pt-2 pb-0 w-full h-full bg-background gap-2 px-0">
       {mode === "logs" ? (
@@ -489,8 +494,37 @@ export function WorkflowsTable({
                   </TableRow>
                 ))}
               </TableHeader>
+
               <TableBody className="bg-card">
-                {table.getRowModel().rows?.length ? (
+                {isLoading ? (
+                  <TableSkeletonRows columns={columns.length} rows={6} />
+                ) : !isLoading && workflows.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={columns.length}>
+                      <div className="flex flex-col items-center justify-center h-[260px] gap-2 text-center">
+                        <div className="text-sm font-medium text-foreground">
+                          No workflows found
+                        </div>
+                        <p className="text-xs text-muted-foreground max-w-sm">
+                          Create your first workflow to start building APIs and
+                          automations.
+                        </p>
+
+                        {mode === "workflows" && (
+                          <CreateWorkflowDialog
+                            projectId={projectId}
+                            isCreating={isCreating}
+                          >
+                            <Button className="mt-3 justify-start gap-2 text-left font-normal border-2 border-neutral-950 dark:border-neutral-300 bg-neutral-800 dark:bg-neutral-100 hover:bg-neutral-700 dark:hover:bg-neutral-300 text-background hover:text-muted cursor-pointer text-xs h-7 px-2.5 py-1">
+                              <Plus className="size-3.5 mr-1" />
+                              New Workflow
+                            </Button>
+                          </CreateWorkflowDialog>
+                        )}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ) : (
                   table.getRowModel().rows.map((row) => (
                     <TableRow
                       key={row.id}
@@ -512,15 +546,6 @@ export function WorkflowsTable({
                       ))}
                     </TableRow>
                   ))
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={columns.length}
-                      className="h-24 text-center"
-                    >
-                      No results.
-                    </TableCell>
-                  </TableRow>
                 )}
               </TableBody>
             </Table>

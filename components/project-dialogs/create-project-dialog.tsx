@@ -21,6 +21,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { createProject } from "@/lib/redux/slices/projectsSlice";
 import type { AppDispatch } from "@/lib/redux/store";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface CreateProjectDialogProps {
   isCreating?: boolean;
@@ -33,6 +34,7 @@ export function CreateProjectDialog({
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,9 +48,12 @@ export function CreateProjectDialog({
     }
 
     try {
-      await dispatch(
+      const response = await dispatch(
         createProject({ name: name.trim(), description: description.trim() })
       ).unwrap();
+
+      const projectId = response.data._id;
+
       toast("Success", {
         description: "Project created successfully",
         className: "bg-green-500 text-white",
@@ -56,6 +61,7 @@ export function CreateProjectDialog({
       setOpen(false);
       setName("");
       setDescription("");
+      router.push(`/projects/${projectId}/dashboard`);
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
@@ -98,7 +104,7 @@ export function CreateProjectDialog({
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Enter project name"
                 required
-                className="h-8 px-3 py-2 bg-input border border-border  rounded-lg font-inter text-neutral-800 text-xs shadow-none"
+                className="h-8 px-3 py-2 bg-input border border-border  rounded-lg font-inter  text-xs shadow-none"
               />
             </div>
             <div className="grid gap-2">

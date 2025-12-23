@@ -5,7 +5,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useAppDispatch } from "@/lib/redux/hooks";
 import { completeOAuthLogin } from "@/lib/redux/slices/authSlice";
 // import { Spinner } from "@/components/ui/spinner";
-import DotLoader from "@/components/loader";
+// import DotLoader from "@/components/loader";
+import { LoaderCircle } from "lucide-react";
 
 function AuthSuccessInner() {
   const router = useRouter();
@@ -54,7 +55,8 @@ function AuthSuccessInner() {
   return (
     <div className="h-full w-full flex items-center justify-center">
       <div className="text-center flex flex-col items-center justify-center gap-2">
-        <DotLoader />
+        {/* <DotLoader /> */}
+        <LoaderCircle className="size-4 text-foreground animate-spin" />
         <p className="text-xl text-foreground font-semibold">
           Authenticating...
         </p>

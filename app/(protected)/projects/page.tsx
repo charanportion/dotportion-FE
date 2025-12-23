@@ -189,8 +189,8 @@ export default function ProjectsPage() {
   if (!projects || projects.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen text-center gap-4 bg-background">
-        <Folder className="h-10 w-10 text-gray-400" />
-        <h2 className="text-2xl font-semibold text-gray-800">
+        <Folder className="h-10 w-10 text-muted-foreground" />
+        <h2 className="text-2xl font-semibold text-foreground">
           No projects yet
         </h2>
         <p className="text-muted-foreground">

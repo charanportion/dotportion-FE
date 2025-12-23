@@ -41,6 +41,8 @@ export function SuccessFailChart({
   const chartData = [{ success: successCalls, failed: failedCalls }];
   const totalCalls = successCalls + failedCalls;
 
+  const hasData = totalCalls > 0;
+
   return (
     <Card className="flex flex-col h-full w-full shadow-none border border-border py-4">
       <CardHeader className="items-center pb-0 px-4">
@@ -49,62 +51,73 @@ export function SuccessFailChart({
         </CardTitle>
       </CardHeader>
       <CardContent className="pb-0 flex flex-col items-center justify-end mt-auto px-4 -mb-16">
-        <ChartContainer
-          config={chartConfig}
-          className="mx-auto aspect-square w-full max-w-[250px]"
-        >
-          <RadialBarChart
-            data={chartData}
-            endAngle={180}
-            innerRadius={80}
-            outerRadius={160}
+        {hasData ? (
+          <ChartContainer
+            config={chartConfig}
+            className="mx-auto aspect-square w-full max-w-[250px]"
           >
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
-            <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
-              <Label
-                content={({ viewBox }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                    return (
-                      <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle">
-                        <tspan
-                          x={viewBox.cx}
-                          y={(viewBox.cy || 0) - 16}
-                          className="fill-foreground text-2xl font-bold"
-                        >
-                          {totalCalls.toLocaleString()}
-                        </tspan>
-                        <tspan
-                          x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 4}
-                          className="fill-muted-foreground"
-                        >
-                          Total Calls
-                        </tspan>
-                      </text>
-                    );
-                  }
-                }}
+            <RadialBarChart
+              data={chartData}
+              endAngle={180}
+              innerRadius={80}
+              outerRadius={160}
+            >
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent hideLabel />}
               />
-            </PolarRadiusAxis>
-            <RadialBar
-              dataKey="success"
-              stackId="a"
-              cornerRadius={5}
-              fill="var(--color-success)"
-              className="stroke-transparent stroke-2"
-            />
-            <RadialBar
-              dataKey="failed"
-              fill="var(--color-failed)"
-              stackId="a"
-              cornerRadius={5}
-              className="stroke-transparent stroke-2"
-            />
-          </RadialBarChart>
-        </ChartContainer>
+              <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
+                <Label
+                  content={({ viewBox }) => {
+                    if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                      return (
+                        <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle">
+                          <tspan
+                            x={viewBox.cx}
+                            y={(viewBox.cy || 0) - 16}
+                            className="fill-foreground text-2xl font-bold"
+                          >
+                            {totalCalls.toLocaleString()}
+                          </tspan>
+                          <tspan
+                            x={viewBox.cx}
+                            y={(viewBox.cy || 0) + 4}
+                            className="fill-muted-foreground"
+                          >
+                            Total Calls
+                          </tspan>
+                        </text>
+                      );
+                    }
+                  }}
+                />
+              </PolarRadiusAxis>
+              <RadialBar
+                dataKey="success"
+                stackId="a"
+                cornerRadius={5}
+                fill="var(--color-success)"
+                className="stroke-transparent stroke-2"
+              />
+              <RadialBar
+                dataKey="failed"
+                fill="var(--color-failed)"
+                stackId="a"
+                cornerRadius={5}
+                className="stroke-transparent stroke-2"
+              />
+            </RadialBarChart>
+          </ChartContainer>
+        ) : (
+          <div className="flex h-[250px] w-full flex-col items-center justify-center gap-2 text-center">
+            <p className="text-sm font-medium text-muted-foreground">
+              No data available
+            </p>
+            <p className="text-xs text-muted-foreground">
+              API statistics will appear once requests are made.
+            </p>
+          </div>
+        )}
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
         <div className="flex items-center justify-center gap-6 mt-4">
