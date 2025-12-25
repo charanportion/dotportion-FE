@@ -41,6 +41,7 @@ import {
   Copy,
   Check,
   RefreshCcw,
+  LoaderCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -54,9 +55,11 @@ export default function ApiDocsPage({ params }: ApiDocsPageProps) {
   const { id } = use(params);
   const dispatch = useDispatch<AppDispatch>();
 
-  const { projects, selectedProject } = useSelector(
-    (state: RootState) => state.projects
-  );
+  const {
+    projects,
+    isLoading: projectsLoading,
+    selectedProject,
+  } = useSelector((state: RootState) => state.projects);
   const {
     workflows,
     isLoading: workflowsLoading,
@@ -169,6 +172,18 @@ export default function ApiDocsPage({ params }: ApiDocsPageProps) {
         },
       ]
     : [];
+
+  if (projectsLoading) {
+    return (
+      <div className="flex items-center justify-center h-[94vh]">
+        <div className="flex flex-col items-center gap-2">
+          {/* <DotLoader /> */}
+          <LoaderCircle className="size-4 text-foreground animate-spin" />
+          <p className="text-sm text-muted-foreground">Loading project...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!currentProject) {
     return (
