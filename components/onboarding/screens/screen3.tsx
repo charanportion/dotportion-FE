@@ -10,31 +10,63 @@ import { useRouter } from "next/navigation";
 import { setAnswer, submitAnswer } from "@/lib/redux/slices/profileSlice";
 
 const tools = [
-  "HTML",
-  "CSS",
-  "JavaScript",
-  "TypeScript",
-  "React.js",
-  "Angular",
-  "Vue.js",
-  "Svelte",
-  "Next.js",
-  "Nuxt.js",
-  "Tailwind CSS",
-  "Bootstrap",
-  "Material UI",
-  "Chakra UI",
-  "Styled Components",
-  "Vite",
-  "Webpack",
-  "Babel",
-  "ESLint / Prettier",
-  "Jest",
-  "React Testing Library",
-  "Cypress",
-  "No code development",
-  "Vibecoding",
-  "Playwright",
+  // Backend Languages & Runtimes
+  "Node.js",
+  "Deno",
+  "Bun",
+  "Python",
+  "Java",
+  "Go",
+  "PHP",
+  "Ruby",
+
+  // Backend Frameworks
+  "Express.js",
+  "Fastify",
+  "NestJS",
+  "Django",
+  "Flask",
+  "Spring Boot",
+
+  // Databases
+  "MongoDB",
+  "PostgreSQL",
+  "MySQL",
+  "SQLite",
+  "Redis",
+  "DynamoDB",
+  "Firebase / Firestore",
+
+  // ORMs / Data Layer
+  "Prisma",
+
+  // APIs & Communication
+  "REST APIs",
+  "GraphQL",
+  "WebSockets",
+  "Socket.IO",
+
+  // DevOps & Deployment
+  "Docker",
+  "Kubernetes",
+
+  // Cloud Platforms
+  "AWS",
+  "GCP",
+  "Azure",
+  "Vercel",
+  "Netlify",
+  "Railway",
+  "Render",
+
+  // Serverless
+  "AWS Lambda",
+  "Cloudflare Workers",
+  "Firebase Functions",
+
+  // CI/CD & Tooling
+  "GitHub Actions",
+  "Bitbucket Pipelines",
 ];
 
 export default function Screen3() {
@@ -87,7 +119,7 @@ export default function Screen3() {
           <Button
             key={tool}
             onClick={() => toggleTool(tool)}
-            className={`px-3 sm:px-4 py-2 text-sm rounded-full border whitespace-nowrap hover:bg-muted text-foreground transition ${
+            className={`shadow-none px-3 sm:px-4 py-2 text-sm rounded-full border whitespace-nowrap hover:bg-muted text-foreground transition ${
               answers.tools?.includes(tool)
                 ? "bg-primary text-primary-foreground border-border"
                 : "bg-card text-foreground border-border hover:bg-muted"
