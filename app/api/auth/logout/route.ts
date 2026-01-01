@@ -34,5 +34,14 @@ export async function POST() {
     expires: new Date(0),
   });
 
+  response.cookies.set("auth-access-status", "", {
+  httpOnly: false,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "strict", // MUST match how it was set
+  path: "/",          // MUST match
+  maxAge: 0,
+  expires: new Date(0),
+});
+
   return response;
 }
