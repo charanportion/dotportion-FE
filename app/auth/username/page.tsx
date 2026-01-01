@@ -30,8 +30,8 @@ export default function UsernamePage() {
     });
 
     if (!res.ok) {
-      toast.error("failed to set username");
-      alert("Failed: " + (await res.text()));
+      toast.error("Username Already exists");
+      setLoading(false);
       return;
     }
 

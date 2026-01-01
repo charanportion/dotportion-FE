@@ -6,6 +6,7 @@ import { ClientProviders } from "@/components/providers/client-providers";
 import { Analytics } from "@vercel/analytics/next";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
+import { PostHogProvider } from "@/components/providers/posthog-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -60,7 +61,9 @@ export default function RootLayout({
             closeButton
             expand={true}
           />
-          <ClientProviders>{children}</ClientProviders>
+          <PostHogProvider>
+            <ClientProviders>{children}</ClientProviders>
+          </PostHogProvider>
         </ThemeProvider>
       </body>
     </html>
