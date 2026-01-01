@@ -5,7 +5,7 @@ import { use } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "@/lib/redux/store";
 import { selectProject } from "@/lib/redux/slices/projectsSlice";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, LoaderCircle } from "lucide-react";
 import { SuccessFailChart } from "@/components/charts/success-fail-chart";
 import { TopWorkflowsBarChart } from "@/components/charts/top-workflows-bar";
 import { ApiCallsChart } from "@/components/charts/api-calls-chart";
@@ -23,9 +23,11 @@ export default function Page({ params }: ProjectPageProps) {
   const { id } = use(params);
   const dispatch = useDispatch<AppDispatch>();
 
-  const { projects, selectedProject } = useSelector(
-    (state: RootState) => state.projects
-  );
+  const {
+    projects,
+    selectedProject,
+    isLoading: projectsLoading,
+  } = useSelector((state: RootState) => state.projects);
 
   // Find the current project
   const currentProject = projects.find((p) => p._id === id);
@@ -36,6 +38,18 @@ export default function Page({ params }: ProjectPageProps) {
       dispatch(selectProject(currentProject));
     }
   }, [currentProject, selectedProject, dispatch]);
+
+  if (projectsLoading) {
+    return (
+      <div className="flex items-center justify-center h-[94vh]">
+        <div className="flex flex-col items-center gap-2">
+          {/* <DotLoader /> */}
+          <LoaderCircle className="size-4 text-foreground animate-spin" />
+          <p className="text-sm text-muted-foreground">Loading project...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!currentProject) {
     return (

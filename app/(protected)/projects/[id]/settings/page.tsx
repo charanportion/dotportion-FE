@@ -122,6 +122,18 @@ export default function SettingsPage({ params }: SettingsPageProps) {
     }
   };
 
+  if (projectsLoading) {
+    return (
+      <div className="flex items-center justify-center h-[94vh]">
+        <div className="flex flex-col items-center gap-2">
+          {/* <DotLoader /> */}
+          <LoaderCircle className="size-4 text-foreground animate-spin" />
+          <p className="text-sm text-muted-foreground">Loading project...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!currentProject) {
     return (
       <div className="flex items-center justify-center h-full">

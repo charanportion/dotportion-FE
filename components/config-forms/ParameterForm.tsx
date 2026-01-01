@@ -65,7 +65,7 @@ export function ParameterForm() {
                     name={`sources.${sourceIndex}.from`}
                     render={({ field }) => (
                       <FormItem className="space-y-1">
-                        <FormLabel className="text-[10px] font-medium text-foreground">
+                        <FormLabel className="text-[10px] font-medium text-foreground font-inter">
                           Source Type
                         </FormLabel>
                         <Select
@@ -100,7 +100,7 @@ export function ParameterForm() {
                   />
 
                   <div className="space-y-2">
-                    <FormLabel className="text-[10px] font-medium text-foreground">
+                    <FormLabel className="text-[10px] font-medium text-foreground font-inter">
                       Parameters
                     </FormLabel>
                     <div className="space-y-1.5">
