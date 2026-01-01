@@ -53,8 +53,8 @@ export async function POST(request: NextRequest) {
         expires: expiresDate,
       });
 
-      if (data.access?.status !== undefined) {
-        nextResponse.cookies.set("auth-access-status", data.access.status, {
+      if (data.user?.access?.status !== undefined) {
+        nextResponse.cookies.set("auth-access-status", data.user.access.status, {
           httpOnly: false,
           secure: process.env.NODE_ENV === "production",
           sameSite: "strict",
