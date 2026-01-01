@@ -2,6 +2,7 @@
 // Hybrid approach:
 // - Auth endpoints that SET cookies → Use API routes
 // - Other endpoints → Use axios directly (interceptor adds token)
+import { Data } from "@lottiefiles/dotlottie-react";
 import api from "./axios";
 
 /**
@@ -66,7 +67,6 @@ export interface ForgotPasswordResponse {
 
 export interface ResetPasswordRequest {
   email: string;
-  otp: string;
   new_password: string;
 }
 
@@ -82,6 +82,15 @@ export interface UserDetails {
   role: "user" | "admin";
   isVerified: boolean;
   isNewUser: boolean;
+  authProvider: string;
+  access?: {
+    status?: string;
+    source?: string;
+    requestedAt?: Date;
+    approvedAt?: Date;
+    rejectedAt?: Data;
+    approvedBy?: string;
+  };
   profile?: {
     name?: string;
     contact_number?: string;

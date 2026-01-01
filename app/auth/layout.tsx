@@ -60,7 +60,7 @@ export default function AuthLayout({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
   return (
-    <div className="flex flex-col min-h-screen w-screen">
+    <div className="flex flex-col min-h-screen w-full">
       <div className="flex flex-1 w-full overflow-y-hidden">
         <div className="flex-grow h-full overflow-y-auto">
           <div className="relative flex flex-col bg-alternative min-h-screen">
@@ -75,15 +75,22 @@ export default function AuthLayout({
                         alt="Dotportion logo"
                         height={40}
                         width={100}
-                        className="h-9 w-auto"
+                        className="h-9 w-auto object-contain block dark:hidden"
+                      />
+                      <Image
+                        src={"/logo-light.png"}
+                        alt="Dotportion logo"
+                        height={40}
+                        width={100}
+                        className="h-9 w-auto object-contain hidden dark:block"
                       />
                     </Link>
                   </div>
                 </div>
-                <div className="items-center hidden space-x-3 md:ml-10 md:flex md:pr-4">
+                <div className="items-center hidden space-x-3 md:ml-10 md:flex md:pr-4 z-10">
                   <Link
-                    href={"/"}
-                    className="cursor-pointer text-xs items-center gap-2 inline-flex px-2.5 py-1 h-[26px] border border-neutral-300 text-neutral-700 rounded-md hover:bg-neutral-100 transition duration-150"
+                    href={"https://docs.dotportion.com/"}
+                    className="cursor-pointer text-xs items-center gap-2 inline-flex px-2.5 py-1 h-[26px] border border-border  text-foreground rounded-md bg-card hover:bg-neutral-900 transition duration-150"
                   >
                     <BookOpen className="size-3.5" />
                     <span>Documentation</span>
@@ -92,14 +99,14 @@ export default function AuthLayout({
               </nav>
             </div>
             {/* body */}
-            <div className="flex flex-1 h-full">
-              <main className="flex flex-col items-center flex-1 flex-shrink-0 px-5 pt-16 pb-8 border-r shadow-lg bg-studio border-default">
+            <div className="flex flex-1 h-full bg-white dark:bg-neutral-950">
+              <main className="flex flex-col items-center flex-1 flex-shrink-0 px-5 pt-16 pb-8 border-r shadow-lg bg-neutral-50 dark:bg-background border-default">
                 {children}
               </main>
               <aside className="flex-col relative items-center justify-center flex-1 flex-shrink hidden basis-1/4 xl:flex">
                 <div className="relative flex flex-col gap-6">
                   <div className="absolute select-none -top-14 -left-14">
-                    <span className="text-[160px] leading-none text-neutral-300 font-inter">
+                    <span className="text-[160px] leading-none text-muted font-inter">
                       “
                     </span>
                   </div>
@@ -115,10 +122,10 @@ export default function AuthLayout({
                       className="size-12 rounded-full object-cover"
                     />
                     <div className="flex flex-col">
-                      <cite className="not-italic font-medium text-foreground-light whitespace-nowrap">
+                      <cite className="not-italic font-medium text-muted-foreground whitespace-nowrap">
                         @ sri charan
                       </cite>
-                      <p className="text-xs text-neutral-500">Founder</p>
+                      <p className="text-xs text-muted-foreground">Founder</p>
                     </div>
                   </div>
                 </div>

@@ -15,16 +15,21 @@ import { driver, type DriveStep } from "driver.js";
 import "driver.js/dist/driver.css";
 import { userApi } from "@/lib/api/user";
 
+const getUserScopedProjectsTourKey = (userId: string) =>
+  `tour_done_projects_${userId}`;
+
 export default function ProjectsPage() {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
   const {
     projects,
     isLoading,
     error: projectError,
     isCreating,
   } = useAppSelector((state) => state.projects);
+
+  const userId = user?._id;
 
   const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -38,12 +43,13 @@ export default function ProjectsPage() {
 
   useEffect(() => {
     async function syncProjectsTour() {
+      if (!isAuthenticated || !userId) return;
       try {
         const res = await userApi.getTours();
         const tours = res?.tours || {};
 
         if (tours.projectTour === true) {
-          localStorage.setItem("tour_done_projects", "true");
+          localStorage.setItem(getUserScopedProjectsTourKey(userId), "true");
         }
       } catch (err) {
         console.warn("Failed to sync projects tour:", err);
@@ -56,7 +62,7 @@ export default function ProjectsPage() {
       setToursSynced(false);
       syncProjectsTour();
     }
-  }, []);
+  }, [isAuthenticated, userId]);
 
   const filteredProjects = projects?.filter(
     (p) =>
@@ -93,8 +99,8 @@ export default function ProjectsPage() {
   );
 
   useEffect(() => {
-    const TOUR_KEY = "tour_done_projects";
-
+    if (!userId) return;
+    const TOUR_KEY = getUserScopedProjectsTourKey(userId);
     if (typeof window === "undefined") return;
     if (!toursSynced) return;
 
@@ -127,7 +133,7 @@ export default function ProjectsPage() {
     });
 
     setTimeout(() => tour.drive(), 300);
-  }, [isLoading, projectSteps, toursSynced]);
+  }, [isLoading, projectSteps, toursSynced, userId]);
 
   // Loading State
   if (isLoading) {
@@ -183,8 +189,8 @@ export default function ProjectsPage() {
   if (!projects || projects.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen text-center gap-4 bg-background">
-        <Folder className="h-10 w-10 text-gray-400" />
-        <h2 className="text-2xl font-semibold text-gray-800">
+        <Folder className="h-10 w-10 text-muted-foreground" />
+        <h2 className="text-2xl font-semibold text-foreground">
           No projects yet
         </h2>
         <p className="text-muted-foreground">
@@ -215,7 +221,7 @@ export default function ProjectsPage() {
               placeholder="Search for a project"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9 pr-10 h-7 border border-neutral-300 rounded-md bg-neutral-100 text-xs shadow-none"
+              className="pl-9 pr-10 h-7 border border-border bg-input text-xs shadow-none"
             />
           </div>
           {/* <Button
@@ -265,7 +271,7 @@ export default function ProjectsPage() {
             <Card
               key={project._id}
               onClick={() => router.push(`/projects/${project._id}/dashboard`)}
-              className="cursor-pointer border border-neutral-300 bg-white shadow-none rounded-lg p-5 transition-colors duration-200 hover:bg-muted"
+              className="cursor-pointer  shadow-none rounded-lg p-5 transition-colors duration-200 hover:bg-muted"
             >
               <CardHeader className="p-0  flex items-center justify-between">
                 <div>
@@ -304,9 +310,9 @@ export default function ProjectsPage() {
         </div>
       ) : (
         // ---------------- LIST VIEW ----------------
-        <div className="w-full bg-white rounded-lg overflow-hidden shadow-xs border border-neutral-300 h-full">
+        <div className="w-full bg-card rounded-lg overflow-hidden  border border-border h-full">
           {/* List Header */}
-          <div className="grid grid-cols-3 px-6 py-3 text-xs font-medium bg-neutral-100 text-neutral-600 border-b-2 border-neutral-300 uppercase tracking-wide min-w-[800px]">
+          <div className="grid grid-cols-3 px-6 py-3 text-xs font-medium bg-card text-muted-foreground border-b-2 border-border uppercase tracking-wide min-w-[800px]">
             <div className="text-left">Project</div>
             <div className="text-center">Workflows</div>
             <div className="text-center">Created</div>

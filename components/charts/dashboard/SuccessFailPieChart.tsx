@@ -31,7 +31,7 @@ export function SuccessFailPieChart({
   const total = data.success + data.failed;
 
   return (
-    <Card className="shadow-none border border-neutral-300 py-4">
+    <Card className="shadow-none border border-border py-4">
       <CardHeader className="pb-2 px-4">
         <CardTitle className="flex items-center gap-2 font-inter text-sm font-medium">
           API Success vs Failed

@@ -27,7 +27,7 @@ export const ApiStartForm = () => {
         name="method"
         render={({ field }) => (
           <FormItem className="space-y-1.5">
-            <FormLabel className="text-xs font-medium text-neutral-700">
+            <FormLabel className="text-xs font-medium text-foreground">
               Method
             </FormLabel>
             <Select
@@ -36,7 +36,7 @@ export const ApiStartForm = () => {
               defaultValue={field.value}
             >
               <FormControl>
-                <SelectTrigger className="h-8 text-xs border-neutral-300 bg-neutral-50">
+                <SelectTrigger className="h-8 text-xs border-border bg-input disabled:text-muted-foreground">
                   <SelectValue placeholder="Select a type of Method" />
                 </SelectTrigger>
               </FormControl>
@@ -64,7 +64,7 @@ export const ApiStartForm = () => {
         name="path"
         render={({ field }) => (
           <FormItem className="space-y-1.5">
-            <FormLabel className="text-xs font-medium text-neutral-700">
+            <FormLabel className="text-xs font-medium text-foreground">
               Path
             </FormLabel>
             <FormControl>
@@ -72,7 +72,7 @@ export const ApiStartForm = () => {
                 disabled
                 {...field}
                 placeholder="e.g., /create-user"
-                className="h-8 text-xs border-neutral-300 bg-neutral-50"
+                className="h-8 text-xs border-border bg-input disabled:text-muted-foreground"
               />
             </FormControl>
             <FormMessage className="text-[10px]" />

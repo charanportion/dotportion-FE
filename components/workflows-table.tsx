@@ -47,7 +47,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useDispatch } from "react-redux";
 import {
   toggleWorkflowDeployment,
@@ -57,7 +57,6 @@ import type { Workflow } from "@/lib/api/workflows";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import type { AppDispatch } from "@/lib/redux/store";
-import DotLoader from "./loader";
 import { CreateWorkflowDialog } from "./project-dialogs/create-workflow-dialog";
 
 interface WorkflowsTableProps {
@@ -69,6 +68,28 @@ interface WorkflowsTableProps {
   selectedWorkflowId?: string;
   mode?: "workflows" | "logs";
   isCreating?: boolean;
+}
+
+function TableSkeletonRows({
+  columns,
+  rows = 5,
+}: {
+  columns: number;
+  rows?: number;
+}) {
+  return (
+    <>
+      {Array.from({ length: rows }).map((_, rowIndex) => (
+        <TableRow key={rowIndex}>
+          {Array.from({ length: columns }).map((_, colIndex) => (
+            <TableCell key={colIndex}>
+              <div className="h-16 w-full rounded bg-muted animate-pulse" />
+            </TableCell>
+          ))}
+        </TableRow>
+      ))}
+    </>
+  );
 }
 
 export function WorkflowsTable({
@@ -201,7 +222,7 @@ export function WorkflowsTable({
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="h-auto p-0 text-xs font-medium uppercase tracking-wide text-neutral-600 hover:bg-transparent text-center"
+            className="h-auto p-0 text-xs font-medium uppercase tracking-wide text-muted-foreground hover:bg-transparent text-center"
           >
             Status
             {/* <ArrowUpDown className="ml-2 h-4 w-4" /> */}
@@ -223,7 +244,7 @@ export function WorkflowsTable({
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="h-auto p-0 text-xs font-medium uppercase tracking-wide text-neutral-600 hover:bg-transparent"
+            className="h-auto p-0 text-xs font-medium uppercase tracking-wide text-muted-foreground hover:bg-transparent"
           >
             Created
             {/* <ArrowUpDown className="ml-2 h-4 w-4" /> */}
@@ -254,7 +275,6 @@ export function WorkflowsTable({
             checked={row.original.isDeployed}
             onCheckedChange={() => handleToggleDeployment(row.original._id)}
             onClick={(e) => e.stopPropagation()}
-            className="data-[state=checked]:bg-neutral-600"
           />
         </div>
       ),
@@ -295,8 +315,9 @@ export function WorkflowsTable({
                   Edit
                 </DropdownMenuItem>
                 <DropdownMenuItem
+                  variant="destructive"
                   onClick={(e) => handleDeleteWorkflow(workflow._id, e)}
-                  className="text-destructive focus:text-destructive text-xs px-2 py-1.5"
+                  className="text-destructive-foreground text-xs px-2 py-1.5"
                 >
                   <Trash2 className="mr-2 size-3.5" />
                   Delete
@@ -330,22 +351,6 @@ export function WorkflowsTable({
       rowSelection,
     },
   });
-
-  if (isLoading) {
-    return (
-      <Card className="shadow-none border-none py-0 min-w-xl w-full">
-        <CardHeader>
-          <CardTitle>Workflow Logs</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center justify-center py-8">
-            <DotLoader />
-            <div className="text-muted-foreground">Loading workflows...</div>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
 
   return (
     <Card className="shadow-none border-none rounded-none pt-2 pb-0 w-full h-full bg-background gap-2 px-0">
@@ -406,7 +411,7 @@ export function WorkflowsTable({
             <h1 className="text-xl font-medium tracking-tight text-foreground">
               Workflows
             </h1>
-            <p className="text-xs text-gray-600 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               Manage your automated workflows
             </p>
           </div>
@@ -420,14 +425,14 @@ export function WorkflowsTable({
                 onChange={(event) =>
                   table.getColumn("name")?.setFilterValue(event.target.value)
                 }
-                className="h-7 min-w-xs w-full border border-neutral-300 rounded-md bg-neutral-100 text-xs shadow-none"
+                className="h-7 min-w-xs w-full border border-border rounded-md bg-input text-xs shadow-none"
               />
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="outline"
-                    className="flex items-center gap-2 border border-neutral-300 text-xs text-neutral-600 shadow-none size-7"
+                    className="flex items-center gap-2 border border-border text-xs text-muted-foreground shadow-none size-7"
                   >
                     <ListFilter className="size-3.5" />
                   </Button>
@@ -454,7 +459,7 @@ export function WorkflowsTable({
               </DropdownMenu>
             </div>
             <CreateWorkflowDialog projectId={projectId} isCreating={isCreating}>
-              <Button className="justify-start gap-2 text-left font-normal border-2 border-neutral-950 bg-neutral-800 hover:bg-neutral-700 text-white hover:text-white cursor-pointer text-xs h-7 px-2.5 py-1">
+              <Button className="justify-start gap-2 text-left font-normal border-2 border-neutral-950 dark:border-neutral-300 bg-neutral-800 dark:bg-neutral-100 hover:bg-neutral-700 dark:hover:bg-neutral-300 text-background hover:text-muted cursor-pointer text-xs h-7 px-2.5 py-1">
                 <Plus className="size-3.5 mr-1" />
                 New Workflow
               </Button>
@@ -466,14 +471,14 @@ export function WorkflowsTable({
         <div className="flex flex-col flex-1 border rounded-md overflow-hidden">
           <div className=" flex-1 overflow-auto">
             <Table>
-              <TableHeader className="[&_tr]:border-b border-neutral-300 bg-neutral-100">
+              <TableHeader className="[&_tr]:border-b border-border bg-card">
                 {table.getHeaderGroups().map((headerGroup) => (
                   <TableRow key={headerGroup.id}>
                     {headerGroup.headers.map((header, index) => {
                       return (
                         <TableHead
                           key={header.id}
-                          className={`px-4 text-xs font-medium uppercase tracking-wide text-neutral-600 ${
+                          className={`px-4 text-xs font-medium uppercase tracking-wide text-muted-foreground ${
                             index === 0 ? "text-left" : "text-center"
                           }`}
                         >
@@ -489,15 +494,44 @@ export function WorkflowsTable({
                   </TableRow>
                 ))}
               </TableHeader>
-              <TableBody className="bg-white">
-                {table.getRowModel().rows?.length ? (
+
+              <TableBody className="bg-card">
+                {isLoading ? (
+                  <TableSkeletonRows columns={columns.length} rows={6} />
+                ) : !isLoading && workflows.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={columns.length}>
+                      <div className="flex flex-col items-center justify-center h-[260px] gap-2 text-center">
+                        <div className="text-sm font-medium text-foreground">
+                          No workflows found
+                        </div>
+                        <p className="text-xs text-muted-foreground max-w-sm">
+                          Create your first workflow to start building APIs and
+                          automations.
+                        </p>
+
+                        {mode === "workflows" && (
+                          <CreateWorkflowDialog
+                            projectId={projectId}
+                            isCreating={isCreating}
+                          >
+                            <Button className="mt-3 justify-start gap-2 text-left font-normal border-2 border-neutral-950 dark:border-neutral-300 bg-neutral-800 dark:bg-neutral-100 hover:bg-neutral-700 dark:hover:bg-neutral-300 text-background hover:text-muted cursor-pointer text-xs h-7 px-2.5 py-1">
+                              <Plus className="size-3.5 mr-1" />
+                              New Workflow
+                            </Button>
+                          </CreateWorkflowDialog>
+                        )}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ) : (
                   table.getRowModel().rows.map((row) => (
                     <TableRow
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
-                      className={`cursor-pointer border-b border-neutral-300 hover:bg-muted/50 transition-colors ${
+                      className={`cursor-pointer border-b border-border hover:bg-muted/50 transition-colors ${
                         selectedWorkflowId === row.original._id
-                          ? "bg-neutral-100 dark:bg-neutral-950/20 border-neutral-200 dark:border-neutral-800"
+                          ? "bg-muted dark:bg-muted border-border "
                           : ""
                       }`}
                       onClick={() => onWorkflowClick(row.original)}
@@ -512,20 +546,11 @@ export function WorkflowsTable({
                       ))}
                     </TableRow>
                   ))
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={columns.length}
-                      className="h-24 text-center"
-                    >
-                      No results.
-                    </TableCell>
-                  </TableRow>
                 )}
               </TableBody>
             </Table>
           </div>
-          <div className="bg-white flex items-center justify-between pr-0 pl-4 pb-1">
+          <div className="bg-card border-t border-border flex items-center justify-between pr-0 pl-4 pb-1">
             <div className="text-xs text-muted-foreground">
               {table.getPaginationRowModel().rows.length} of{" "}
               {table.getFilteredRowModel().rows.length} workflows

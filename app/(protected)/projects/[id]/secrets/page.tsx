@@ -12,6 +12,7 @@ import { Secret } from "@/lib/api/secrets";
 
 import type { RootState, AppDispatch } from "@/lib/redux/store";
 import { SecretsTable } from "@/components/secrets-table";
+import { LoaderCircle } from "lucide-react";
 
 interface SecretsPageProps {
   params: Promise<{
@@ -23,9 +24,11 @@ export default function SecretsPage({ params }: SecretsPageProps) {
   const { id } = use(params);
   const dispatch = useDispatch<AppDispatch>();
 
-  const { projects, selectedProject } = useSelector(
-    (state: RootState) => state.projects
-  );
+  const {
+    projects,
+    selectedProject,
+    isLoading: projectsLoading,
+  } = useSelector((state: RootState) => state.projects);
 
   const {
     secrets,
@@ -52,6 +55,18 @@ export default function SecretsPage({ params }: SecretsPageProps) {
   const [editSecretDialogOpen, setEditSecretDialogOpen] = useState(false);
   const [secretToEdit, setSecretToEdit] = useState<Secret | null>(null);
 
+  if (projectsLoading) {
+    return (
+      <div className="flex items-center justify-center h-[94vh]">
+        <div className="flex flex-col items-center gap-2">
+          {/* <DotLoader /> */}
+          <LoaderCircle className="size-4 text-foreground animate-spin" />
+          <p className="text-sm text-muted-foreground">Loading project...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!currentProject) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -67,16 +82,12 @@ export default function SecretsPage({ params }: SecretsPageProps) {
 
   return (
     <div className="h-full max-w-7xl w-full  py-6 mx-auto">
-      {/* CHANGE: Render the table directly. We removed the Card wrapper. */}
-      {secretsLoading ? (
-        <p className="text-muted-foreground">Loading secrets...</p>
-      ) : (
-        <SecretsTable
-          data={secrets}
-          projectId={currentProject._id}
-          isCreating={secretsCreating}
-        />
-      )}
+      <SecretsTable
+        data={secrets}
+        projectId={currentProject._id}
+        isLoading={secretsLoading}
+        isCreating={secretsCreating}
+      />
 
       {/* The dialog can remain here as it's positioned absolutely */}
       {secretToEdit && (

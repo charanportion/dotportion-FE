@@ -41,6 +41,7 @@ import {
   Copy,
   Check,
   RefreshCcw,
+  LoaderCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -54,9 +55,11 @@ export default function ApiDocsPage({ params }: ApiDocsPageProps) {
   const { id } = use(params);
   const dispatch = useDispatch<AppDispatch>();
 
-  const { projects, selectedProject } = useSelector(
-    (state: RootState) => state.projects
-  );
+  const {
+    projects,
+    isLoading: projectsLoading,
+    selectedProject,
+  } = useSelector((state: RootState) => state.projects);
   const {
     workflows,
     isLoading: workflowsLoading,
@@ -170,6 +173,18 @@ export default function ApiDocsPage({ params }: ApiDocsPageProps) {
       ]
     : [];
 
+  if (projectsLoading) {
+    return (
+      <div className="flex items-center justify-center h-[94vh]">
+        <div className="flex flex-col items-center gap-2">
+          {/* <DotLoader /> */}
+          <LoaderCircle className="size-4 text-foreground animate-spin" />
+          <p className="text-sm text-muted-foreground">Loading project...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!currentProject) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -181,16 +196,18 @@ export default function ApiDocsPage({ params }: ApiDocsPageProps) {
   return (
     <div className="flex h-[calc(100vh-3rem)] w-full bg-background text-foreground overflow-hidden">
       {/* Left Panel: Workflows List */}
-      <div className="w-64 flex flex-col h-full border-r border-border bg-white shrink-0">
+      <div className="w-64 flex flex-col h-full border-r border-border bg-background shrink-0">
         <div className="border-b border-border flex min-h-12 items-center px-4">
-          <h4 className="text-sm font-medium">API Documentation</h4>
+          <h4 className="text-sm font-medium text-foreground">
+            API Documentation
+          </h4>
         </div>
         <div className="flex-grow overflow-y-auto flex flex-col">
-          <div className="flex gap-x-2 items-center sticky top-0 bg-neutral-50 backdrop-blur z-[1] px-4 py-3 border-b border-border">
+          <div className="flex gap-x-2 items-center sticky top-0 bg-background backdrop-blur z-[1] px-4 py-3 border-b border-border">
             <div className="relative h-7 flex-1">
               <Search className="absolute top-1.5 left-2 size-3.5 text-neutral-600" />
               <Input
-                className="h-7 w-full pl-7 text-xs bg-neutral-100 border border-neutral-300 shadow-none text-neutral-600"
+                className="h-7 w-full pl-7 text-xs bg-input border border-border shadow-none "
                 placeholder="Search Workflows"
                 value={workflowSearchTerm}
                 onChange={(e) => setWorkflowSearchTerm(e.target.value)}
@@ -201,7 +218,7 @@ export default function ApiDocsPage({ params }: ApiDocsPageProps) {
                 <Button
                   asChild
                   size="icon"
-                  className="size-7 shadow-none bg-white border border-neutral-300 hover:bg-neutral-100 cursor-pointer"
+                  className="size-7 shadow-none  border border-border cursor-pointer"
                   variant="outline"
                 >
                   <Link href={`/projects/${currentProject?._id}/workflows`}>
@@ -228,7 +245,7 @@ export default function ApiDocsPage({ params }: ApiDocsPageProps) {
               </div>
             ) : filteredWorkflows.length === 0 && workflowSearchTerm ? (
               <div className="h-full flex flex-col items-center justify-center text-muted-foreground p-4 text-center">
-                <Inbox className="size-8 text-neutral-400 mb-2" />
+                <Inbox className="size-8 text-foreground mb-2" />
                 <h3 className="text-sm font-semibold text-foreground mb-1">
                   No workflows found
                 </h3>
@@ -245,7 +262,7 @@ export default function ApiDocsPage({ params }: ApiDocsPageProps) {
               </div>
             ) : filteredWorkflows.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-muted-foreground p-4 text-center">
-                <Inbox className="size-8 text-neutral-400 mb-2" />
+                <Inbox className="size-8 text-foreground mb-2" />
                 <h3 className="text-sm font-semibold text-foreground mb-1">
                   No deployed workflows
                 </h3>
@@ -259,10 +276,10 @@ export default function ApiDocsPage({ params }: ApiDocsPageProps) {
                   key={workflow._id}
                   onClick={() => handleWorkflowClick(workflow._id)}
                   className={cn(
-                    "h-7 px-4 py-2 cursor-pointer text-xs truncate rounded-md hover:bg-neutral-100 flex items-center gap-2 transition-colors",
+                    "h-7 px-4 py-2 cursor-pointer text-xs truncate rounded-md hover:bg-muted flex items-center gap-2 transition-colors",
                     currentWorkflowId === workflow._id
-                      ? "bg-neutral-100 text-black font-medium"
-                      : "text-neutral-700"
+                      ? "bg-muted text-foreground font-medium"
+                      : "text-muted-foreground"
                   )}
                 >
                   <FileCode className="size-3.5 shrink-0" />
@@ -276,21 +293,21 @@ export default function ApiDocsPage({ params }: ApiDocsPageProps) {
 
       {/* Right Side: Documentation Content */}
       <div className="flex flex-1 h-full overflow-hidden">
-        <div className="h-full flex flex-col bg-white flex-1">
+        <div className="h-full flex flex-col bg-background flex-1">
           {/* Top Bar */}
-          <div className="relative flex w-full h-12 min-h-12 items-center justify-between border-b border-neutral-300 px-4 gap-4">
+          <div className="relative flex w-full h-12 min-h-12 items-center justify-between border-b border-border px-4 gap-4">
             <div className="flex items-center gap-2">
               {selectedWorkflow && (
                 <>
-                  <span className="text-sm font-medium">
+                  <span className="text-sm font-medium text-foreground">
                     {selectedWorkflow.name}
                   </span>
                   <span
                     className={cn(
                       "text-[10px] px-2 py-0.5 rounded-full border",
                       selectedWorkflow.isDeployed
-                        ? "bg-green-50 text-green-700 border-green-300"
-                        : "bg-neutral-50 text-neutral-600 border-neutral-300"
+                        ? "bg-green-50 dark:bg-green-950 text-green-500 border-green-500"
+                        : "bg-neutral-50 dark:bg-neutral-950 text-neutral-500 border-neutral-500"
                     )}
                   >
                     {selectedWorkflow.isDeployed ? "Deployed" : "Draft"}
@@ -301,7 +318,8 @@ export default function ApiDocsPage({ params }: ApiDocsPageProps) {
             <div className="flex items-center gap-2">
               <Button
                 size="icon"
-                className="size-7 shadow-none bg-white border border-neutral-300 hover:bg-neutral-100 cursor-pointer text-neutral-600 hover:text-black"
+                variant="secondary"
+                className="size-7 shadow-none bg-secondary border border-border  cursor-pointer "
                 onClick={handleRefresh}
                 disabled={isDocsLoading}
               >
@@ -312,8 +330,7 @@ export default function ApiDocsPage({ params }: ApiDocsPageProps) {
               </Button>
               {docs && (
                 <Button
-                  variant="outline"
-                  className="h-7 px-2.5 text-xs shadow-none border-neutral-300 bg-white hover:bg-neutral-100 text-neutral-600 hover:text-black gap-1.5"
+                  className="h-7 px-2.5 text-xs shadow-none  gap-1.5"
                   onClick={() => copy(docs.endpoint, "endpoint-header")}
                 >
                   {copied === "endpoint-header" ? (
@@ -331,13 +348,13 @@ export default function ApiDocsPage({ params }: ApiDocsPageProps) {
           <div className="flex-1 overflow-y-auto">
             {!currentWorkflowId ? (
               <div className="h-full flex flex-col items-center justify-center text-muted-foreground p-8">
-                <div className="bg-neutral-100 rounded-full p-6 mb-4">
-                  <FileCode className="size-12 text-neutral-400" />
+                <div className=" rounded-full p-6 mb-4">
+                  <FileCode className="size-12 text-muted-foreground" />
                 </div>
                 <h3 className="text-base font-semibold text-foreground mb-2">
                   Select a workflow
                 </h3>
-                <p className="text-sm text-center max-w-sm">
+                <p className="text-sm text-muted-foreground text-center max-w-sm">
                   Choose a deployed workflow from the sidebar to view its API
                   documentation.
                 </p>
@@ -368,13 +385,13 @@ export default function ApiDocsPage({ params }: ApiDocsPageProps) {
                       programmatically.
                     </p>
                   </div>
-                  <div className="bg-neutral-50 p-6 flex items-end">
-                    <div className="group w-full bg-white border border-neutral-300 rounded-lg p-3 flex justify-between items-center gap-2">
+                  <div className="bg-card p-6 flex items-end">
+                    <div className="group w-full bg-secondary border border-border rounded-lg p-3 flex justify-between items-center gap-2">
                       <code className="text-xs break-all">
-                        <span className="text-neutral-900 font-medium">
+                        <span className="text-foreground font-medium">
                           {docs.method}
                         </span>{" "}
-                        <span className="text-neutral-500">
+                        <span className="text-muted-foreground">
                           {docs.endpoint}
                         </span>
                       </code>
@@ -382,9 +399,13 @@ export default function ApiDocsPage({ params }: ApiDocsPageProps) {
                         variant="ghost"
                         size="sm"
                         onClick={() => copy(docs.endpoint, "endpoint")}
-                        className="h-6 px-2 text-xs text-neutral-500 hover:text-neutral-900 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
+                        className="h-6 px-2 text-xs shrink-0 text-foreground"
                       >
-                        {copied === "endpoint" ? "Copied" : "Copy"}
+                        {copied === "endpoint" ? (
+                          <Check className="size-3.5" />
+                        ) : (
+                          <Copy className="size-3.5" />
+                        )}
                       </Button>
                     </div>
                   </div>
@@ -403,21 +424,21 @@ export default function ApiDocsPage({ params }: ApiDocsPageProps) {
                       successfully.
                     </p>
                   </div>
-                  <div className="bg-neutral-50 p-6">
-                    <div className="overflow-hidden border border-neutral-300 rounded-lg bg-white">
+                  <div className="bg-card p-6">
+                    <div className="overflow-hidden border border-border rounded-lg bg-secondary">
                       <Table>
                         <TableHeader>
-                          <TableRow className="bg-neutral-50">
-                            <TableHead className="text-xs font-medium">
+                          <TableRow className="bg-secondary">
+                            <TableHead className="text-xs font-medium text-muted-foreground">
                               Name
                             </TableHead>
-                            <TableHead className="text-xs font-medium">
+                            <TableHead className="text-xs font-medium text-muted-foreground">
                               Type
                             </TableHead>
-                            <TableHead className="text-xs font-medium">
+                            <TableHead className="text-xs font-medium text-muted-foreground">
                               Required
                             </TableHead>
-                            <TableHead className="text-xs font-medium">
+                            <TableHead className="text-xs font-medium text-muted-foreground">
                               Location
                             </TableHead>
                           </TableRow>
@@ -426,25 +447,25 @@ export default function ApiDocsPage({ params }: ApiDocsPageProps) {
                           {Object.entries(docs.bodyParams || {}).map(
                             ([key, val]) => (
                               <TableRow key={key}>
-                                <TableCell className="text-xs font-mono">
+                                <TableCell className="text-xs font-mono text-foreground">
                                   {key}
                                 </TableCell>
-                                <TableCell className="text-xs">
+                                <TableCell className="text-xs text-foreground">
                                   {val.type}
                                 </TableCell>
-                                <TableCell className="text-xs">
+                                <TableCell className="text-xs text-foreground">
                                   <span
                                     className={cn(
                                       "px-1.5 py-0.5 rounded text-[10px]",
                                       val.required
-                                        ? "bg-amber-50 text-amber-700 border border-amber-300"
-                                        : "bg-neutral-50 text-neutral-600 border border-neutral-300"
+                                        ? "bg-amber-50 dark:bg-amber-950 text-amber-500 border border-amber-500"
+                                        : "bg-neutral-50 dark:bg-neutral-950 text-neutral-500 border border-neutral-500"
                                     )}
                                   >
                                     {val.required ? "Yes" : "No"}
                                   </span>
                                 </TableCell>
-                                <TableCell className="text-xs text-neutral-500">
+                                <TableCell className="text-xs text-foreground">
                                   {val.from}
                                 </TableCell>
                               </TableRow>
@@ -453,25 +474,25 @@ export default function ApiDocsPage({ params }: ApiDocsPageProps) {
                           {Object.entries(docs.queryParams || {}).map(
                             ([key, val]) => (
                               <TableRow key={key}>
-                                <TableCell className="text-xs font-mono">
+                                <TableCell className="text-xs font-mono text-foreground">
                                   {key}
                                 </TableCell>
-                                <TableCell className="text-xs">
+                                <TableCell className="text-xs text-foreground">
                                   {val.type}
                                 </TableCell>
-                                <TableCell className="text-xs">
+                                <TableCell className="text-xs text-foreground">
                                   <span
                                     className={cn(
                                       "px-1.5 py-0.5 rounded text-[10px]",
                                       val.required
-                                        ? "bg-amber-50 text-amber-700 border border-amber-300"
-                                        : "bg-neutral-50 text-neutral-600 border border-neutral-300"
+                                        ? "bg-amber-50 dark:bg-amber-950 text-amber-500 border border-amber-500"
+                                        : "bg-neutral-50 dark:bg-neutral-950 text-neutral-500 border border-neutral-500"
                                     )}
                                   >
                                     {val.required ? "Yes" : "No"}
                                   </span>
                                 </TableCell>
-                                <TableCell className="text-xs text-neutral-500">
+                                <TableCell className="text-xs text-foreground">
                                   {val.from}
                                 </TableCell>
                               </TableRow>
@@ -508,14 +529,14 @@ export default function ApiDocsPage({ params }: ApiDocsPageProps) {
                       examples.
                     </p>
                   </div>
-                  <div className="bg-neutral-50 p-6">
+                  <div className="bg-card p-6">
                     <Tabs defaultValue={snippetList[0]?.key} className="w-full">
-                      <TabsList className="bg-transparent border-none mb-3 h-7">
+                      <TabsList className=" border-border mb-3 h-7">
                         {snippetList.map((item) => (
                           <TabsTrigger
                             key={item.key}
                             value={item.key}
-                            className="text-xs data-[state=active]:bg-white data-[state=active]:border data-[state=active]:border-neutral-300 shadow-none"
+                            className="text-xs data-[state=active]:bg-secondary data-[state=active]:border data-[state=active]:border-border shadow-none"
                           >
                             {item.label}
                           </TabsTrigger>
@@ -525,10 +546,10 @@ export default function ApiDocsPage({ params }: ApiDocsPageProps) {
                         <TabsContent key={item.key} value={item.key}>
                           <div className="group relative">
                             <Button
-                              variant="ghost"
+                              variant="secondary"
                               size="sm"
                               onClick={() => copy(item.code, item.key)}
-                              className="absolute top-2 right-2 h-6 px-2 text-xs text-neutral-500 hover:text-neutral-900 opacity-0 group-hover:opacity-100 transition-opacity z-10 bg-white/80 backdrop-blur"
+                              className="absolute top-2 right-2 h-6 px-2 text-xs border border-border text-foreground opacity-0 group-hover:opacity-100 transition-opacity z-10 backdrop-blur"
                             >
                               {copied === item.key ? (
                                 <>
@@ -564,13 +585,13 @@ export default function ApiDocsPage({ params }: ApiDocsPageProps) {
                       Example response returned by the workflow execution.
                     </p>
                   </div>
-                  <div className="bg-neutral-50 p-6">
+                  <div className="bg-card p-6">
                     <div className="group relative">
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => copy(docs.responseExample, "response")}
-                        className="absolute top-2 right-2 h-6 px-2 text-xs text-neutral-500 hover:text-neutral-900 opacity-0 group-hover:opacity-100 transition-opacity z-10 bg-white/80 backdrop-blur"
+                        className="absolute top-2 right-2 h-6 px-2 text-xs border border-border text-foreground opacity-0 group-hover:opacity-100 transition-opacity z-10 backdrop-blur"
                       >
                         {copied === "response" ? (
                           <>
@@ -593,13 +614,15 @@ export default function ApiDocsPage({ params }: ApiDocsPageProps) {
           </div>
 
           {/* Bottom Bar */}
-          <div className="h-9 border-t border-neutral-300 bg-white flex items-center justify-between px-4 shrink-0">
-            <span className="text-xs text-neutral-600">
+          <div className="h-9 border-t border-border bg-background flex items-center justify-between px-4 shrink-0">
+            <span className="text-xs text-muted-foreground">
               {deployedWorkflows.length} deployed workflow
               {deployedWorkflows.length !== 1 ? "s" : ""}
             </span>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-neutral-500">API Version 1.0</span>
+              <span className="text-xs text-muted-foreground">
+                API Version 1.0
+              </span>
             </div>
           </div>
         </div>

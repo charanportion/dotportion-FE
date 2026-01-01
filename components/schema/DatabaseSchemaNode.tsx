@@ -262,13 +262,13 @@ const DatabaseSchemaNode: React.FC<DatabaseSchemaNodeProps> = ({
 
   return (
     <div
-      className="min-w-72 bg-white border border-neutral-300 rounded-lg shadow-sm relative"
+      className="min-w-72 bg-card border border-border rounded-lg shadow-sm relative"
       style={{ pointerEvents: "all" }}
     >
       {/* Header */}
-      <div className="px-3 py-2.5 flex flex-row items-center justify-between border-b border-neutral-200 bg-neutral-50 rounded-t-lg">
+      <div className="px-3 py-2.5 flex flex-row items-center justify-between border-b border-border bg-secondary rounded-t-lg">
         <div className="flex items-center gap-2">
-          <Table2 className="w-4 h-4 text-neutral-500" />
+          <Table2 className="w-4 h-4 text-muted-foreground" />
           {editingTableName ? (
             <Input
               ref={tableNameInputRef}
@@ -281,7 +281,7 @@ const DatabaseSchemaNode: React.FC<DatabaseSchemaNodeProps> = ({
             />
           ) : (
             <span
-              className="text-sm font-semibold cursor-pointer hover:bg-neutral-100 px-2 py-0.5 rounded transition-colors"
+              className="text-sm font-semibold cursor-pointer hover:bg-muted px-2 py-0.5 rounded transition-colors"
               onClick={handleTableNameClick}
             >
               {data.label}
@@ -297,7 +297,7 @@ const DatabaseSchemaNode: React.FC<DatabaseSchemaNodeProps> = ({
                 className="h-6 w-6 tour-node-settings"
                 onClick={handleOpenDetails}
               >
-                <Settings className="h-3.5 w-3.5 text-neutral-500" />
+                <Settings className="h-3.5 w-3.5 text-muted-foreground" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Table Settings</TooltipContent>
@@ -328,7 +328,7 @@ const DatabaseSchemaNode: React.FC<DatabaseSchemaNodeProps> = ({
           data.schema.map((field) => (
             <div
               key={field.id}
-              className="group relative px-3 py-1.5 hover:bg-neutral-50 transition-colors tour-field-row"
+              className="group relative px-3 py-1.5 hover:bg-muted transition-colors tour-field-row"
             >
               {(field.handleType === "target" ||
                 field.handleType === "both") && (
@@ -363,7 +363,7 @@ const DatabaseSchemaNode: React.FC<DatabaseSchemaNodeProps> = ({
                       className={cn(
                         "text-xs font-mono",
                         field.name === "_id"
-                          ? "cursor-default text-neutral-600"
+                          ? "cursor-default text-foreground"
                           : "cursor-pointer hover:text-primary"
                       )}
                       onClick={() => handleNameClick(field)}
@@ -384,7 +384,7 @@ const DatabaseSchemaNode: React.FC<DatabaseSchemaNodeProps> = ({
                       value={field.type}
                       onValueChange={(v) => handleTypeChange(field, v)}
                     >
-                      <SelectTrigger className="h-5 w-auto min-w-[70px] text-[11px] border-none shadow-none px-1.5 font-mono text-muted-foreground hover:text-foreground">
+                      <SelectTrigger className="h-5 w-auto min-w-[70px] text-[11px] border-border bg-input shadow-none px-1.5 font-mono text-muted-foreground hover:text-foreground">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>

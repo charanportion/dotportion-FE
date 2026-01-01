@@ -37,15 +37,22 @@ function OnboardingContent() {
   }, [step, router]);
   if (step === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen bg-white">
+      <div className="flex flex-col items-center justify-center h-screen bg-background">
         {/* Splash screen logo & text */}
         <div className="flex flex-col items-center">
           <Image
-            src="/logo-dark.png"
-            alt="DotPortion Logo"
-            className="mb-4 animate-fade-in"
+            src={"/logo-dark.png"}
+            alt="logo"
             width={256}
             height={256}
+            className=" object-contain block dark:hidden mb-4 animate-fade-in"
+          />
+          <Image
+            src={"/logo-light.png"}
+            alt="logo"
+            width={256}
+            height={256}
+            className=" object-contain hidden dark:block mb-4 animate-fade-in"
           />
           {/* <h1 className="text-2xl font-semibold">DotPortion</h1> */}
         </div>

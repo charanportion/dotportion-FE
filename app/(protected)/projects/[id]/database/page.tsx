@@ -19,7 +19,7 @@ import { fetchSecrets } from "@/lib/redux/slices/secretsSlice";
 import Link from "next/link";
 import { format } from "date-fns";
 
-const DATABASE_TYPES = ["mongodb", "supabase", "neondb"];
+// const DATABASE_TYPES = ["mongodb", "supabase", "neondb"];
 
 export default function DatabasePage() {
   const dispatch = useDispatch<AppDispatch>();
@@ -37,31 +37,34 @@ export default function DatabasePage() {
     }
   }, [dispatch, selectedProject]);
 
-  const databaseSecrets = secrets.filter((secret) =>
-    DATABASE_TYPES.includes(secret.provider.toLowerCase())
+  const mongoSecret = secrets.find(
+    (secret) => secret.provider.toLowerCase() === "mongodb"
   );
 
   // Include platform database in the list
-  const allDatabases = [
-    {
-      _id: "platform",
-      name: "Platform Database",
-      provider: "Internal",
-      description: "Access project's internal database",
-      type: "platform",
-      createdAt: selectedProject?.createdAt || new Date().toISOString(),
-      updatedAt: selectedProject?.updatedAt || new Date().toISOString(),
-    },
-    ...databaseSecrets.map((secret) => ({
-      _id: secret._id,
-      name: secret.provider,
-      provider: secret.provider.toUpperCase(),
-      description: "Click to explore collections and data",
-      type: "external",
-      createdAt: secret.createdAt,
-      updatedAt: secret.updatedAt,
-    })),
-  ];
+  const allDatabases = mongoSecret
+    ? [
+        {
+          _id: mongoSecret._id,
+          name: mongoSecret.provider,
+          provider: mongoSecret.provider.toUpperCase(),
+          description: "Click to explore collections and data",
+          type: "external",
+          createdAt: mongoSecret.createdAt,
+          updatedAt: mongoSecret.updatedAt,
+        },
+      ]
+    : [
+        {
+          _id: "platform",
+          name: "Platform Database",
+          provider: "INTERNAL",
+          description: "Access project's internal database",
+          type: "platform",
+          createdAt: selectedProject?.createdAt || new Date().toISOString(),
+          updatedAt: selectedProject?.updatedAt || new Date().toISOString(),
+        },
+      ];
 
   const filteredDatabases = allDatabases.filter(
     (db) =>
@@ -117,11 +120,11 @@ export default function DatabasePage() {
   }
 
   // Empty State (no external databases)
-  if (databaseSecrets.length === 0) {
+  if (!mongoSecret && !selectedProject) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen text-center gap-4 bg-background">
-        <Database className="h-10 w-10 text-gray-400" />
-        <h2 className="text-2xl font-semibold text-gray-800">
+        <Database className="h-10 w-10 text-foreground" />
+        <h2 className="text-2xl font-semibold text-foreground">
           No database secrets configured
         </h2>
         <p className="text-muted-foreground">
@@ -156,7 +159,7 @@ export default function DatabasePage() {
               placeholder="Search for a database"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9 pr-10 h-7 border border-neutral-300 rounded-md bg-neutral-100 text-xs shadow-none"
+              className="pl-9 pr-10 h-7 border border-border rounded-md bg-input text-xs shadow-none"
             />
           </div>
         </div>
@@ -201,7 +204,7 @@ export default function DatabasePage() {
 
             return (
               <Link key={database._id} href={href}>
-                <Card className="cursor-pointer border border-neutral-300 bg-white shadow-none rounded-lg p-5 transition-colors duration-200 hover:bg-muted">
+                <Card className="cursor-pointer border border-border  shadow-none rounded-lg p-5 transition-colors duration-200 hover:bg-muted">
                   <CardHeader className="p-0 flex items-center justify-between">
                     <div>
                       <CardTitle className="text-sm font-semibold text-foreground truncate flex items-center gap-2">
@@ -246,9 +249,9 @@ export default function DatabasePage() {
         </div>
       ) : (
         // ---------------- LIST VIEW ----------------
-        <div className="w-full bg-white rounded-lg overflow-hidden shadow-xs border border-neutral-300 h-full">
+        <div className="w-full bg-card rounded-lg overflow-hidden shadow-xs border border-border h-full">
           {/* List Header */}
-          <div className="grid grid-cols-3 px-6 py-3 text-xs font-medium bg-neutral-100 text-neutral-600 border-b-2 border-neutral-300 uppercase tracking-wide min-w-[800px]">
+          <div className="grid grid-cols-3 px-6 py-3 text-xs font-medium bg-card text-muted-foreground border-b-2 border-border uppercase tracking-wide min-w-[800px]">
             <div className="text-left">Database</div>
             <div className="text-center">Type</div>
             <div className="text-center">Created</div>
@@ -264,14 +267,14 @@ export default function DatabasePage() {
 
               return (
                 <Link key={database._id} href={href}>
-                  <div className="grid grid-cols-3 px-4 py-4 items-center text-sm text-foreground hover:bg-muted/50 transition cursor-pointer min-w-[800px]">
+                  <div className="grid grid-cols-3 px-4 py-4 items-center text-sm text-foreground hover:bg-muted transition cursor-pointer min-w-[800px] border-b border-border">
                     {/* LEFT ALIGNED DATABASE NAME + DESCRIPTION */}
                     <div className="flex flex-col text-left">
-                      <span className="font-semibold truncate flex items-center gap-2">
+                      <span className="font-medium truncate flex items-center gap-2 text-sm">
                         {database.type === "platform" ? (
-                          <Database className="h-4 w-4" />
+                          <Database className="size-3.5" />
                         ) : (
-                          <Server className="h-4 w-4" />
+                          <Server className="size-3.5" />
                         )}
                         {database.name}
                       </span>

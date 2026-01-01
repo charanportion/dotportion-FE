@@ -5,6 +5,8 @@ import "./globals.css";
 import { ClientProviders } from "@/components/providers/client-providers";
 import { Analytics } from "@vercel/analytics/next";
 import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/components/theme-provider";
+import { PostHogProvider } from "@/components/providers/posthog-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -46,16 +48,23 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} ${InterFont.variable} antialiased`}
       >
-        {/* <ThemeProvider
+        <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
-        > */}
-        <Analytics />
-        <Toaster position="bottom-right" richColors closeButton expand={true} />
-        <ClientProviders>{children}</ClientProviders>
-        {/* </ThemeProvider> */}
+        >
+          <Analytics />
+          <Toaster
+            position="bottom-right"
+            richColors
+            closeButton
+            expand={true}
+          />
+          <PostHogProvider>
+            <ClientProviders>{children}</ClientProviders>
+          </PostHogProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

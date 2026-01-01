@@ -26,12 +26,12 @@ export const ResponseForm = () => {
         name="status"
         render={({ field }) => (
           <FormItem className="space-y-1.5">
-            <FormLabel className="text-xs font-medium text-neutral-700">
+            <FormLabel className="text-xs font-medium text-foreground">
               Status
             </FormLabel>
             <Select onValueChange={field.onChange} defaultValue={field.value}>
               <FormControl>
-                <SelectTrigger className="h-8 text-xs border-neutral-300">
+                <SelectTrigger className="h-8 text-xs bg-input border-border">
                   <SelectValue placeholder="Select a type of status" />
                 </SelectTrigger>
               </FormControl>

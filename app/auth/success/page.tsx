@@ -5,7 +5,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useAppDispatch } from "@/lib/redux/hooks";
 import { completeOAuthLogin } from "@/lib/redux/slices/authSlice";
 // import { Spinner } from "@/components/ui/spinner";
-import DotLoader from "@/components/loader";
+// import DotLoader from "@/components/loader";
+import { LoaderCircle } from "lucide-react";
 
 function AuthSuccessInner() {
   const router = useRouter();
@@ -40,7 +41,7 @@ function AuthSuccessInner() {
         if (isNew) {
           router.push(`/auth/username?email=${email}`);
         } else {
-          router.push("/dashboard");
+          router.push("/projects");
         }
       } else {
         console.error("OAuth login failed:", result.payload);
@@ -52,11 +53,12 @@ function AuthSuccessInner() {
   }, [token, email, isNewUserParam, router, dispatch]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white dark:bg-black">
+    <div className="h-full w-full flex items-center justify-center">
       <div className="text-center flex flex-col items-center justify-center gap-2">
-        <DotLoader />
-        <p className="text-xl text-black dark:text-white font-semibold">
-          Signing you in...
+        {/* <DotLoader /> */}
+        <LoaderCircle className="size-4 text-foreground animate-spin" />
+        <p className="text-xl text-foreground font-semibold">
+          Authenticating...
         </p>
       </div>
     </div>
@@ -67,7 +69,7 @@ export default function Page() {
   return (
     <Suspense
       fallback={
-        <div className="flex items-center justify-center h-screen bg-[#18181b]">
+        <div className="flex items-center justify-center h-screen bg-background">
           <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
         </div>
       }

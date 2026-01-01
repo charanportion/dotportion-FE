@@ -78,6 +78,8 @@ const defaultEdgeOptions = {
   style: { strokeWidth: 2, stroke: "#94a3b8" },
 };
 
+const getSchemaTourKey = (userId: string) => `tour_done_schema_page_${userId}`;
+
 export default function SchemaPageContent() {
   const params = useParams();
   const dispatch = useDispatch<AppDispatch>();
@@ -89,6 +91,9 @@ export default function SchemaPageContent() {
   const schemaForAPI = useSelector(selectSchemaForAPI);
   const canUndo = useSelector(selectCanUndo);
   const canRedo = useSelector(selectCanRedo);
+
+  const { user } = useSelector((state: RootState) => state.auth);
+  const userId = user?._id;
 
   const { isDirty, isSaving, isGenerating } = schemaCanvas.ui;
   const isSavingRef = useRef(false);
@@ -174,12 +179,13 @@ export default function SchemaPageContent() {
   // Sync schema-page tour from backend to localStorage
   useEffect(() => {
     async function syncSchemaTour() {
+      if (!userId) return;
       try {
         const res = await userApi.getTours();
         const tours = res.tours || {};
 
         if (tours.schemaPageTour === true) {
-          localStorage.setItem("tour_done_schema_page", "true");
+          localStorage.setItem(getSchemaTourKey(userId), "true");
         }
       } catch (err) {
         console.warn("Failed to sync schema tour:", err);
@@ -189,13 +195,15 @@ export default function SchemaPageContent() {
     }
     setToursSynced(false);
     syncSchemaTour();
-  }, []);
+  }, [userId]);
 
   // ------- Add this useEffect (tour) ------- //
   useEffect(() => {
-    const TOUR_KEY = "tour_done_schema_page";
     if (typeof window === "undefined") return;
+    if (!userId) return;
     if (!toursSynced) return;
+
+    const TOUR_KEY = getSchemaTourKey(userId);
     if (localStorage.getItem(TOUR_KEY) === "true") return;
 
     const waitForSelectors = (selectors: string[], timeout = 5000) =>
@@ -343,7 +351,7 @@ export default function SchemaPageContent() {
         tour.drive();
       }, 250);
     })();
-  }, [toursSynced]);
+  }, [toursSynced, userId]);
 
   // ReactFlow handlers
   const onNodesChange = useCallback(
@@ -475,11 +483,11 @@ export default function SchemaPageContent() {
     return (
       <>
         {/* Top Bar Skeleton */}
-        <div className="relative flex w-full h-12 min-h-12 items-center justify-between border-b border-neutral-300 px-3 gap-4">
+        <div className="relative flex w-full h-12 min-h-12 items-center justify-between border-b border-border px-3 gap-4">
           <div className="flex items-center gap-2">
             <Skeleton className="size-7 rounded-md" />
             <Skeleton className="size-7 rounded-md" />
-            <div className="w-px h-5 bg-neutral-300 mx-1" />
+            <div className="w-px h-5 bg-background mx-1" />
             <Skeleton className="h-7 w-24 rounded-md" />
           </div>
           <div className="flex items-center gap-2">
@@ -493,7 +501,7 @@ export default function SchemaPageContent() {
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
         {/* Footer Skeleton */}
-        <div className="h-9 border-t border-neutral-300 bg-white flex items-center justify-center gap-6 px-4 shrink-0">
+        <div className="h-9 border-t border-border bg-background flex items-center justify-center gap-6 px-4 shrink-0">
           {[...Array(5)].map((_, i) => (
             <div key={i} className="flex items-center gap-1.5">
               <Skeleton className="size-3.5 rounded" />
@@ -508,14 +516,14 @@ export default function SchemaPageContent() {
   return (
     <>
       {/* Top Bar */}
-      <div className="relative flex w-full h-12 min-h-12 items-center justify-between border-b border-neutral-300 px-3 gap-4">
+      <div className="relative flex w-full h-12 min-h-12 items-center justify-between border-b border-border px-3 gap-4">
         <div className="flex items-center gap-2">
           <TooltipShadCn>
             <TooltipTrigger asChild>
               <Button
                 size="icon"
-                variant="outline"
-                className="size-7 shadow-none border-neutral-300 tour-undo"
+                variant="secondary"
+                className="size-7 shadow-none border-border tour-undo"
                 onClick={() => dispatch(undo())}
                 disabled={!canUndo}
               >
@@ -528,8 +536,8 @@ export default function SchemaPageContent() {
             <TooltipTrigger asChild>
               <Button
                 size="icon"
-                variant="outline"
-                className="size-7 shadow-none border-neutral-300 tour-redo"
+                variant="secondary"
+                className="size-7 shadow-none border-border tour-redo"
                 onClick={() => dispatch(redo())}
                 disabled={!canRedo}
               >
@@ -538,11 +546,11 @@ export default function SchemaPageContent() {
             </TooltipTrigger>
             <TooltipContent>Redo</TooltipContent>
           </TooltipShadCn>
-          <div className="w-px h-5 bg-neutral-300 mx-1" />
+          <div className="w-px h-5 bg-border mx-1" />
           <Button
-            variant="outline"
+            variant="secondary"
             size="sm"
-            className="h-7 text-xs shadow-none border-neutral-300 gap-1.5 tour-add-table"
+            className="h-7 text-xs shadow-none border-border gap-1.5 tour-add-table"
             onClick={handleAddTable}
           >
             <Plus className="size-3.5" />
@@ -560,9 +568,9 @@ export default function SchemaPageContent() {
             Export
           </Button> */}
           <Button
-            variant="outline"
+            variant="secondary"
             size="sm"
-            className="h-7 text-xs shadow-none border-neutral-300 gap-1.5 tour-save"
+            className="h-7 text-xs shadow-none border-border gap-1.5 tour-save"
             onClick={handleManualSave}
             disabled={isSaving || !isDirty}
           >
@@ -597,12 +605,12 @@ export default function SchemaPageContent() {
             )}
           </Button>
           {isDirty && !isSaving && (
-            <span className="text-xs text-orange-600 bg-orange-50 px-2 py-1 rounded border border-orange-200">
+            <span className="text-xs text-orange-600 bg-orange-50 dark:bg-orange-950 px-2 py-1 dark:py-1.5 rounded border border-orange-200 dark:border-none">
               Unsaved
             </span>
           )}
           {!isDirty && schemaCanvas.ui.lastSavedAt && (
-            <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded border border-green-200">
+            <span className="text-xs text-green-600 bg-green-50  dark:bg-green-950 px-2 py-1 dark:py-1.5 rounded border border-green-200 dark:border-none">
               Saved
             </span>
           )}
@@ -629,14 +637,14 @@ export default function SchemaPageContent() {
           fitView
           fitViewOptions={{ padding: 0.2 }}
         >
-          <Background variant={BackgroundVariant.Cross} gap={16} size={1} />
+          <Background variant={BackgroundVariant.Cross} gap={16} size={0.3} />
           <MiniMap nodeStrokeWidth={3} zoomable pannable className="" />
-          <Controls className="" />
+          <Controls className="text-neutral-950" />
         </ReactFlow>
       </div>
 
       {/* Bottom Footer - Legend */}
-      <div className="h-9 border-t border-neutral-300 bg-white flex items-center justify-center gap-6 px-4 shrink-0">
+      <div className="h-9 border-t border-border bg-background flex items-center justify-center gap-6 px-4 shrink-0">
         <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
           <Key className="size-3.5 text-amber-500" />
           <span>Primary key</span>

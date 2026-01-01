@@ -169,10 +169,12 @@ export function TestPanel({
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 h-12 border-b border-neutral-300 shrink-0">
+      <div className="flex items-center justify-between px-4 h-12 border-b border-border shrink-0">
         <div className="flex items-center gap-2">
-          <Beaker className="h-4 w-4 text-neutral-500" />
-          <span className="text-sm font-medium">Test Panel</span>
+          <Beaker className="h-4 w-4 text-muted-foreground" />
+          <span className="text-sm font-medium text-foreground">
+            Test Panel
+          </span>
           {isRunningState && (
             <div className="flex items-center gap-1.5 text-blue-600 text-xs ml-2">
               <div className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse" />
@@ -191,7 +193,7 @@ export function TestPanel({
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-1 px-3 py-2 border-b border-neutral-300 shrink-0">
+      <div className="flex items-center gap-1 px-3 py-2 border-b border-border shrink-0">
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -199,8 +201,8 @@ export function TestPanel({
             className={cn(
               "px-3 py-1.5 text-xs font-medium rounded-md transition-colors",
               activeTab === tab.id
-                ? "bg-neutral-900 text-white"
-                : "text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100"
+                ? "bg-secondary text-foreground"
+                : "text-muted-foreground  hover:bg-muted"
             )}
           >
             {tab.label}
@@ -213,14 +215,14 @@ export function TestPanel({
         {activeTab === "logs" && (
           <div className="p-3 space-y-2">
             {isRunningState && executionLogs.length === 0 ? (
-              <div className="text-center py-8 text-neutral-500">
+              <div className="text-center py-8 text-foreground">
                 <div className="flex flex-col items-center gap-2">
                   <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
                   <p className="text-xs">Waiting for execution logs...</p>
                 </div>
               </div>
             ) : executionLogs.length === 0 ? (
-              <div className="text-center py-8 text-neutral-500">
+              <div className="text-center py-8 text-foreground">
                 <p className="text-xs">No execution logs yet.</p>
                 <p className="text-[10px] mt-1">
                   Run the workflow to see execution logs.
@@ -232,19 +234,19 @@ export function TestPanel({
                 return (
                   <div
                     key={log.nodeId}
-                    className="border border-neutral-300 rounded-md overflow-hidden"
+                    className="border border-border rounded-md overflow-hidden"
                   >
                     <div
-                      className="flex items-center justify-between p-2.5 cursor-pointer hover:bg-neutral-50"
+                      className="flex bg-card items-center justify-between p-2.5 cursor-pointer hover:bg-muted"
                       onClick={() => toggleLogExpansion(log.nodeId)}
                     >
                       <div className="flex items-center gap-2.5">
                         {getStatusIcon(log.status)}
                         <div>
-                          <div className="font-medium text-xs">
+                          <div className="font-medium text-xs text-foreground">
                             {log.nodeName}
                           </div>
-                          <div className="text-[10px] text-neutral-500">
+                          <div className="text-[10px] text-muted-foreground">
                             {log.nodeType}
                           </div>
                         </div>
@@ -259,26 +261,26 @@ export function TestPanel({
                           {log.status}
                         </span>
                         {isExpanded ? (
-                          <ChevronUp className="h-3.5 w-3.5 text-neutral-400" />
+                          <ChevronUp className="h-3.5 w-3.5 text-muted-foreground" />
                         ) : (
-                          <ChevronDown className="h-3.5 w-3.5 text-neutral-400" />
+                          <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
                         )}
                       </div>
                     </div>
 
                     {isExpanded && (
-                      <div className="border-t border-neutral-200 p-2.5 bg-neutral-50">
-                        <div className="text-[10px] text-neutral-500 mb-2">
+                      <div className="border-t border-border p-2.5 bg-card">
+                        <div className="text-[10px] text-muted-foreground mb-2">
                           {formatTime(log.timestamp)}
                           {log.duration && ` • ${formatDuration(log.duration)}`}
                         </div>
 
                         {log.error ? (
-                          <div className="text-xs text-red-600">
-                            <div className="font-medium text-[10px] mb-1">
+                          <div className="text-xs ">
+                            <div className="font-medium text-red-600 text-[10px] mb-1">
                               Error:
                             </div>
-                            <pre className="font-mono text-[10px] bg-red-50 border border-red-200 p-2 rounded overflow-x-auto">
+                            <pre className="font-mono text-foreground text-[10px] bg-card border border-destructive p-2 rounded overflow-x-auto">
                               {typeof log.error === "string"
                                 ? log.error
                                 : JSON.stringify(log.error, null, 2)}
@@ -288,10 +290,10 @@ export function TestPanel({
                           <>
                             {log.input && (
                               <div className="space-y-1 mb-2">
-                                <div className="text-[10px] font-medium text-neutral-700">
+                                <div className="text-[10px] font-medium  text-muted-foreground">
                                   Input:
                                 </div>
-                                <pre className="text-[10px] font-mono bg-white border border-neutral-200 p-2 rounded overflow-x-auto">
+                                <pre className="text-[10px] font-mono bg-secondary border border-border0 p-2 rounded overflow-x-auto">
                                   {JSON.stringify(log.input, null, 2)}
                                 </pre>
                               </div>
@@ -299,10 +301,10 @@ export function TestPanel({
 
                             {log.output && (
                               <div className="space-y-1">
-                                <div className="text-[10px] font-medium text-neutral-700">
+                                <div className="text-[10px] font-medium text-muted-foreground">
                                   Output:
                                 </div>
-                                <pre className="text-[10px] font-mono bg-white border border-neutral-200 p-2 rounded overflow-x-auto">
+                                <pre className="text-[10px] font-mono bg-secondary border border-border p-2 rounded overflow-x-auto">
                                   {JSON.stringify(log.output, null, 2)}
                                 </pre>
                               </div>
@@ -321,7 +323,7 @@ export function TestPanel({
         {activeTab === "response" && (
           <div className="p-3">
             {isRunningState && !finalResponse ? (
-              <div className="text-center py-8 text-neutral-500">
+              <div className="text-center py-8 text-foreground">
                 <div className="flex flex-col items-center gap-2">
                   <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
                   <p className="text-xs">Waiting for response...</p>
@@ -331,18 +333,18 @@ export function TestPanel({
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <h4 className="text-xs font-medium">Final API Response</h4>
-                  <span className="px-2 py-0.5 bg-green-100 text-green-700 text-[10px] rounded-full border border-green-300">
+                  <span className="px-2 py-0.5 bg-green-100 dark:bg-green-950 text-green-500 text-[10px] rounded-full border border-green-500">
                     {typeof finalResponse.statusCode === "number"
                       ? `Status: ${finalResponse.statusCode}`
                       : "Completed"}
                   </span>
                 </div>
 
-                <div className="border border-neutral-300 rounded-md overflow-hidden">
-                  <div className="bg-neutral-100 px-3 py-1.5 border-b border-neutral-300 text-[10px] font-medium text-neutral-600">
+                <div className="border border-border rounded-md overflow-hidden">
+                  <div className="bg-card px-3 py-1.5 border-b border-border text-[10px] font-medium text-muted-foreground">
                     Response Body
                   </div>
-                  <pre className="p-3 text-[10px] overflow-x-auto bg-white font-mono max-h-64">
+                  <pre className="p-3 text-[10px] overflow-x-auto bg-card font-mono max-h-64">
                     {JSON.stringify(
                       finalResponse.data || finalResponse,
                       null,
@@ -372,7 +374,7 @@ export function TestPanel({
         {activeTab === "request" && (
           <div className="p-3 space-y-3">
             <div>
-              <label className="text-xs font-medium text-neutral-700 mb-1.5 block">
+              <label className="text-xs font-medium text-foreground mb-1.5 block">
                 Test Input (JSON)
               </label>
               <div className="relative">
@@ -380,16 +382,16 @@ export function TestPanel({
                   value={testInput}
                   onChange={(e) => handleTestInputChange(e.target.value)}
                   className={cn(
-                    "w-full h-48 font-mono text-xs p-3 border rounded-md resize-none bg-white",
+                    "w-full h-48 font-mono text-xs p-3 border rounded-md resize-none bg-input",
                     !isValidJson
                       ? "border-red-400 focus:border-red-500 focus:ring-red-500"
-                      : "border-neutral-300 focus:border-neutral-400"
+                      : "border-border "
                   )}
                   placeholder="Enter test input JSON..."
                   disabled={isRunningState}
                 />
                 {!isValidJson && (
-                  <div className="absolute bottom-2 right-2 text-[10px] text-red-500 bg-white px-1.5 py-0.5 rounded">
+                  <div className="absolute bottom-2 right-2 text-[10px] text-red-500 bg-card px-1.5 py-0.5 rounded">
                     Invalid JSON
                   </div>
                 )}
@@ -397,12 +399,12 @@ export function TestPanel({
             </div>
 
             {apiStartNode && (
-              <div className="border border-blue-200 rounded-md p-2.5 bg-blue-50">
-                <div className="font-medium text-xs flex items-center gap-1.5 text-blue-700 mb-1">
+              <div className="border border-blue-500 rounded-md p-2.5 bg-blue-50 dark:bg-blue-950/10">
+                <div className="font-medium text-xs flex items-center gap-1.5 text-blue-500 mb-1">
                   <FileJson className="h-3.5 w-3.5" />
                   Schema Validation
                 </div>
-                <p className="text-[10px] text-blue-600">
+                <p className="text-[10px] text-blue-400">
                   This API has schema validation enabled. Your test input will
                   be validated against the schema before processing.
                 </p>
@@ -413,17 +415,18 @@ export function TestPanel({
       </div>
 
       {/* Footer */}
-      <div className="flex items-center justify-end gap-2 px-4 h-12  border-t border-neutral-300 shrink-0 bg-neutral-50">
+      <div className="flex items-center justify-end gap-2 px-4 h-12  border-t border-border shrink-0 bg-background">
         <Button
           variant="outline"
           size="sm"
-          className="h-7 shadow-none gap-2 border-neutral-300 bg-white hover:bg-neutral-100 text-neutral-600 hover:text-black text-xs px-2.5"
+          className="h-7 shadow-none gap-2 border-border bg-white hover:bg-neutral-100 text-muted-foreground text-xs px-2.5"
           onClick={onClose}
         >
           Close
         </Button>
         <Button
           size="sm"
+          variant="default"
           className="h-7 shadow-none text-xs px-3"
           onClick={handleRunWorkflow}
           disabled={!isValidJson || isRunningState}

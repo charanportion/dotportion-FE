@@ -11,9 +11,9 @@ import {
 } from "@/components/ui/select";
 // import { Button } from "@/components/ui/button";
 // import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
+// import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle, BarChart3 } from "lucide-react";
+import { AlertCircle, BarChart3, LoaderCircle } from "lucide-react";
 import { format } from "date-fns";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 import { cn } from "@/lib/utils";
@@ -161,12 +161,11 @@ ApiCallsChartProps) {
   // const averageCalls =
   //   data.length > 0 ? Math.round(totalCalls / data.length) : 0;
 
+  const hasData = data.length > 0 && data.some((item) => item.totalCalls > 0);
+
   return (
     <Card
-      className={cn(
-        "w-full shadow-none border border-neutral-300 py-4",
-        className
-      )}
+      className={cn("w-full shadow-none border border-border py-4", className)}
     >
       <CardHeader className="pb-2 px-4">
         {/* Filters */}
@@ -204,14 +203,13 @@ ApiCallsChartProps) {
 
         {/* Loading State */}
         {isLoading && (
-          <div className="space-y-3">
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-[300px] w-full" />
+          <div className="space-y-3 h-[300px] w-full flex items-center justify-center">
+            <LoaderCircle className="size-4 animate-spin text-foreground" />
           </div>
         )}
 
         {/* Empty State */}
-        {!isLoading && !error && data.length === 0 && (
+        {!isLoading && !error && !hasData && (
           <div className="flex flex-col items-center justify-center h-[300px] text-center">
             <BarChart3 className="h-12 w-12 text-muted-foreground mb-4" />
             <h3 className="text-lg font-medium text-muted-foreground mb-2">
@@ -224,17 +222,12 @@ ApiCallsChartProps) {
         )}
 
         {/* Area Chart with Gradient */}
-        {!isLoading && !error && data.length > 0 && (
+        {!isLoading && !error && hasData && (
           <ChartContainer config={chartConfig} className="h-[300px] w-full">
             <AreaChart
               accessibilityLayer
               data={data}
-              margin={{
-                top: 10,
-                right: 20,
-                left: 20,
-                bottom: 10,
-              }}
+              margin={{ top: 10, right: 20, left: 20, bottom: 10 }}
             >
               <CartesianGrid vertical={false} strokeDasharray="3 3" />
               <XAxis
@@ -245,17 +238,10 @@ ApiCallsChartProps) {
                 axisLine={false}
                 interval="preserveStartEnd"
               />
-              {/* <YAxis
-                tickLine={false}
-                axisLine={false}
-                tickMargin={10}
-                allowDecimals={false}
-              /> */}
               <ChartTooltip
                 cursor={false}
                 content={
                   <ChartTooltipContent
-                    hideLabel={false}
                     formatter={(value) => [`${value} calls`, "API Calls"]}
                     labelFormatter={(label) => formatLabel(String(label))}
                   />
@@ -279,7 +265,6 @@ ApiCallsChartProps) {
                 dataKey="totalCalls"
                 type="monotone"
                 fill="url(#fillTotalCalls)"
-                fillOpacity={0.4}
                 stroke="var(--color-totalCalls)"
                 strokeWidth={2}
               />

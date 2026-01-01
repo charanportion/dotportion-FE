@@ -15,6 +15,8 @@ import { Workflow as WorkflowType } from "@/lib/api/workflows";
 // import { Plus } from "lucide-react";
 import type { RootState, AppDispatch } from "@/lib/redux/store";
 import { WorkflowsTable } from "@/components/workflows-table";
+// import DotLoader from "@/components/loader";
+import { LoaderCircle } from "lucide-react";
 
 interface WorkflowsPageProps {
   params: Promise<{
@@ -27,13 +29,15 @@ export default function WorkflowsPage({ params }: WorkflowsPageProps) {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
 
-  const { projects, selectedProject } = useSelector(
-    (state: RootState) => state.projects
-  );
+  const {
+    projects,
+    selectedProject,
+    isLoading: projectsLoading,
+  } = useSelector((state: RootState) => state.projects);
 
   const {
     workflows,
-    // isLoading: workflowsLoading,
+    isLoading: workflowsLoading,
     isCreating: workflowsCreating,
     selectedWorkflow,
   } = useSelector((state: RootState) => state.workflows);
@@ -64,6 +68,18 @@ export default function WorkflowsPage({ params }: WorkflowsPageProps) {
     setEditDialogOpen(true);
   };
 
+  if (projectsLoading) {
+    return (
+      <div className="flex items-center justify-center h-[94vh]">
+        <div className="flex flex-col items-center gap-2">
+          {/* <DotLoader /> */}
+          <LoaderCircle className="size-4 text-foreground animate-spin" />
+          <p className="text-sm text-muted-foreground">Loading project...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!currentProject) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -82,6 +98,7 @@ export default function WorkflowsPage({ params }: WorkflowsPageProps) {
       <WorkflowsTable
         workflows={workflows}
         projectId={selectedProject?._id || currentProject._id}
+        isLoading={workflowsLoading}
         onEditWorkflow={handleEditWorkflow}
         onWorkflowClick={handleWorkflowClick}
         selectedWorkflowId={selectedWorkflow?._id}

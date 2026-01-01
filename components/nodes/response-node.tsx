@@ -15,17 +15,15 @@ export function ResponseNode({
 }) {
   const statusColor =
     data.status && data.status >= 200 && data.status < 300
-      ? "bg-green-100 text-green-700"
+      ? "bg-green-100 dark:bg-green-950 text-green-700"
       : data.status && data.status >= 400
-      ? "bg-red-100 text-red-700"
-      : "bg-amber-100 text-amber-700";
+      ? "bg-red-100 dark:bg-red-950 text-red-700"
+      : "bg-amber-100 dark:bg-amber-950 text-amber-700";
 
   return (
     <div
-      className={`rounded-md border bg-white w-[200px] overflow-hidden ${
-        selected
-          ? "border-orange-500 ring-1 ring-orange-500"
-          : "border-neutral-300"
+      className={`rounded-md border bg-card w-[200px] overflow-hidden ${
+        selected ? "border-orange-500 ring-1 ring-orange-500" : "border-border"
       } tour-api-response-node`}
     >
       {/* Input Handle */}
@@ -38,12 +36,12 @@ export function ResponseNode({
       />
 
       {/* Header */}
-      <div className="flex items-center gap-2 px-2.5 py-2 border-b border-neutral-200 bg-orange-50">
+      <div className="flex items-center gap-2 px-2.5 py-2 border-b border-border bg-orange-50 dark:bg-orange-950/10">
         <div className="w-6 h-6 rounded bg-orange-500 flex items-center justify-center">
           <Send className="h-3 w-3 text-white" />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="font-medium text-xs text-neutral-900 truncate">
+          <div className="font-medium text-xs text-foreground truncate">
             {data.label || "Response"}
           </div>
         </div>
@@ -57,20 +55,20 @@ export function ResponseNode({
           >
             {data.status || 200}
           </span>
-          <span className="text-[10px] text-neutral-500 truncate">
+          <span className="text-[10px] text-muted-foreground truncate">
             {data.responseType || "application/json"}
           </span>
         </div>
 
         {data.responseBody && (
-          <div className="bg-neutral-50 border border-neutral-200 rounded px-1.5 py-1">
-            <code className="text-[10px] text-neutral-600 font-mono block truncate">
+          <div className="bg-neutral-50 border border-border rounded px-1.5 py-1">
+            <code className="text-[10px] text-muted-foreground font-mono block truncate">
               {data.responseBody.substring(0, 30)}...
             </code>
           </div>
         )}
 
-        <div className="text-[9px] text-neutral-400 font-mono">{id}</div>
+        <div className="text-[9px] text-muted-foreground font-mono">{id}</div>
       </div>
     </div>
   );

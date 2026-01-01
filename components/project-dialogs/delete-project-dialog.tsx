@@ -20,6 +20,7 @@ import { deleteProject } from "@/lib/redux/slices/projectsSlice";
 import type { AppDispatch } from "@/lib/redux/store";
 import type { Project } from "@/lib/api/projects";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface DeleteProjectDialogProps {
   project: Project;
@@ -34,6 +35,7 @@ export function DeleteProjectDialog({
 }: DeleteProjectDialogProps) {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
 
   const handleDelete = async () => {
     try {
@@ -43,6 +45,7 @@ export function DeleteProjectDialog({
         className: "bg-green-500 text-white",
       });
       setOpen(false);
+      router.push("/projects");
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
@@ -62,25 +65,25 @@ export function DeleteProjectDialog({
           </Button>
         )}
       </AlertDialogTrigger>
-      <AlertDialogContent className="sm:max-w-[425px] border border-neutral-300 p-4">
+      <AlertDialogContent className="sm:max-w-[425px] border border-border p-4">
         <AlertDialogHeader className="flex flex-col gap-1">
-          <AlertDialogTitle className="flex items-center gap-2 font-inter text-[16px] font-medium">
+          <AlertDialogTitle className="flex items-center gap-2 font-inter text-[16px] font-medium text-foreground">
             Delete Project
           </AlertDialogTitle>
-          <AlertDialogDescription className="flex items-center gap-2 font-inter text-xs text-neutral-500">
+          <AlertDialogDescription className="flex items-center gap-2 font-inter text-xs text-muted-foreground">
             Are you sure you want to delete &quot;{project.name}&quot;? This
             action cannot be undone and will permanently delete the project and
             all its associated workflows and secrets.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel className="justify-start shadow-none gap-2 text-left font-normal border-2 border-neutral-300 bg-white hover:bg-neutral-100 text-neutral-600 hover:text-neutral-800 cursor-pointer text-xs h-7 px-2.5 py-1">
+          <AlertDialogCancel className="justify-start shadow-none gap-2 text-left font-normal border-2 border-neutral-300 bg-white hover:bg-neutral-100 text-muted-foreground cursor-pointer text-xs h-7 px-2.5 py-1">
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             disabled={isDeleting}
-            className="justify-start gap-2 text-left font-normal border border-red-800 bg-red-700 hover:bg-red-600 text-white hover:text-white cursor-pointer text-xs h-7 px-2.5 py-1"
+            className="justify-start gap-2 text-left font-normal  bg-destructive hover:bg-destructive/70 text-white hover:text-white cursor-pointer text-xs h-7 px-2.5 py-1"
           >
             {isDeleting ? (
               <LoaderCircle className="size-3.5 animate-spin" />

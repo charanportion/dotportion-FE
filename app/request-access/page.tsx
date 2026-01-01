@@ -37,9 +37,11 @@ export default function RequestAccessPage() {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen px-6 text-center">
-      <h1 className="text-3xl font-semibold mb-4">Request Access</h1>
+      <h1 className="text-3xl font-semibold mb-2 text-foreground">
+        Request Access
+      </h1>
 
-      <p className="text-neutral-600 max-w-md mb-8">
+      <p className="text-muted-foreground max-w-md mb-4">
         You’ve completed onboarding. To start using DotPortion, you need to
         request access to your workspace. Our team will review and approve it.
       </p>
@@ -47,7 +49,7 @@ export default function RequestAccessPage() {
       {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
 
       <Button
-        className="px-6 py-2 text-base bg-neutral-800 hover:bg-neutral-700"
+        className="px-5 h-8 text-sm font-normal rounded-md"
         disabled={loading}
         onClick={handleRequestAccess}
       >

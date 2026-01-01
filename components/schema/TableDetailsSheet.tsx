@@ -138,10 +138,10 @@ export default function TableDetailsSheet() {
     <Sheet open={isOpen} onOpenChange={handleClose}>
       <SheetContent className="sm:max-w-[540px] overflow-y-auto ">
         <SheetHeader className="flex flex-col gap-1">
-          <SheetTitle className="flex items-center gap-2 font-inter text-[16px] font-medium">
+          <SheetTitle className="flex items-center gap-2 font-inter text-[16px] font-medium text-foreground">
             Table Details
           </SheetTitle>
-          <SheetDescription className="flex items-center gap-2 font-inter text-xs text-neutral-500">
+          <SheetDescription className="flex items-center gap-2 font-inter text-xs text-muted-foreground">
             Manage table name and field properties
           </SheetDescription>
         </SheetHeader>
@@ -159,13 +159,13 @@ export default function TableDetailsSheet() {
               onBlur={handleTableNameBlur}
               onKeyDown={handleTableNameKeyDown}
               placeholder="e.g., users"
-              className="h-8 px-3 py-2 bg-neutral-100 border border-neutral-300 rounded-lg font-inter text-neutral-800 text-xs"
+              className="h-8 px-3 py-2 bg-input border border-border rounded-lg font-inter text-xs"
             />
           </div>
 
           {/* Fields Accordion */}
           <div className="space-y-2 p-4">
-            <Label className="text-sm font-inter">Fields</Label>
+            <Label className="text-sm font-inter text-foreground">Fields</Label>
             <Accordion type="single" collapsible className="w-full">
               {fields.map((field) => (
                 <AccordionItem key={field.id} value={field.id}>
@@ -186,7 +186,7 @@ export default function TableDetailsSheet() {
                       <div className="space-y-2">
                         <Label
                           htmlFor={`name-${field.id}`}
-                          className="text-sm font-inter"
+                          className="text-sm font-inter text-foreground"
                         >
                           Field Name
                         </Label>
@@ -200,7 +200,7 @@ export default function TableDetailsSheet() {
                           }
                           disabled={field.name === "_id"}
                           placeholder="e.g., email"
-                          className="h-8 px-3 py-2 bg-neutral-100 border border-neutral-300 rounded-lg font-inter text-neutral-800 text-xs"
+                          className="h-8 px-3 py-2 bg-input border border-border rounded-lg font-inter  text-xs"
                         />
                       </div>
 
@@ -221,7 +221,7 @@ export default function TableDetailsSheet() {
                         >
                           <SelectTrigger
                             id={`type-${field.id}`}
-                            className="w-full px-3 py-2 bg-neutral-100 border border-neutral-300 shadow-none rounded-lg font-inter text-neutral-800 text-xs"
+                            className="h-8 px-3 py-2 bg-input border border-border rounded-lg font-inter w-full  text-xs"
                           >
                             <SelectValue />
                           </SelectTrigger>
@@ -259,7 +259,7 @@ export default function TableDetailsSheet() {
                           >
                             <SelectTrigger
                               id={`arrayItemType-${field.id}`}
-                              className="w-full px-3 py-2 bg-neutral-100 border border-neutral-300 shadow-none rounded-lg font-inter text-neutral-800 text-xs"
+                              className="h-8 px-3 py-2 bg-input border border-border rounded-lg font-inter w-full  text-xs"
                             >
                               <SelectValue />
                             </SelectTrigger>
@@ -300,7 +300,7 @@ export default function TableDetailsSheet() {
                               ? String(field.default)
                               : ""
                           }
-                          className="h-8 px-3 py-2 bg-neutral-100 border border-neutral-300 rounded-lg font-inter text-neutral-800 text-xs"
+                          className="h-8 px-3 py-2 bg-input border border-border rounded-lg font-inter  text-xs"
                           onChange={(e) => {
                             const inputValue = e.target.value;
                             let defaultValue: unknown;
@@ -388,7 +388,7 @@ export default function TableDetailsSheet() {
                               description: e.target.value,
                             })
                           }
-                          className="h-8 px-3 py-2 bg-neutral-100 border border-neutral-300 rounded-lg font-inter text-neutral-800 text-xs"
+                          className="h-8 px-3 py-2 bg-input border border-border rounded-lg font-inter w-full  text-xs"
                           placeholder="Field description..."
                         />
                       </div>
@@ -419,6 +419,7 @@ export default function TableDetailsSheet() {
                           onCheckedChange={(checked) =>
                             handleFieldUpdate(field.id, { unique: checked })
                           }
+                          disabled={field.name === "_id"}
                         />
                         <Label
                           htmlFor={`unique-${field.id}`}
@@ -436,6 +437,7 @@ export default function TableDetailsSheet() {
                           onCheckedChange={(checked) =>
                             handleFieldUpdate(field.id, { index: checked })
                           }
+                          disabled={field.name === "_id"}
                         />
                         <Label
                           htmlFor={`index-${field.id}`}
@@ -473,7 +475,8 @@ export default function TableDetailsSheet() {
         <SheetFooter>
           <Button
             onClick={handleClose}
-            className="justify-center gap-2 text-center font-normal border-2 border-neutral-950 bg-neutral-800 hover:bg-neutral-700 text-white hover:text-white cursor-pointer text-xs h-7 px-2.5 py-1"
+            variant="secondary"
+            className="justify-center gap-2 text-center font-normal  cursor-pointer text-xs h-8 px-2.5 py-2"
           >
             Close
           </Button>

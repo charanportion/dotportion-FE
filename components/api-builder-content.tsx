@@ -1,6 +1,6 @@
 "use client";
 import type React from "react";
-import { useCallback, useRef, useEffect, useState } from "react";
+import { useCallback, useRef, useEffect, useState, useMemo } from "react";
 import {
   ReactFlow,
   MiniMap,
@@ -17,7 +17,14 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { TestPanel } from "@/components/test-panel";
-import { Beaker, ArrowLeft, Save, Eye, EyeOff } from "lucide-react";
+import {
+  Beaker,
+  ArrowLeft,
+  Save,
+  Eye,
+  EyeOff,
+  LoaderCircle,
+} from "lucide-react";
 import { APIStartNode } from "@/components/nodes/api-start-node";
 import { ParameterNode } from "@/components/nodes/parameter-node";
 import { LogicNode } from "@/components/nodes/logic-node";
@@ -73,6 +80,7 @@ import { cn } from "@/lib/utils";
 import { driver, type DriveStep } from "driver.js";
 import "driver.js/dist/driver.css";
 import { userApi } from "@/lib/api/user";
+import { WorkflowContextMenu } from "./workflow-context-menu";
 
 // Define custom node types
 const nodeTypes: NodeTypes = {
@@ -93,11 +101,24 @@ interface ApiBuilderContentProps {
   projectId: string;
 }
 
+const getApiBuilderTourKey = (userId: string) =>
+  `tour_done_api_builder_${userId}`;
+
+const deepClone = <T,>(obj: T): T => {
+  return JSON.parse(JSON.stringify(obj));
+};
+
+interface ContextMenuState {
+  show: boolean;
+  x: number;
+  y: number;
+  nodeId: string | null;
+}
+
 export function ApiBuilderContent({
   workflowId,
   projectId,
 }: ApiBuilderContentProps) {
-  // Redux state
   const dispatch = useAppDispatch();
   const router = useRouter();
   const selectedNode = useAppSelector((state) => state.ui.selectedNode);
@@ -110,6 +131,7 @@ export function ApiBuilderContent({
   );
   const finalResponse = useAppSelector((state) => state.execution.responseData);
   const user = useAppSelector((state) => state.auth.user);
+  const userId = user?._id;
   const historyState = useAppSelector((state) => state.history);
 
   const { nodes, edges, hasUnsavedChanges, isSaving, isLoading } = useSelector(
@@ -119,20 +141,29 @@ export function ApiBuilderContent({
     (state: RootState) => state.workflows
   );
 
-  // Local state
   const [showMinimap, setShowMinimap] = useState(true);
-
   const [toursSynced, setToursSynced] = useState(false);
 
-  // ReactFlow hooks
+  // Context menu state
+  const [contextMenu, setContextMenu] = useState<ContextMenuState>({
+    show: false,
+    x: 0,
+    y: 0,
+    nodeId: null,
+  });
+  const contextMenuPositionRef = useRef<{ x: number; y: number } | null>(null);
+  const contextMenuNodeRef = useRef<Node<NodeData> | null>(null);
+
+  const clonedNodes = useMemo(() => deepClone(nodes), [nodes]);
+  const clonedEdges = useMemo(() => deepClone(edges), [edges]);
+
   const [reactFlowNodes, setReactFlowNodes, onNodesChangeInternal] =
-    useNodesState<Node<NodeData>>(nodes);
+    useNodesState<Node<NodeData>>(clonedNodes);
   const [reactFlowEdges, setReactFlowEdges, onEdgesChange] =
-    useEdgesState(edges);
+    useEdgesState(clonedEdges);
   const reactFlowInstance = useReactFlow();
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
 
-  // Load workflow on mount
   useEffect(() => {
     dispatch(loadWorkflowIntoEditor({ projectId, workflowId }));
     return () => {
@@ -140,30 +171,28 @@ export function ApiBuilderContent({
     };
   }, [projectId, workflowId, dispatch]);
 
-  // Sync workflow editor state with local editor state
   useEffect(() => {
     if (selectedWorkflow) {
       dispatch(clearUnsavedChanges());
     }
   }, [selectedWorkflow, dispatch]);
 
-  // Sync ReactFlow state with Redux
   useEffect(() => {
-    setReactFlowNodes(nodes);
-  }, [nodes, setReactFlowNodes]);
+    setReactFlowNodes(clonedNodes);
+  }, [clonedNodes, setReactFlowNodes]);
 
   useEffect(() => {
-    setReactFlowEdges(edges);
-  }, [edges, setReactFlowEdges]);
+    setReactFlowEdges(clonedEdges);
+  }, [clonedEdges, setReactFlowEdges]);
 
   useEffect(() => {
     async function syncApiBuilderTour() {
+      if (!userId) return;
       try {
         const res = await userApi.getTours();
         const tours = res?.tours || {};
-
         if (tours.workflowsTour === true) {
-          localStorage.setItem("tour_done_api_builder", "true");
+          localStorage.setItem(getApiBuilderTourKey(userId), "true");
         }
       } catch (err) {
         console.warn("Failed to sync API Builder tour:", err);
@@ -173,13 +202,13 @@ export function ApiBuilderContent({
     }
     setToursSynced(false);
     syncApiBuilderTour();
-  }, []);
+  }, [userId]);
 
-  // --- Guided Tour for API Builder ---
   useEffect(() => {
-    const TOUR_KEY = "tour_done_api_builder";
     if (typeof window === "undefined") return;
     if (!toursSynced) return;
+    if (!userId) return;
+    const TOUR_KEY = getApiBuilderTourKey(userId);
     if (localStorage.getItem(TOUR_KEY)) return;
 
     const waitFor = (selectors: string[], timeout = 5000) =>
@@ -205,50 +234,41 @@ export function ApiBuilderContent({
           steps.push({ element: selector, popover });
         }
       };
-
       add(".tour-add-node", {
         title: "Add Node",
         description: "Open the palette to insert new workflow nodes.",
       });
-
       add(".tour-test", {
         title: "Test Workflow",
         description: "Run your workflow with custom inputs.",
       });
-
       add(".tour-save", {
         title: "Save Workflow",
         description: "Save all current workflow changes.",
       });
-
       add(".tour-api-start-node", {
         title: "API Endpoint Node",
         description: "Defines the API method, path & entry configuration.",
         side: "right",
       });
-
       add(".tour-api-response-node", {
         title: "API Response Node",
         description: "Sends the final response back to the API caller.",
         side: "right",
       });
-
       return steps;
     };
 
     (async () => {
       await waitFor([".tour-add-node", ".tour-test", ".tour-save"], 3000);
-
       const steps = buildSteps();
       if (!steps.length) return;
-
       const tour = driver({
         showProgress: true,
         steps,
         onDestroyed: async () => {
           try {
             localStorage.setItem(TOUR_KEY, "true");
-
             await userApi.updateTourStatus({
               tourKey: "workflowsTour",
               completed: true,
@@ -258,17 +278,14 @@ export function ApiBuilderContent({
           }
         },
       });
-
       setTimeout(() => tour.drive(), 300);
     })();
-  }, [toursSynced]);
+  }, [toursSynced, userId]);
 
-  // Handle ReactFlow node changes
   const onNodesChange = useCallback(
     (changes: NodeChange<Node<NodeData>>[]) => {
-      const updatedNodes = [...nodes];
+      const updatedNodes = deepClone(nodes);
       let hasChanges = false;
-
       changes.forEach((change) => {
         if (change.type === "position" && change.dragging && change.position) {
           const nodeIndex = updatedNodes.findIndex((n) => n.id === change.id);
@@ -281,20 +298,16 @@ export function ApiBuilderContent({
           }
         }
       });
-
       if (hasChanges) {
         dispatch(setWorkflowNodes(updatedNodes));
       }
-
       onNodesChangeInternal(changes);
     },
     [nodes, dispatch, onNodesChangeInternal]
   );
 
-  // Save workflow
   const saveWorkflow = useCallback(async () => {
     if (!selectedWorkflow) return;
-
     try {
       await dispatch(
         saveWorkflowFromEditor({
@@ -304,7 +317,6 @@ export function ApiBuilderContent({
           edges,
         })
       ).unwrap();
-
       dispatch(clearUnsavedChanges());
       toast("Success", {
         description: "Workflow saved successfully",
@@ -320,15 +332,12 @@ export function ApiBuilderContent({
     }
   }, [selectedWorkflow, nodes, edges, projectId, dispatch]);
 
-  // Debounce update node data
   const lastUpdateRef = useRef(0);
 
-  // Process data flow between connected nodes
   useEffect(() => {
     dispatch(setWorkflowNodes(nodes));
   }, [nodes, edges, dispatch]);
 
-  // Record history when nodes or edges change
   useEffect(() => {
     if (!historyState.isHistoryAction) {
       dispatch(recordHistory({ nodes, edges }));
@@ -343,7 +352,6 @@ export function ApiBuilderContent({
         id: `e${params.source}-${params.target}-${timestamp}`,
       };
       dispatch(addWorkflowEdge(newEdge));
-
       const sourceNode = nodes.find((n) => n.id === params.source);
       if (
         sourceNode &&
@@ -357,10 +365,7 @@ export function ApiBuilderContent({
         dispatch(
           updateWorkflowNodeData({
             id: sourceNode.id,
-            data: {
-              ...restData,
-              [edgeField]: newEdge.id,
-            },
+            data: { ...restData, [edgeField]: newEdge.id },
           })
         );
       }
@@ -384,6 +389,8 @@ export function ApiBuilderContent({
 
   const onPaneClick = useCallback(() => {
     dispatch(clearSelections());
+    setContextMenu({ show: false, x: 0, y: 0, nodeId: null });
+    contextMenuNodeRef.current = null;
   }, [dispatch]);
 
   const updateNodeData = useCallback(
@@ -399,7 +406,6 @@ export function ApiBuilderContent({
     [dispatch]
   );
 
-  // Duplicate selected node
   const duplicateSelectedNode = useCallback(() => {
     if (selectedNode) {
       const timestamp = Date.now();
@@ -408,20 +414,16 @@ export function ApiBuilderContent({
         x: selectedNode.position.x + 50,
         y: selectedNode.position.y + 50,
       };
-
       const newNode: Node<NodeData> = {
-        ...selectedNode,
+        ...deepClone(selectedNode),
         id: newId,
         position: newPosition,
       };
-
       dispatch(addWorkflowNode(newNode));
-
       const connectedEdges = edges.filter(
         (edge) =>
           edge.source === selectedNode.id || edge.target === selectedNode.id
       );
-
       connectedEdges.forEach((edge) => {
         const newEdgeId = `e${
           edge.source === selectedNode.id ? newId : edge.source
@@ -429,7 +431,7 @@ export function ApiBuilderContent({
           edge.target === selectedNode.id ? newId : edge.target
         }-copy-${timestamp}`;
         const newEdge: Edge = {
-          ...edge,
+          ...deepClone(edge),
           id: newEdgeId,
           source: edge.source === selectedNode.id ? newId : edge.source,
           target: edge.target === selectedNode.id ? newId : edge.target,
@@ -439,84 +441,81 @@ export function ApiBuilderContent({
     }
   }, [selectedNode, dispatch, edges]);
 
-  // Delete selected node
   const deleteSelectedNode = useCallback(() => {
     if (selectedNode) {
       dispatch(removeWorkflowNode(selectedNode.id));
-
       const connectedEdges = edges.filter(
         (edge) =>
           edge.source === selectedNode.id || edge.target === selectedNode.id
       );
-
       connectedEdges.forEach((edge) => {
         dispatch(removeWorkflowEdge(edge.id));
       });
-
       dispatch(setSelectedNode(null));
     }
   }, [selectedNode, dispatch, edges]);
 
-  // Copy selected node to clipboard
   const copySelectedNode = useCallback(() => {
     if (selectedNode) {
-      const clonedNode = JSON.parse(JSON.stringify(selectedNode));
+      const clonedNode = deepClone(selectedNode);
       dispatch(setClipboard([clonedNode]));
+      toast("Copied", { description: "Node copied to clipboard" });
     }
   }, [selectedNode, dispatch]);
 
-  // Cut selected node to clipboard
   const cutSelectedNode = useCallback(() => {
     if (selectedNode) {
-      copySelectedNode();
+      const clonedNode = deepClone(selectedNode);
+      dispatch(setClipboard([clonedNode]));
       deleteSelectedNode();
+      toast("Cut", { description: "Node cut to clipboard" });
     }
-  }, [selectedNode, copySelectedNode, deleteSelectedNode]);
+  }, [selectedNode, dispatch, deleteSelectedNode]);
 
-  // Paste nodes from clipboard
   const pasteNodes = useCallback(() => {
     if (clipboard.length > 0 && reactFlowWrapper.current) {
-      const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-      const centerX = reactFlowBounds.width / 2;
-      const centerY = reactFlowBounds.height / 2;
-
-      const position = reactFlowInstance.screenToFlowPosition({
-        x: centerX,
-        y: centerY,
-      });
-
+      let pastePosition: { x: number; y: number };
+      if (contextMenuPositionRef.current) {
+        pastePosition = reactFlowInstance.screenToFlowPosition(
+          contextMenuPositionRef.current
+        );
+      } else {
+        const reactFlowBounds =
+          reactFlowWrapper.current.getBoundingClientRect();
+        const centerX = reactFlowBounds.width / 2;
+        const centerY = reactFlowBounds.height / 2;
+        pastePosition = reactFlowInstance.screenToFlowPosition({
+          x: centerX,
+          y: centerY,
+        });
+      }
       const timestamp = Date.now();
       const newNodes: Node<NodeData>[] = [];
       const newEdges: Edge[] = [];
       const idMapping: Record<string, string> = {};
-
       clipboard.forEach((node, index) => {
         const newId = `${node.id}-pasted-${timestamp}-${index}`;
         idMapping[node.id] = newId;
-
         const newNode: Node<NodeData> = {
-          ...node,
+          ...deepClone(node),
           id: newId,
           position: {
-            x: position.x + index * 50,
-            y: position.y + index * 50,
+            x: pastePosition.x + index * 50,
+            y: pastePosition.y + index * 50,
           },
         };
         newNodes.push(newNode);
       });
-
       clipboard.forEach((node) => {
         const nodeEdges = edges.filter(
           (edge) => edge.source === node.id || edge.target === node.id
         );
-
         nodeEdges.forEach((edge) => {
           const newEdgeId = `e${idMapping[edge.source] || edge.source}-${
             idMapping[edge.target] || edge.target
           }-pasted-${timestamp}`;
-
           const newEdge: Edge = {
-            ...edge,
+            ...deepClone(edge),
             id: newEdgeId,
             source: idMapping[edge.source] || edge.source,
             target: idMapping[edge.target] || edge.target,
@@ -524,31 +523,120 @@ export function ApiBuilderContent({
           newEdges.push(newEdge);
         });
       });
-
-      newNodes.forEach((node) => {
-        dispatch(addWorkflowNode(node));
-      });
-
-      newEdges.forEach((edge) => {
-        dispatch(addWorkflowEdge(edge));
-      });
-
+      newNodes.forEach((node) => dispatch(addWorkflowNode(node)));
+      newEdges.forEach((edge) => dispatch(addWorkflowEdge(edge)));
       dispatch(setClipboard([]));
+      contextMenuPositionRef.current = null;
+      toast("Pasted", { description: `${newNodes.length} node(s) pasted` });
     }
   }, [clipboard, reactFlowInstance, dispatch, edges]);
 
-  // Delete selected edges
+  // Context menu handlers
+  const onNodeContextMenu = useCallback(
+    (event: React.MouseEvent, node: Node) => {
+      event.preventDefault();
+      // Store the node for context menu actions, but don't select it (don't open panel)
+      contextMenuNodeRef.current = node as Node<NodeData>;
+      contextMenuPositionRef.current = { x: event.clientX, y: event.clientY };
+      setContextMenu({
+        show: true,
+        x: event.clientX,
+        y: event.clientY,
+        nodeId: node.id,
+      });
+    },
+    []
+  );
+
+  const onPaneContextMenu = useCallback(
+    (event: MouseEvent | React.MouseEvent) => {
+      event.preventDefault();
+      contextMenuPositionRef.current = { x: event.clientX, y: event.clientY };
+      setContextMenu({
+        show: true,
+        x: event.clientX,
+        y: event.clientY,
+        nodeId: null,
+      });
+    },
+    []
+  );
+
+  const closeContextMenu = useCallback(() => {
+    setContextMenu({ show: false, x: 0, y: 0, nodeId: null });
+    contextMenuNodeRef.current = null;
+  }, []);
+
+  const configureNode = useCallback(() => {
+    // Select the node from context menu to open the config panel
+    if (contextMenuNodeRef.current) {
+      dispatch(setSelectedNode(contextMenuNodeRef.current));
+      contextMenuNodeRef.current = null;
+    }
+  }, [dispatch]);
+
+  // Context menu action handlers (use context menu node if available, otherwise selected node)
+  const handleContextMenuCopy = useCallback(() => {
+    const nodeToUse = contextMenuNodeRef.current || selectedNode;
+    if (nodeToUse) {
+      const clonedNode = deepClone(nodeToUse);
+      dispatch(setClipboard([clonedNode]));
+      toast("Copied", { description: "Node copied to clipboard" });
+    }
+    contextMenuNodeRef.current = null;
+  }, [selectedNode, dispatch]);
+
+  const handleContextMenuCut = useCallback(() => {
+    const nodeToUse = contextMenuNodeRef.current || selectedNode;
+    if (nodeToUse) {
+      const clonedNode = deepClone(nodeToUse);
+      dispatch(setClipboard([clonedNode]));
+      // Delete the node
+      dispatch(removeWorkflowNode(nodeToUse.id));
+      const connectedEdges = edges.filter(
+        (edge) => edge.source === nodeToUse.id || edge.target === nodeToUse.id
+      );
+      connectedEdges.forEach((edge) => {
+        dispatch(removeWorkflowEdge(edge.id));
+      });
+      if (selectedNode?.id === nodeToUse.id) {
+        dispatch(setSelectedNode(null));
+      }
+      toast("Cut", { description: "Node cut to clipboard" });
+    }
+    contextMenuNodeRef.current = null;
+  }, [selectedNode, dispatch, edges]);
+
+  const handleContextMenuDelete = useCallback(() => {
+    const nodeToUse = contextMenuNodeRef.current || selectedNode;
+    if (nodeToUse) {
+      dispatch(removeWorkflowNode(nodeToUse.id));
+      const connectedEdges = edges.filter(
+        (edge) => edge.source === nodeToUse.id || edge.target === nodeToUse.id
+      );
+      connectedEdges.forEach((edge) => {
+        dispatch(removeWorkflowEdge(edge.id));
+      });
+      if (selectedNode?.id === nodeToUse.id) {
+        dispatch(setSelectedNode(null));
+      }
+    }
+    contextMenuNodeRef.current = null;
+  }, [selectedNode, dispatch, edges]);
+
+  const handleContextMenuPaste = useCallback(() => {
+    pasteNodes();
+    contextMenuNodeRef.current = null;
+  }, [pasteNodes]);
+
   const deleteSelectedEdges = useCallback(() => {
     if (selectedEdges.length > 0) {
       const edgeIds = selectedEdges.map((edge) => edge.id);
-      edgeIds.forEach((edgeId) => {
-        dispatch(removeWorkflowEdge(edgeId));
-      });
+      edgeIds.forEach((edgeId) => dispatch(removeWorkflowEdge(edgeId)));
       dispatch(clearSelectedEdges());
     }
   }, [selectedEdges, dispatch]);
 
-  // Add a new node from the palette
   const addNodeFromPalette = useCallback(
     (nodeType: string) => {
       if (reactFlowWrapper.current) {
@@ -556,14 +644,11 @@ export function ApiBuilderContent({
           reactFlowWrapper.current.getBoundingClientRect();
         const centerX = reactFlowBounds.width / 2;
         const centerY = reactFlowBounds.height / 2;
-
         const position = reactFlowInstance.screenToFlowPosition({
           x: centerX,
           y: centerY,
         });
-
         let newNode: Node<NodeData>;
-
         switch (nodeType) {
           case "apiStart":
             newNode = {
@@ -606,7 +691,7 @@ export function ApiBuilderContent({
               position,
               data: {
                 label: "Process Data",
-                code: "// Access data from previous nodes using ${input}\nreturn { processed: true };",
+                code: "",
                 description: "Transform the input data",
                 output: { processed: true },
               },
@@ -637,9 +722,7 @@ export function ApiBuilderContent({
                 description: "Send response to client",
                 type: "jwt",
                 expiresIn: "1h",
-                payload: {
-                  msg: "hello world",
-                },
+                payload: { msg: "hello world" },
               },
             };
             break;
@@ -710,7 +793,6 @@ export function ApiBuilderContent({
           default:
             return;
         }
-
         dispatch(addWorkflowNode(newNode));
         dispatch(setShowPalette(false));
       }
@@ -718,23 +800,25 @@ export function ApiBuilderContent({
     [reactFlowInstance, dispatch]
   );
 
-  // Undo action
   const undo = useCallback(() => {
     if (historyState.past.length > 0) {
       dispatch(undoAction());
       const previousState = historyState.past[historyState.past.length - 1];
-      dispatch(setWorkflowNodes(previousState.nodes as Node<NodeData>[]));
-      dispatch(setWorkflowEdges(previousState.edges));
+      dispatch(
+        setWorkflowNodes(deepClone(previousState.nodes) as Node<NodeData>[])
+      );
+      dispatch(setWorkflowEdges(deepClone(previousState.edges)));
     }
   }, [dispatch, historyState.past]);
 
-  // Redo action
   const redo = useCallback(() => {
     if (historyState.future.length > 0) {
       dispatch(redoAction());
       const futureState = historyState.future[0];
-      dispatch(setWorkflowNodes(futureState.nodes as Node<NodeData>[]));
-      dispatch(setWorkflowEdges(futureState.edges));
+      dispatch(
+        setWorkflowNodes(deepClone(futureState.nodes) as Node<NodeData>[])
+      );
+      dispatch(setWorkflowEdges(deepClone(futureState.edges)));
     }
   }, [dispatch, historyState.future]);
 
@@ -747,37 +831,23 @@ export function ApiBuilderContent({
           );
           return;
         }
-
         dispatch(setShowTestPanel(true));
         dispatch(setIsRunning(true));
-
         dispatch(setWorkflowNodes(nodes));
         dispatch(setWorkflowEdges(edges));
-
         if (!selectedWorkflow) {
           toast.error("Workflow not found");
           return;
         }
-
         const enrichedInput: TestData = testInput
-          ? {
-              ...testInput,
-              tenant: user.name,
-            }
-          : {
-              body: {},
-              query: {},
-              headers: {},
-              tenant: user.name,
-            };
-
+          ? { ...testInput, tenant: user.name }
+          : { body: {}, query: {}, headers: {}, tenant: user.name };
         const result = await dispatch(
           runWorkflowAction({
             workflow: selectedWorkflow,
             testInput: enrichedInput,
           })
         ).unwrap();
-
         return result;
       } catch (error) {
         console.error("Failed to run workflow:", error);
@@ -787,7 +857,6 @@ export function ApiBuilderContent({
     [nodes, edges, dispatch, user, selectedWorkflow]
   );
 
-  // Keyboard event handler
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (
@@ -797,7 +866,6 @@ export function ApiBuilderContent({
       ) {
         return;
       }
-
       if (event.key === "Delete" || event.key === "Backspace") {
         if (selectedNode) {
           deleteSelectedNode();
@@ -805,24 +873,19 @@ export function ApiBuilderContent({
           deleteSelectedEdges();
         }
       }
-
       if (event.key === "c" && (event.ctrlKey || event.metaKey)) {
         copySelectedNode();
       }
-
       if (event.key === "x" && (event.ctrlKey || event.metaKey)) {
         cutSelectedNode();
       }
-
       if (event.key === "v" && (event.ctrlKey || event.metaKey)) {
         pasteNodes();
       }
-
       if (event.key === "d" && (event.ctrlKey || event.metaKey)) {
         event.preventDefault();
         duplicateSelectedNode();
       }
-
       if (
         event.key === "z" &&
         (event.ctrlKey || event.metaKey) &&
@@ -831,7 +894,6 @@ export function ApiBuilderContent({
         event.preventDefault();
         undo();
       }
-
       if (
         (event.key === "y" && (event.ctrlKey || event.metaKey)) ||
         (event.key === "z" &&
@@ -842,11 +904,8 @@ export function ApiBuilderContent({
         redo();
       }
     };
-
     window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [
     selectedNode,
     selectedEdges,
@@ -862,9 +921,10 @@ export function ApiBuilderContent({
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <div className="text-center">
-          <h2 className="text-2xl font-semibold">Loading workflow...</h2>
+      <div className="flex items-center justify-center h-[94vh]">
+        <div className="flex flex-col items-center gap-2">
+          <LoaderCircle className="size-4 text-foreground animate-spin" />
+          <p className="text-sm text-muted-foreground">Loading Workflow...</p>
         </div>
       </div>
     );
@@ -887,7 +947,6 @@ export function ApiBuilderContent({
 
   return (
     <div className="flex h-[calc(100vh-3rem)] w-full bg-background text-foreground overflow-hidden flex-col">
-      {/* Custom Animation Styles for the Loader */}
       <style>{`
         @keyframes border-trail {
           0% { transform: translateX(-100%) scaleX(0.2); }
@@ -896,29 +955,28 @@ export function ApiBuilderContent({
         }
       `}</style>
 
-      {/* Main Content Area - Takes full remaining height */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Canvas Area */}
         <div
           className={cn(
-            "flex flex-col bg-white transition-all overflow-hidden",
+            "flex flex-col bg-background transition-all overflow-hidden",
             selectedNode || showTestPanel ? "flex-1" : "flex-1"
           )}
         >
-          {/* Top Bar */}
-          <div className="relative flex w-full min-h-[3rem] h-12 items-center justify-between border-b border-neutral-300 px-4 gap-4 shrink-0">
+          <div className="relative flex w-full min-h-[3rem] h-12 items-center justify-between border-b border-border px-4 gap-4 shrink-0">
             <div className="flex items-center gap-2">
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
-                className="h-7 shadow-none border-neutral-300 bg-white hover:bg-neutral-100 text-neutral-600 hover:text-black text-xs"
+                className="h-7 shadow-none border border-border hover:bg-muted text-xs"
                 onClick={() => router.push(`/projects/${projectId}/workflows/`)}
               >
                 <ArrowLeft className="h-3.5 w-3.5 mr-2" />
                 Back
               </Button>
-              <h1 className="text-sm font-semibold">{selectedWorkflow.name}</h1>
-              <span className="px-2 py-0.5 text-[10px] rounded bg-neutral-100 border border-neutral-300">
+              <h1 className="text-sm font-medium text-foreground">
+                {selectedWorkflow.name}
+              </h1>
+              <span className="px-2 py-0.5 text-[10px] rounded bg-secondary border border-border">
                 {selectedWorkflow.method}
               </span>
               <span className="text-xs text-muted-foreground">
@@ -937,7 +995,7 @@ export function ApiBuilderContent({
               />
               <Button
                 variant="outline"
-                className="h-7 shadow-none gap-2 border-neutral-300 bg-white hover:bg-neutral-100 text-neutral-600 hover:text-black text-xs px-2.5 tour-test"
+                className="h-7 shadow-none bg-secondary border border-border hover:bg-muted text-xs cursor-pointer tour-test"
                 onClick={() => dispatch(setShowTestPanel(true))}
               >
                 <Beaker className="size-3.5" />
@@ -945,7 +1003,7 @@ export function ApiBuilderContent({
               </Button>
               <Button
                 variant="outline"
-                className="h-7 shadow-none gap-2 border-neutral-300 bg-white hover:bg-neutral-100 text-neutral-600 hover:text-black text-xs px-2.5"
+                className="h-7 shadow-none bg-secondary border border-border hover:bg-muted text-xs cursor-pointer"
                 onClick={() => setShowMinimap(!showMinimap)}
               >
                 {showMinimap ? (
@@ -957,7 +1015,8 @@ export function ApiBuilderContent({
               </Button>
               <Button
                 size="sm"
-                className="h-7 shadow-none text-xs px-3 tour-save"
+                variant="default"
+                className="h-7 shadow-none text-xs px-3 tour-save cursor-pointer"
                 onClick={saveWorkflow}
                 disabled={isSaving || !hasUnsavedChanges}
               >
@@ -965,7 +1024,6 @@ export function ApiBuilderContent({
                 {isSaving ? "Saving..." : "Save"}
               </Button>
             </div>
-            {/* Animated Border Trail Loader */}
             {isSaving && (
               <div className="absolute bottom-[-1px] left-0 w-full h-[2px] overflow-hidden z-10">
                 <div
@@ -982,11 +1040,10 @@ export function ApiBuilderContent({
             )}
           </div>
 
-          {/* ReactFlow Canvas */}
           <div className="flex-1 flex overflow-hidden min-h-0">
             <div
               ref={reactFlowWrapper}
-              className="flex-1 relative bg-neutral-50 min-h-0"
+              className="flex-1 relative bg-background min-h-0"
             >
               <ReactFlow
                 nodes={reactFlowNodes}
@@ -997,22 +1054,37 @@ export function ApiBuilderContent({
                 onNodeClick={onNodeClick}
                 onEdgeClick={onEdgeClick}
                 onPaneClick={onPaneClick}
+                onNodeContextMenu={onNodeContextMenu}
+                onPaneContextMenu={onPaneContextMenu}
                 nodeTypes={nodeTypes}
                 fitView
                 attributionPosition="bottom-right"
               >
-                <Controls className="border border-neutral-300" />
+                <Controls className="border border-neutral-300 text-black dark:text-white bg-white dark:bg-neutral-900" />
                 {showMinimap && (
-                  <MiniMap className="border border-neutral-300" />
+                  <MiniMap className="border border-neutral-300 bg-white/70" />
                 )}
-                <Background gap={12} size={1} />
+                <Background gap={12} size={0.3} />
               </ReactFlow>
+
+              {/* Context Menu */}
+              <WorkflowContextMenu
+                contextMenu={contextMenu}
+                selectedNode={selectedNode}
+                hasClipboard={clipboard.length > 0}
+                onCopy={handleContextMenuCopy}
+                onCut={handleContextMenuCut}
+                onPaste={handleContextMenuPaste}
+                onDelete={handleContextMenuDelete}
+                onConfigure={configureNode}
+                onClose={closeContextMenu}
+              />
             </div>
           </div>
         </div>
 
         {(selectedNode || showTestPanel) && (
-          <div className="w-[350px] border-l border-neutral-300 bg-white flex flex-col shrink-0 overflow-hidden">
+          <div className="w-[350px] border-l border-border bg-background flex flex-col shrink-0 overflow-hidden">
             {selectedNode ? (
               <NodeConfigPanelNew
                 node={selectedNode}

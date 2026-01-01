@@ -58,12 +58,36 @@ interface SecretsTableProps {
   data: Secret[];
   projectId: string;
   isCreating: boolean;
+  isLoading: boolean;
+}
+
+function SecretsTableSkeleton({
+  columns,
+  rows = 5,
+}: {
+  columns: number;
+  rows?: number;
+}) {
+  return (
+    <>
+      {Array.from({ length: rows }).map((_, rowIndex) => (
+        <TableRow key={rowIndex}>
+          {Array.from({ length: columns }).map((_, colIndex) => (
+            <TableCell key={colIndex}>
+              <div className="h-4 w-full rounded bg-muted animate-pulse" />
+            </TableCell>
+          ))}
+        </TableRow>
+      ))}
+    </>
+  );
 }
 
 export function SecretsTable({
   data,
   projectId,
   isCreating,
+  isLoading,
 }: SecretsTableProps) {
   const dispatch = useDispatch<AppDispatch>();
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -217,8 +241,9 @@ export function SecretsTable({
                   Edit secret
                 </DropdownMenuItem>
                 <DropdownMenuItem
+                  variant="destructive"
                   onClick={() => handleDeleteSecret(secret._id)}
-                  className="text-destructive text-xs px-2 py-1.5"
+                  className="text-destructive-foreground text-xs px-2 py-1.5"
                 >
                   <Trash2 className="mr-2 size-3.5" />
                   Delete secret
@@ -257,7 +282,7 @@ export function SecretsTable({
           <h2 className="text-xl font-medium tracking-tight text-foreground">
             Secrets
           </h2>
-          <p className="text-xs text-gray-600 mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             Manage your API secrets and credentials
           </p>
         </div>
@@ -271,13 +296,13 @@ export function SecretsTable({
               onChange={(event) =>
                 table.getColumn("provider")?.setFilterValue(event.target.value)
               }
-              className="h-7 min-w-xs w-full border border-neutral-300 rounded-md bg-neutral-100 text-xs shadow-none"
+              className="h-7 min-w-xs w-full border border-border rounded-md bg-input text-xs shadow-none"
             />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
-                  className="flex items-center gap-2 border border-neutral-300 text-xs text-neutral-600 shadow-none size-7"
+                  className="flex items-center gap-2 border border-border text-xs text-muted-foreground shadow-none size-7"
                 >
                   <ListFilter className="size-3.5" />
                 </Button>
@@ -304,7 +329,7 @@ export function SecretsTable({
             </DropdownMenu>
           </div>
           <CreateSecretDialog projectId={projectId} isCreating={isCreating}>
-            <Button className="justify-start gap-2 text-left font-normal border-2 border-neutral-950 bg-neutral-800 hover:bg-neutral-700 text-white hover:text-white cursor-pointer text-xs h-7 px-2.5 py-1">
+            <Button className="justify-start gap-2 text-left font-normal  cursor-pointer text-xs h-7 px-2.5 py-1">
               <Plus className="size-3.5 mr-1" />
               New Secret
             </Button>
@@ -313,16 +338,16 @@ export function SecretsTable({
       </CardHeader>
       <CardContent className="p-0 pt-0 flex-1 flex flex-col">
         <div className="flex flex-col flex-1 border rounded-md overflow-hidden">
-          <div className=" flex-1 overflow-auto">
+          <div className=" flex-1 overflow-auto border-b border-border">
             <Table>
-              <TableHeader className="[&_tr]:border-b border-neutral-300 bg-neutral-100">
+              <TableHeader className="[&_tr]:border-b border-border bg-card">
                 {table.getHeaderGroups().map((headerGroup) => (
                   <TableRow key={headerGroup.id}>
                     {headerGroup.headers.map((header) => {
                       return (
                         <TableHead
                           key={header.id}
-                          className="px-4 text-xs font-medium uppercase tracking-wide text-neutral-600 text-center"
+                          className="px-4 text-xs font-medium uppercase tracking-wide text-muted-foreground text-center"
                         >
                           {header.isPlaceholder
                             ? null
@@ -336,11 +361,36 @@ export function SecretsTable({
                   </TableRow>
                 ))}
               </TableHeader>
-              <TableBody className="[&_tr]:border-b border-neutral-300 bg-white">
-                {table.getRowModel().rows?.length ? (
+              <TableBody className="[&_tr]:border-b border-border bg-card">
+                {isLoading ? (
+                  <SecretsTableSkeleton columns={columns.length} rows={4} />
+                ) : !isLoading && data.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={columns.length}>
+                      <div className="flex flex-col items-center justify-center h-[260px] gap-2 text-center">
+                        <div className="text-sm font-medium text-muted-foreground">
+                          No secrets found
+                        </div>
+                        <p className="text-xs text-muted-foreground max-w-sm">
+                          Create a secret to securely store credentials and
+                          configurations.
+                        </p>
+
+                        <CreateSecretDialog
+                          projectId={projectId}
+                          isCreating={isCreating}
+                        >
+                          <Button className="mt-4 justify-start gap-2 text-left font-normal  cursor-pointer text-xs h-7 px-2.5 py-1">
+                            <Plus className="size-3.5 mr-1" />
+                            New Secret
+                          </Button>
+                        </CreateSecretDialog>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ) : (
                   table.getRowModel().rows.map((row) => (
                     <TableRow
-                      // className="relative after:content-[''] after:absolute after:bottom-0 after:left-2 after:right-2 after:h-px after:bg-border border-muted-foreground"
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
                     >
@@ -354,20 +404,11 @@ export function SecretsTable({
                       ))}
                     </TableRow>
                   ))
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={columns.length}
-                      className="h-24 text-center"
-                    >
-                      No secrets found.
-                    </TableCell>
-                  </TableRow>
                 )}
               </TableBody>
             </Table>
           </div>
-          <div className="flex items-center justify-between pr-0 pl-4 pb-1">
+          <div className="flex items-center bg-card boder-t border-border justify-between pr-0 pl-4 pb-1">
             <div className="text-xs text-muted-foreground">
               {table.getFilteredSelectedRowModel().rows.length} of{" "}
               {table.getFilteredRowModel().rows.length} row(s) selected.

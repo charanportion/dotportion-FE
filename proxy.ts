@@ -25,9 +25,28 @@ function isTokenExpired(token: string): boolean {
   const currentTime = Math.floor(Date.now() / 1000);
   return decoded.exp <= currentTime + 60;
 }
+function isMobileOrTablet(request: NextRequest): boolean {
+  const ua = request.headers.get("user-agent") || "";
+  return /mobile|android|iphone|ipad|ipod|tablet/i.test(ua);
+}
 
 export function proxy(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
+  const isMobile = isMobileOrTablet(request);
+
+  // Routes that REQUIRE desktop
+  const desktopOnlyRoutes = [
+    "/dashboard",
+    "/projects",
+    "/workflows",
+    "/settings",
+    "/profile",
+    "/secrets",
+  ];
+
+  const isDesktopOnlyRoute = desktopOnlyRoutes.some((route) =>
+    pathname.startsWith(route)
+  );
 
   // Route definitions
   const protectedRoutes = [
@@ -65,6 +84,33 @@ export function proxy(request: NextRequest) {
     // If new user, redirect to onboarding
     if (isNewUserCookie) {
       return NextResponse.redirect(new URL("/onboarding?step=0", request.url));
+    }
+
+    // 🚫 Block mobile/tablet ONLY for desktop-only routes
+    if (isMobile && isDesktopOnlyRoute) {
+      if (accessStatus === "none") {
+        return NextResponse.redirect(new URL("/request-access", request.url));
+      }
+
+      if (accessStatus === "requested") {
+        return NextResponse.redirect(
+          new URL("/request-access/pending", request.url)
+        );
+      }
+
+      if (accessStatus === "rejected") {
+        return NextResponse.redirect(
+          new URL("/request-access/rejected", request.url)
+        );
+      }
+      return NextResponse.redirect(
+        new URL("/mobile-not-supported", request.url)
+      );
+    }
+
+    // 🔄 Auto-exit fallback page on desktop
+    if (!isMobile && pathname === "/mobile-not-supported") {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
     }
 
     // NEW LOGIC: Access gating

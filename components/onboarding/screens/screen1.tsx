@@ -54,22 +54,22 @@ export default function Screen1() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8">
-      <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 text-center">
+      <h2 className="text-lg sm:text-xl md:text-2xl font-medium mb-2 text-center text-foreground">
         Profile Details
       </h2>
-      <p className="text-sm text-gray-500 mb-16 text-center">
+      <p className="text-sm text-muted-foreground mb-16 text-center">
         Please let us know what we should address you as!
       </p>
 
       {/* User name */}
       <div className="flex flex-col space-y-1 w-full max-w-2xl mb-4">
-        <Label htmlFor="name" className="text-sm font-medium text-gray-700">
+        <Label htmlFor="name" className="text-sm font-medium text-foreground">
           Name
         </Label>
         <Input
           id="name"
           placeholder="Name..."
-          className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+          className="px-3 py-2 border border-border rounded-md"
           value={answers.name || ""}
           onChange={(e) => {
             dispatch(setAnswer({ key: "name", value: e.target.value }));
@@ -79,14 +79,17 @@ export default function Screen1() {
 
       {/* Contact Number */}
       <div className="flex flex-col space-y-1 w-full max-w-2xl mb-10">
-        <Label htmlFor="phoneNo" className="text-sm font-medium text-gray-700">
+        <Label
+          htmlFor="phoneNo"
+          className="text-sm font-medium text-foreground"
+        >
           Contact Number
         </Label>
         <Input
           id="phoneNo"
           type="tel"
           placeholder="(91) 123-456-7890"
-          className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+          className="px-3 py-2 border border-border rounded-md"
           value={answers.contact_number || ""}
           onChange={(e) =>
             dispatch(
@@ -102,7 +105,7 @@ export default function Screen1() {
 
       {/* Continue button */}
       <Button
-        className="bg-[#222] hover:bg-white hover:border border-black hover:text-black text-white text-sm sm:text-base font-normal px-5 h-11 rounded-md mt-4"
+        className="text-sm font-normal px-5 h-8 rounded-md mt-4"
         onClick={handleContinue}
         disabled={status === "loading"}
       >
@@ -111,11 +114,11 @@ export default function Screen1() {
 
       {/* Step Indicator */}
       <div className="flex space-x-1 mt-10 sm:mt-14 justify-center">
-        <span className="h-2 w-2 rounded-md bg-black"></span>
-        <span className="h-2 w-4 rounded-md bg-gray-400"></span>
-        <span className="h-2 w-4 rounded-md bg-gray-400"></span>
-        <span className="h-2 w-4 rounded-md bg-gray-400"></span>
-        <span className="h-2 w-4 rounded-md bg-gray-400"></span>
+        <span className="h-2 w-2 rounded-md bg-primary"></span>
+        <span className="h-2 w-4 rounded-md bg-muted-foreground"></span>
+        <span className="h-2 w-4 rounded-md bg-muted-foreground"></span>
+        <span className="h-2 w-4 rounded-md bg-muted-foreground"></span>
+        <span className="h-2 w-4 rounded-md bg-muted-foreground"></span>
       </div>
     </div>
   );

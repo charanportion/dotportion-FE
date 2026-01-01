@@ -97,13 +97,13 @@ export function CreateSecretDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] border border-neutral-300 p-4">
+      <DialogContent className="sm:max-w-[425px] border border-border p-4">
         <form onSubmit={handleSubmit}>
           <DialogHeader className="flex flex-col gap-1">
-            <DialogTitle className="flex items-center gap-2 font-inter text-[16px] font-medium">
+            <DialogTitle className="flex items-center gap-2 font-inter text-[16px] text-foreground font-medium">
               Create New Secret
             </DialogTitle>
-            <DialogDescription className="flex items-center gap-2 font-inter text-xs text-neutral-500">
+            <DialogDescription className="flex items-center gap-2 font-inter text-xs text-muted-foreground">
               Add a new secret configuration to your project.
             </DialogDescription>
           </DialogHeader>
@@ -116,7 +116,7 @@ export function CreateSecretDialog({
                 value={provider}
                 onValueChange={(value: "mongodb" | "jwt") => setProvider(value)}
               >
-                <SelectTrigger className="w-full px-3 py-2 bg-neutral-100 border border-neutral-300 shadow-none rounded-lg font-inter text-neutral-800 text-xs h-7">
+                <SelectTrigger className="w-full px-3 py-2 bg-input border border-border shadow-none rounded-lg font-inter text-xs h-7">
                   <SelectValue placeholder="Select provider" />
                 </SelectTrigger>
                 <SelectContent>
@@ -132,11 +132,11 @@ export function CreateSecretDialog({
                 </Label>
                 <Input
                   id="uri"
-                  type="password"
+                  // type="password"
                   value={uri}
                   onChange={(e) => setUri(e.target.value)}
                   placeholder="mongodb+srv://..."
-                  className="h-8 px-3 py-2 bg-neutral-100 border border-neutral-300 rounded-lg font-inter text-neutral-800 text-xs"
+                  className="h-8 px-3 py-2 bg-input border border-border rounded-lg font-inter text-xs"
                   required
                 />
               </div>
@@ -148,11 +148,11 @@ export function CreateSecretDialog({
                 </Label>
                 <Input
                   id="secret"
-                  type="password"
+                  // type="password"
                   value={secret}
                   onChange={(e) => setSecret(e.target.value)}
                   placeholder="Enter JWT secret"
-                  className="h-8 px-3 py-2 bg-neutral-100 border border-neutral-300 rounded-lg font-inter text-neutral-800 text-xs"
+                  className="h-8 px-3 py-2 bg-input border border-border rounded-lg font-inter text-xs"
                   required
                 />
               </div>
@@ -163,14 +163,14 @@ export function CreateSecretDialog({
               type="button"
               variant="outline"
               onClick={() => setOpen(false)}
-              className="justify-start shadow-none gap-2 text-left font-normal border-2 border-neutral-300 bg-white hover:bg-neutral-100 text-neutral-600 hover:text-neutral-800 cursor-pointer text-xs h-7 px-2.5 py-1"
+              className="justify-start shadow-none gap-2 text-left font-normal border-2 border-neutral-300 bg-white hover:bg-neutral-100 text-muted-foreground cursor-pointer text-xs h-7 px-2.5 py-1"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={isCreating}
-              className="justify-start gap-2 text-left font-normal border-2 border-neutral-950 bg-neutral-800 hover:bg-neutral-700 text-white hover:text-white cursor-pointer text-xs h-7 px-2.5 py-1"
+              className="justify-start gap-2 text-left font-normal  cursor-pointer text-xs h-7 px-2.5 py-1"
             >
               {isCreating ? (
                 <LoaderCircle className="size-3.5 animate-spin" />

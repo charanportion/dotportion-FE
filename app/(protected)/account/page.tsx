@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -11,13 +11,18 @@ import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { updateTheme, updateUser } from "@/lib/redux/slices/authSlice";
 import { userApi } from "@/lib/api/user";
 import { toast } from "sonner";
+import { useTheme } from "next-themes";
 
 export default function AccountPreferencesPage() {
   const dispatch = useAppDispatch();
   const { user, isLoading } = useAppSelector((state) => state.auth);
 
   const [fullName, setFullName] = useState("");
-  const [theme, setTheme] = useState<"light" | "dark" | "system">("system");
+  const [localTheme, setLocalTheme] = useState<"light" | "dark" | "system">(
+    "system"
+  );
+
+  const { theme, setTheme } = useTheme();
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -67,7 +72,7 @@ export default function AccountPreferencesPage() {
 
   const handleSaveTheme = async () => {
     try {
-      await dispatch(updateTheme({ theme })).unwrap();
+      await dispatch(updateTheme({ theme: localTheme })).unwrap();
       toast.success("Theme updated!");
     } catch {
       toast.error("Failed to update theme.");
@@ -81,9 +86,9 @@ export default function AccountPreferencesPage() {
           Preferences
         </h1>
       </div>
-      <Card className="bg-white border border-neutral-300 shadow-none mb-8 gap-4 p-0">
+      <Card className="bg-card border border-border shadow-none mb-8 gap-4 p-0">
         <CardContent className="p-0 flex flex-col gap-y-4">
-          <div className="px-6 py-4  border-b border-neutral-300 m-0">
+          <div className="px-6 py-4  border-b border-border m-0">
             <div className="text-lg font-inter font-medium tracking-tight text-foreground">
               Profile Information
             </div>
@@ -92,7 +97,7 @@ export default function AccountPreferencesPage() {
             <div className="grid  grid-cols-3 items-center gap-4">
               <Label className="text-sm text-muted-foreground">Full Name</Label>
               <Input
-                className="col-span-2 px-3 py-2 shadow-none bg-neutral-100 border border-neutral-300 rounded-lg font-inter text-neutral-800 text-xs w-72"
+                className="col-span-2 px-3 py-2 shadow-none bg-input border border-border rounded-lg font-inter text-xs w-72"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder="Enter your full name"
@@ -102,7 +107,7 @@ export default function AccountPreferencesPage() {
             <div className="grid grid-cols-3 items-center gap-4">
               <Label className="text-sm text-muted-foreground">Email</Label>
               <Input
-                className="col-span-2 px-3 py-2 shadow-none bg-neutral-100 border border-neutral-300 rounded-lg font-inter text-neutral-800 text-xs w-72"
+                className="col-span-2 px-3 py-2 shadow-none bg-input border border-border rounded-lg font-inter text-xs w-72"
                 value={user?.email || ""}
                 disabled
               />
@@ -111,18 +116,19 @@ export default function AccountPreferencesPage() {
             <div className="grid grid-cols-3 items-center gap-4">
               <Label className="text-sm text-muted-foreground">Name</Label>
               <Input
-                className="col-span-2 px-3 py-2 shadow-none bg-neutral-100 border border-neutral-300 rounded-lg font-inter text-neutral-800 text-xs w-72"
+                className="col-span-2 px-3 py-2 shadow-none bg-input border border-border rounded-lg font-inter text-xs w-72 "
                 value={user?.name || ""}
                 disabled
               />
             </div>
           </div>
 
-          <div className="flex gap-2 w-full justify-end border-t border-neutral-300 py-4 px-8">
+          <div className="flex gap-2 w-full justify-end border-t border-border py-4 px-8">
             <Button
               onClick={handleSaveProfile}
               disabled={isLoading}
-              className="justify-start gap-2 text-left font-normal border-2 border-neutral-950 bg-neutral-800 hover:bg-neutral-700 text-white hover:text-white cursor-pointer text-xs h-7 px-2.5 py-1"
+              variant="default"
+              className="justify-start gap-2 text-left font-normal  cursor-pointer text-xs h-7 px-2.5 py-1"
             >
               Save
             </Button>
@@ -130,9 +136,9 @@ export default function AccountPreferencesPage() {
         </CardContent>
       </Card>
 
-      <Card className=" p-0 bg-white border border-neutral-300 shadow-none mb-8 gap-4">
+      <Card className=" p-0 bg-card border border-border shadow-none mb-8 gap-4">
         <CardContent className="p-0 flex flex-col gap-y-4">
-          <div className="px-6 py-4  border-b border-neutral-300 m-0">
+          <div className="px-6 py-4  border-b border-borderm-0">
             <div className="text-lg font-inter font-medium tracking-tight text-foreground">
               Change Password
             </div>
@@ -142,7 +148,7 @@ export default function AccountPreferencesPage() {
               <Label className="text-sm">New Password</Label>
               <Input
                 type="password"
-                className="col-span-2 bg-muted border-border w-72"
+                className="col-span-2 bg-input border-border w-72"
                 placeholder="Enter new password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
@@ -153,7 +159,7 @@ export default function AccountPreferencesPage() {
               <Label className="text-sm">Confirm Password</Label>
               <Input
                 type="password"
-                className="col-span-2 bg-muted border-border w-72"
+                className="col-span-2 bg-input border-border w-72"
                 placeholder="Confirm password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
@@ -161,9 +167,9 @@ export default function AccountPreferencesPage() {
             </div>
           </div>
 
-          <div className="flex gap-2 w-full justify-end border-t border-neutral-300 py-4 px-8">
+          <div className="flex gap-2 w-full justify-end border-t border-border py-4 px-8">
             <Button
-              className="justify-start gap-2 text-left font-normal border-2 border-neutral-950 bg-neutral-800 hover:bg-neutral-700 text-white hover:text-white cursor-pointer text-xs h-7 px-2.5 py-1"
+              className="justify-start gap-2 text-left font-normal  cursor-pointer text-xs h-7 px-2.5 py-1"
               onClick={handleChangePassword}
             >
               Save
@@ -172,9 +178,9 @@ export default function AccountPreferencesPage() {
         </CardContent>
       </Card>
 
-      <Card className="p-0 bg-white border border-neutral-300 shadow-none gap-4">
+      <Card className="p-0 bg-card border border-border shadow-none gap-4">
         <CardContent className="p-0  gap-8 border-t">
-          <div className="px-6 py-4  border-b border-neutral-300 m-0">
+          <div className="px-6 py-4  border-b border-border m-0">
             <div className="text-lg font-inter font-medium tracking-tight text-foreground">
               Appearance
             </div>
@@ -195,9 +201,10 @@ export default function AccountPreferencesPage() {
               </p>
               <RadioGroup
                 value={theme}
-                onValueChange={(val) =>
-                  setTheme(val as "light" | "dark" | "system")
-                }
+                onValueChange={(val) => {
+                  setLocalTheme(val as "light" | "dark" | "system");
+                  setTheme(val as "light" | "dark" | "system");
+                }}
                 className="grid grid-cols-3 gap-6"
               >
                 {/* DARK */}
@@ -264,9 +271,9 @@ export default function AccountPreferencesPage() {
               </RadioGroup>
             </div>
           </div>
-          <div className="flex gap-2 w-full justify-end border-t border-neutral-300 py-4 px-8">
+          <div className="flex gap-2 w-full justify-end border-t border-border py-4 px-8">
             <Button
-              className="justify-start gap-2 text-left font-normal border-2 border-neutral-950 bg-neutral-800 hover:bg-neutral-700 text-white hover:text-white cursor-pointer text-xs h-7 px-2.5 py-1"
+              className="justify-start gap-2 text-left font-normal  cursor-pointer text-xs h-7 px-2.5 py-1"
               onClick={handleSaveTheme}
               disabled={isLoading}
             >
