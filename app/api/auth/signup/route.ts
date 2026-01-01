@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Signup doesn't return a token - just pass through the response
-    return NextResponse.json(data);
+    return nextResponse;
   } catch (error) {
     console.error("Signup API route error:", error);
     return NextResponse.json(
